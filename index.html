@@ -1,0 +1,2430 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="author" content="Ellecci Studio">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Finanze">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icona-180.png">
+<link rel="icon" href="icona-192.png">
+<title>Tracker finanziario · Ellecci Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top, 0px);
+    padding-bottom:env(safe-area-inset-bottom, 0px);
+    background:#000;
+    color-scheme:dark;
+  }
+  html{ scroll-padding-top:env(safe-area-inset-top, 0px); background:#000; }
+  body{ margin:0; padding:14px 14px 28px; background:#000; -webkit-font-smoothing:antialiased; }
+  *,*::before,*::after{ box-sizing:inherit; }
+  img{ max-width:100%; }
+  .hidden{ display:none !important; }
+  /* accesso */
+  #accesso{ min-height:86vh; display:flex; flex-direction:column; justify-content:center; max-width:360px; margin:0 auto; padding:24px 6px; color:#E9ECF1; font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; }
+  #accesso .logo{ width:76px; height:76px; margin-bottom:14px; }
+  #accesso .firma{ font-size:.8rem; letter-spacing:.14em; text-transform:uppercase; color:#8A93A1; margin-bottom:26px; }
+  #accesso h1{ font-family:Unbounded,"IBM Plex Sans",sans-serif; font-weight:600; font-size:1.7rem; letter-spacing:-.01em; margin:0 0 8px; }
+  #accesso p{ color:#8A93A1; margin:0 0 26px; font-size:.95rem; line-height:1.5; }
+  #accesso label{ display:block; font-size:.8rem; color:#8A93A1; margin:0 0 6px; }
+  #accesso input{ width:100%; font:inherit; font-size:1.05rem; padding:14px 16px; border-radius:14px; border:1px solid #1A1E27; background:#0B0D12; color:#E9ECF1; margin-bottom:14px; }
+  #accesso input:focus{ outline:none; border-color:#4EDB9C; }
+  #accesso button{ width:100%; font:inherit; font-weight:600; font-size:1rem; border:0; border-radius:14px; padding:14px; background:#E9ECF1; color:#000; cursor:pointer; margin-top:6px; }
+  #accesso button:disabled{ opacity:.5; }
+  #accesso-errore{ color:#FF6A5C; font-size:.9rem; min-height:1.4em; margin-top:12px; }
+  :focus-visible{ outline:2px solid #8FD3FF; outline-offset:3px; }
+</style>
+</head>
+<body>
+
+<main id="accesso" class="hidden" aria-labelledby="acc-titolo">
+  <img class="logo" src="data:image/png;base64,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" alt="Ellecci Studio">
+  <div class="firma">Ellecci Studio</div>
+  <h1 id="acc-titolo">Tracker finanziario</h1>
+  <p>Accedi per vedere e aggiornare i tuoi conti. I dati sono sincronizzati tra telefono e computer.</p>
+  <form id="form-accesso" autocomplete="on">
+    <label for="acc-email">Email</label>
+    <input id="acc-email" type="email" inputmode="email" autocomplete="username" required>
+    <label for="acc-pwd">Password</label>
+    <input id="acc-pwd" type="password" autocomplete="current-password" required>
+    <button id="acc-btn" type="submit">Accedi</button>
+  </form>
+  <div id="accesso-errore" role="alert"></div>
+</main>
+
+<style>
+  #ft-root{
+    --bg:#000000; --card:#0B0D12; --ink:#E9ECF1; --ink-soft:#8A93A1; --ink-faint:#5C6470;
+    --line:#1A1E27; --teal:#4EDB9C; --teal-bg:#0E2A1F; --gold:#E8B04B; --gold-bg:#2B2210;
+    --red:#FF6A5C; --red-bg:#2E1512; --blue:#8FD3FF; --blue-bg:#0F2230; --purple:#B79BEB; --purple-bg:#1F1A33;
+    --neutral:#9AA1AC; --neutral-bg:#15181F;
+    font-family:'IBM Plex Sans',system-ui,-apple-system,sans-serif; color:var(--ink); background:var(--bg); padding:2px; max-width:1100px; margin:0 auto;
+  }
+  #ft-root *{box-sizing:border-box;}
+  #ft-root .num{font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums;}
+  #ft-root .disp{font-family:'Unbounded',sans-serif; letter-spacing:-.01em;}
+  #ft-root h1,#ft-root h2,#ft-root h3{font-family:'Unbounded',sans-serif; font-weight:600; margin:0; letter-spacing:-.01em;}
+  #ft-root .app-header{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:14px;}
+  #ft-root .app-header h1{font-size:19px;}
+  #ft-root .marchio{display:flex; align-items:center; gap:12px; flex:1; min-width:0;}
+  #ft-root .marchio img{width:38px; height:38px;}
+  #ft-root .header-destra{display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex-shrink:0;}
+  #ft-root .btn-esci{font-family:'IBM Plex Sans',sans-serif; font-size:12px; color:var(--ink-soft); background:none; border:1px solid var(--line); border-radius:999px; padding:6px 12px; cursor:pointer;}
+  #ft-root .btn-esci:hover{color:var(--ink);}
+  #ft-root .firma-piede{display:flex; align-items:center; justify-content:center; gap:8px; font-size:11px; color:var(--ink-faint); margin:28px 0 8px; letter-spacing:.04em;}
+  #ft-root .firma-piede img{width:18px; height:18px; opacity:.8;}
+  #ft-root .app-sub{font-size:12px; color:var(--ink-soft);}
+  #ft-root .tabs{display:flex; gap:4px; overflow-x:auto; border-bottom:1px solid var(--line); margin-bottom:18px; padding-bottom:0;}
+  #ft-root .tab-btn{font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:500; color:var(--ink-soft); background:none; border:none; padding:9px 13px; cursor:pointer; white-space:nowrap; border-bottom:2px solid transparent; margin-bottom:-1px;}
+  #ft-root .tab-btn.active{color:var(--ink); border-bottom-color:var(--teal);}
+  #ft-root .tab-btn:hover{color:var(--ink);}
+  #ft-root .tab-panel{display:none;}
+  #ft-root .tab-panel.active{display:block;}
+  #ft-root .card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin-bottom:14px;}
+  #ft-root .card-title{font-size:13px; font-weight:600; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.03em; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;}
+  #ft-root .kpi-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; margin-bottom:14px;}
+  #ft-root .kpi{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 14px;}
+  #ft-root .kpi-label{font-size:11px; color:var(--ink-soft); margin-bottom:6px; font-weight:500;}
+  #ft-root .kpi-val{font-size:21px; font-weight:600; font-family:'Unbounded',sans-serif; letter-spacing:-.01em;}
+  #ft-root .kpi-val.pos{color:var(--teal);} #ft-root .kpi-val.neg{color:var(--red);}
+  #ft-root .stamp{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; padding:3px 8px; border-radius:4px; border:1px solid currentColor;}
+  #ft-root .stamp.teal{color:var(--teal); background:var(--teal-bg);}
+  #ft-root .stamp.gold{color:var(--gold); background:var(--gold-bg);}
+  #ft-root .stamp.red{color:var(--red); background:var(--red-bg);}
+  #ft-root .stamp.blue{color:var(--blue); background:var(--blue-bg);}
+  #ft-root .stamp.purple{color:var(--purple); background:var(--purple-bg);}
+  #ft-root .rail{position:relative; height:6px; background:var(--line); border-radius:3px; margin:8px 0; overflow:hidden;}
+  #ft-root .rail-fill{position:absolute; top:0; left:0; height:100%; border-radius:3px;}
+  #ft-root .rail-row{display:flex; justify-content:space-between; font-size:11px; color:var(--ink-soft); margin-top:2px;}
+  #ft-root label{display:block; font-size:11px; color:var(--ink-soft); margin-bottom:4px; font-weight:500;}
+  #ft-root input,#ft-root select{width:100%; font-family:'IBM Plex Sans',sans-serif; font-size:13px; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px 10px; height:36px;}
+  #ft-root input:focus,#ft-root select:focus{outline:none; border-color:var(--teal); box-shadow:0 0 0 2px var(--teal-bg);}
+  #ft-root input.num-in{font-family:'IBM Plex Mono',monospace;}
+  #ft-root button.btn{font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:500; padding:8px 14px; border-radius:8px; border:1px solid var(--line); background:var(--card); color:var(--ink); cursor:pointer;}
+  #ft-root button.btn:hover{background:var(--bg);}
+  #ft-root button.btn:active{transform:scale(0.98);}
+  #ft-root button.btn.primary{background:var(--ink); border-color:var(--ink); color:#000; font-weight:600;}
+  #ft-root button.btn.primary:hover{opacity:.9;}
+  #ft-root button.btn.danger{color:var(--red);}
+  #ft-root button.btn-icon{background:none; border:none; cursor:pointer; color:var(--ink-faint); font-size:14px; padding:4px 6px;}
+  #ft-root button.btn-icon:hover{color:var(--red);}
+  #ft-root .form-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; align-items:end;}
+  #ft-root .card{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  #ft-root table{width:100%; border-collapse:collapse; font-size:13px;}
+  #ft-root th{text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-soft); font-weight:600; padding:6px 8px; border-bottom:1px solid var(--line);}
+  #ft-root td{padding:8px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  #ft-root tr:last-child td{border-bottom:none;}
+  #ft-root .row-flex{display:flex; align-items:center; gap:8px;}
+  #ft-root .empty{text-align:center; color:var(--ink-faint); font-size:13px; padding:24px 0;}
+  #ft-root .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  #ft-root .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+  @media (max-width:640px){#ft-root .grid-2, #ft-root .grid-3{grid-template-columns:1fr;}}
+  #ft-root .note{font-size:12px; color:var(--ink-soft); line-height:1.5; background:var(--gold-bg); border:1px solid var(--gold); color:var(--gold); border-radius:8px; padding:10px 12px;}
+  #ft-root textarea{width:100%; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px; min-height:120px; resize:vertical;}
+  #ft-root textarea:focus{outline:none; border-color:var(--teal); box-shadow:0 0 0 2px var(--teal-bg);}
+  #ft-root .status-msg{font-size:12px; margin-top:8px; padding:8px 10px; border-radius:6px;}
+  #ft-root .status-msg.ok{color:var(--teal); background:var(--teal-bg);}
+  #ft-root .status-msg.err{color:var(--red); background:var(--red-bg);}
+  #ft-root .badge-type{font-size:10px; font-weight:600; padding:3px 7px; border-radius:5px; white-space:nowrap;}
+  #ft-root .sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0);}
+  #ft-root .save-flag{font-size:11px; color:var(--teal); opacity:0; transition:opacity .3s;}
+  #ft-root .save-flag.show{opacity:1;}
+  #ft-root select.type-select option{background:var(--card);}
+  #ft-root .goal-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px;}
+  #ft-root .del-row{color:var(--ink-faint); cursor:pointer; font-size:12px;}
+  #ft-root .del-row:hover{color:var(--red);}
+</style>
+
+<div id="ft-root" class="hidden">
+  <h2 class="sr-only">Tracker finanziario personale con log transazioni, debiti, investimenti, fondo emergenza, obiettivi e patrimonio netto</h2>
+
+  <div class="app-header">
+    <div class="marchio">
+      <img src="data:image/png;base64,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" alt="Ellecci Studio">
+      <div>
+        <h1>Tracker finanziario</h1>
+        <div class="app-sub" id="ft-lastupdate">Caricamento...</div>
+        <div class="app-sub" id="ft-syncstatus" style="margin-top:2px;"></div>
+      </div>
+    </div>
+    <div class="header-destra">
+      <span class="save-flag" id="ft-saveflag" role="status" aria-live="polite">Salvato</span>
+      <button class="btn-esci" id="ft-esci" type="button">Esci</button>
+    </div>
+  </div>
+
+  <div class="tabs" id="ft-tabs">
+    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+    <button class="tab-btn" data-tab="conti">Conti</button>
+    <button class="tab-btn" data-tab="log">Transazioni</button>
+    <button class="tab-btn" data-tab="debiti">Debiti</button>
+    <button class="tab-btn" data-tab="crediti">Crediti</button>
+    <button class="tab-btn" data-tab="investimenti">Investimenti</button>
+    <button class="tab-btn" data-tab="fondo">Fondo e obiettivi</button>
+    <button class="tab-btn" data-tab="patrimonio">Patrimonio</button>
+    <button class="tab-btn" data-tab="previsione">Previsione</button>
+    <button class="tab-btn" data-tab="etf">ETF</button>
+    <button class="tab-btn" data-tab="backup">Backup</button>
+  </div>
+
+  <div class="tab-panel active" id="panel-dashboard"></div>
+  <div class="tab-panel" id="panel-conti"></div>
+  <div class="tab-panel" id="panel-log"></div>
+  <div class="tab-panel" id="panel-debiti"></div>
+  <div class="tab-panel" id="panel-crediti"></div>
+  <div class="tab-panel" id="panel-investimenti"></div>
+  <div class="tab-panel" id="panel-fondo"></div>
+  <div class="tab-panel" id="panel-patrimonio"></div>
+  <div class="tab-panel" id="panel-previsione"></div>
+  <div class="tab-panel" id="panel-etf"></div>
+  <div class="tab-panel" id="panel-backup"></div>
+  <div class="firma-piede"><img src="data:image/png;base64,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" alt="">Realizzato da Ellecci Studio · © 2026</div>
+</div>
+
+<script src="lib/chart.umd.js"></script>
+<script src="lib/supabase.js"></script>
+<script>
+(function(){
+
+var TX = [];
+var CFG = {};
+var chartMonthly = null;
+var chartSaldo = null;
+var chartPatrimonio = null;
+var chartDebiti = null;
+var chartCrediti = null;
+var chartFondo = null;
+var chartAlloc = null;
+var chartOwner = null;
+var chartConti = null;
+var chartPrevisione = null;
+var chartEtf = null;
+
+var COLORS = {
+  teal:'#4EDB9C', tealBg:'rgba(78,219,156,0.14)',
+  red:'#FF6A5C', redBg:'rgba(255,106,92,0.14)',
+  gold:'#E8B04B', goldBg:'rgba(232,176,75,0.14)',
+  blue:'#8FD3FF', blueBg:'rgba(143,211,255,0.14)',
+  purple:'#B79BEB', purpleBg:'rgba(183,155,235,0.15)',
+  neutral:'#9AA1AC', neutralBg:'rgba(154,161,172,0.15)'
+};
+
+if(typeof Chart !== 'undefined'){
+  Chart.defaults.color = '#8A93A1';
+  Chart.defaults.borderColor = '#1A1E27';
+  Chart.defaults.font.family = "'IBM Plex Sans', sans-serif";
+}
+
+function safeChart(ctx, config){
+  if(typeof Chart === 'undefined' || !ctx){ return null; }
+  try{
+    return new Chart(ctx, config);
+  }catch(e){
+    console.error('Errore creazione grafico', e);
+    return null;
+  }
+}
+
+var TYPE_META = {
+  'Entrata':          {color:'teal',   bg:'var(--teal-bg)',   fg:'var(--teal)'},
+  'Uscita Fissa':     {color:'red',    bg:'var(--red-bg)',    fg:'var(--red)'},
+  'Uscita Variabile': {color:'gold',   bg:'var(--gold-bg)',   fg:'var(--gold)'},
+  'Risparmio':        {color:'blue',   bg:'var(--blue-bg)',   fg:'var(--blue)'},
+  'Investimento':     {color:'purple', bg:'var(--purple-bg)', fg:'var(--purple)'},
+  'Rimborso Debito':  {color:'red',    bg:'var(--red-bg)',    fg:'var(--red)'},
+  'Prestito Dato':    {color:'purple', bg:'var(--purple-bg)', fg:'var(--purple)'},
+  'Rimborso Credito': {color:'teal',   bg:'var(--teal-bg)',   fg:'var(--teal)'},
+  'Trasferimento':    {color:'neutral',bg:'var(--neutral-bg)',fg:'var(--neutral)'}
+};
+var TYPES = Object.keys(TYPE_META);
+var CAT_SUGGEST = ['Tirocinio','Stipendio','Extra Settimanale','Regalo Papa','Palestra','Ricarica Cellulare','Barbiere','Uscite / Svago','Acquisti Vari','Acquisti Online','Benzina / Trasporti','Regali','Fondo Emergenza','Crypto','BingX','Altro'];
+var CONTI_NOMI = ['Contanti','Conto Corrente','Fondo Emergenza'];
+
+function uid(){ return 'id' + Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+
+function defaultTx(){
+  return [
+    {id:uid(), date:'2026-05-01', type:'Entrata', category:'Extra Settimanale', amount:100, account:'Contanti', note:'Pagamento settimanale datore lavoro assicurazione'},
+    {id:uid(), date:'2026-05-06', type:'Uscita Variabile', category:'Acquisti Online', amount:26, account:'Conto Corrente', note:'Ultima rata Temu'},
+    {id:uid(), date:'2026-05-08', type:'Entrata', category:'Extra Settimanale', amount:100, account:'Contanti', note:'Pagamento settimanale'},
+    {id:uid(), date:'2026-05-10', type:'Uscita Fissa', category:'Ricarica Cellulare', amount:10, account:'Conto Corrente', note:''},
+    {id:uid(), date:'2026-05-15', type:'Entrata', category:'Extra Settimanale', amount:100, account:'Contanti', note:'Pagamento settimanale'},
+    {id:uid(), date:'2026-05-20', type:'Uscita Fissa', category:'Barbiere', amount:15, account:'Contanti', note:''},
+    {id:uid(), date:'2026-05-22', type:'Entrata', category:'Extra Settimanale', amount:100, account:'Contanti', note:'Pagamento settimanale'},
+    {id:uid(), date:'2026-05-28', type:'Uscita Fissa', category:'Palestra', amount:40, account:'Conto Corrente', note:'Rinnovo mensile'},
+    {id:uid(), date:'2026-05-28', type:'Rimborso Debito', category:'Carta di Credito', amount:75, account:'Conto Corrente', note:'Rata automatica'},
+    {id:uid(), date:'2026-05-29', type:'Entrata', category:'Extra Settimanale', amount:100, account:'Contanti', note:'Pagamento settimanale'},
+    {id:uid(), date:'2026-06-05', type:'Entrata', category:'Extra Settimanale', amount:100, account:'Contanti', note:'Pagamento settimanale'},
+    {id:uid(), date:'2026-06-10', type:'Uscita Fissa', category:'Ricarica Cellulare', amount:10, account:'Conto Corrente', note:''},
+    {id:uid(), date:'2026-06-12', type:'Entrata', category:'Extra Settimanale', amount:100, account:'Contanti', note:'Pagamento settimanale'},
+    {id:uid(), date:'2026-06-19', type:'Entrata', category:'Extra Settimanale', amount:100, account:'Contanti', note:'Pagamento settimanale'},
+    {id:uid(), date:'2026-06-20', type:'Uscita Fissa', category:'Barbiere', amount:15, account:'Contanti', note:''},
+    {id:uid(), date:'2026-06-26', type:'Entrata', category:'Extra Settimanale', amount:100, account:'Contanti', note:'Pagamento settimanale'},
+    {id:uid(), date:'2026-06-28', type:'Uscita Fissa', category:'Palestra', amount:40, account:'Conto Corrente', note:'Rinnovo mensile'},
+    {id:uid(), date:'2026-06-28', type:'Rimborso Debito', category:'Carta di Credito', amount:75, account:'Conto Corrente', note:'Rata automatica'},
+    {id:uid(), date:'2026-07-03', type:'Entrata', category:'Extra Settimanale', amount:150, account:'Contanti', note:'Pagamento settimanale (aumentato a 150)'},
+    {id:uid(), date:'2026-07-10', type:'Uscita Fissa', category:'Ricarica Cellulare', amount:10, account:'Conto Corrente', note:''},
+    {id:uid(), date:'2026-07-10', type:'Entrata', category:'Extra Settimanale', amount:150, account:'Contanti', note:'Pagamento settimanale'},
+    {id:uid(), date:'2026-07-10', type:'Risparmio', category:'Fondo Emergenza', amount:500, account:'Conto Corrente', note:'Risparmiato dai pagamenti extra maggio-luglio'},
+    {id:uid(), date:'2026-07-10', type:'Prestito Dato', category:'Madre', amount:250, account:'Contanti', note:'Prestito dai risparmi extra maggio-luglio'},
+    {id:uid(), date:'2026-07-10', type:'Prestito Dato', category:'Fratello', amount:50, account:'Contanti', note:'Prestito dai risparmi extra maggio-luglio'},
+    {id:uid(), date:'2026-07-17', type:'Uscita Fissa', category:'Palestra', amount:35, account:'Conto Corrente', note:'Nuovo abbonamento estivo pagato da solo, 2 ingressi a settimana'},
+    {id:uid(), date:'2026-08-14', type:'Uscita Fissa', category:'Palestra', amount:35, account:'Conto Corrente', note:'Abbonamento estivo, 2 ingressi a settimana'}
+  ];
+}
+
+function defaultCfg(){
+  return {
+    saldoIniziale: 100,
+    birthYear: 1999,
+    debts: [
+      {id:'carta', name:'Carta di Credito', iniziale:1700},
+      {id:'lucia', name:'Lucia', iniziale:1850}
+    ],
+    crypto: {
+      coins: [{id:uid(), name:'Altcoin 1', qty:0, buyPrice:0, currentPrice:0}],
+      usdtEurRate: 0.92,
+      quotaLuciaEUR: 1300,
+      quotaMadreEUR: 1400,
+      bingxIniziale: 300,
+      bingxAttuale: 300
+    },
+    fondo: { iniziale:0, obiettivoFase1:500, obiettivoFinale:3000 },
+    previsione: {
+      redditoMensile: 650,
+      speseFisseMensili: 65,
+      speseVariabiliMensili: 60,
+      contributoFondoMensile: 0,
+      rimborsoLuciaMensile: 0,
+      includiRataCarta: true,
+      dataObiettivo: '2027-03-31'
+    },
+    etfPrevisione: {
+      capitaleIniziale: 0,
+      versamentoMensile: 500,
+      rendimentoAnnuo: 7,
+      dataObiettivo: '2036-07-18'
+    },
+    conti: {
+      contanti: { iniziale:80, dal:'2026-07-12' },
+      corrente: { iniziale:17, dal:'2026-07-12' }
+    },
+    goals: [
+      {id:uid(), name:'Lavoro stabile post-tirocinio', target:0, current:0, note:'Contratto stabile in agenzia assicurativa', autoLink:null},
+      {id:uid(), name:'Tesla Model Y', target:45000, current:0, note:'Auto desiderata, valore da confermare', autoLink:null},
+      {id:uid(), name:'Comprare casa', target:250000, current:0, note:'Con mutuo bancario', autoLink:null},
+      {id:uid(), name:'Liberta finanziaria', target:500000, current:0, note:'Conto + investimenti complessivi', autoLink:'patrimonio'}
+    ],
+    patrimonio: [ {year:2026, saldo:100, investimenti:2500, fondo:0, crediti:0, debiti:3576} ]
+  };
+}
+
+function fmt(n, dec){
+  dec = (dec === undefined) ? 2 : dec;
+  n = Number(n) || 0;
+  return new Intl.NumberFormat('it-IT', {style:'currency', currency:'EUR', minimumFractionDigits:dec, maximumFractionDigits:dec}).format(n);
+}
+function fmtUsdt(n, dec){
+  dec = (dec === undefined) ? 2 : dec;
+  n = Number(n) || 0;
+  return new Intl.NumberFormat('it-IT', {minimumFractionDigits:dec, maximumFractionDigits:dec}).format(n) + ' USDT';
+}
+function fmtPct(n){
+  return new Intl.NumberFormat('it-IT', {style:'percent', minimumFractionDigits:0, maximumFractionDigits:1}).format(n || 0);
+}
+function fmtDate(d){
+  var parts = d.split('-');
+  return parts[2] + '/' + parts[1] + '/' + parts[0];
+}
+function monthKey(d){ return d.slice(0,7); }
+function monthLabel(mk){
+  var parts = mk.split('-');
+  var months = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
+  return months[parseInt(parts[1],10)-1] + ' ' + parts[0];
+}
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+
+function sumByType(type, category, monthFilter){
+  return TX.filter(function(t){
+    if(t.type !== type) return false;
+    if(category && t.category !== category) return false;
+    if(monthFilter && monthKey(t.date) !== monthFilter) return false;
+    return true;
+  }).reduce(function(s,t){ return s + Number(t.amount || 0); }, 0);
+}
+
+// Somma solo le transazioni pagate con soldi liquidi (esclude quelle finanziate dal Fondo Emergenza)
+function sumByTypeLiquid(type, category, monthFilter){
+  return TX.filter(function(t){
+    if(t.type !== type) return false;
+    if(category && t.category !== category) return false;
+    if(monthFilter && monthKey(t.date) !== monthFilter) return false;
+    if(t.account === 'Fondo Emergenza') return false;
+    return true;
+  }).reduce(function(s,t){ return s + Number(t.amount || 0); }, 0);
+}
+
+var FONDO_OUTFLOW_TYPES = ['Uscita Fissa','Uscita Variabile','Investimento','Rimborso Debito','Prestito Dato'];
+
+function sumFondoOutflow(monthFilter){
+  return TX.filter(function(t){
+    if(FONDO_OUTFLOW_TYPES.indexOf(t.type) === -1) return false;
+    if(t.account !== 'Fondo Emergenza') return false;
+    if(monthFilter && monthKey(t.date) !== monthFilter) return false;
+    return true;
+  }).reduce(function(s,t){ return s + Number(t.amount || 0); }, 0);
+}
+
+function fondoOutflowUpto(uptoMonth){
+  return TX.filter(function(t){
+    if(FONDO_OUTFLOW_TYPES.indexOf(t.type) === -1) return false;
+    if(t.account !== 'Fondo Emergenza') return false;
+    return monthKey(t.date) <= uptoMonth;
+  }).reduce(function(s,t){ return s + Number(t.amount || 0); }, 0);
+}
+
+// Effetto netto dei Trasferimenti sul Fondo Emergenza: positivo se sono entrati piu soldi di quanti ne sono usciti
+function fondoTrasferimentiEffect(monthFilter){
+  var eff = 0;
+  TX.forEach(function(t){
+    if(t.type !== 'Trasferimento') return;
+    if(monthFilter && monthKey(t.date) !== monthFilter) return;
+    if(t.category === 'Fondo Emergenza') eff += Number(t.amount)||0;
+    if(t.account === 'Fondo Emergenza') eff -= Number(t.amount)||0;
+  });
+  return eff;
+}
+
+function fondoTrasferimentiEffectUpto(uptoMonth){
+  var eff = 0;
+  TX.forEach(function(t){
+    if(t.type !== 'Trasferimento') return;
+    if(monthKey(t.date) > uptoMonth) return;
+    if(t.category === 'Fondo Emergenza') eff += Number(t.amount)||0;
+    if(t.account === 'Fondo Emergenza') eff -= Number(t.amount)||0;
+  });
+  return eff;
+}
+
+function computeDebitiByPerson(){
+  return CFG.debts.map(function(d){
+    var dovuto = Math.max(0, d.iniziale - sumByType('Rimborso Debito', d.name));
+    var pagato = d.iniziale - dovuto;
+    return {id:d.id, name:d.name, iniziale:d.iniziale, pagato:pagato, dovuto:dovuto};
+  });
+}
+
+function contoAttuale(chiave){
+  var conf = CFG.conti[chiave];
+  var nome = chiave === 'contanti' ? 'Contanti' : 'Conto Corrente';
+  var oggi = todayStr();
+  var eff = 0;
+  TX.forEach(function(t){
+    if(t.date < conf.dal || t.date > oggi) return;
+    if(t.type === 'Trasferimento'){
+      if(t.account === nome) eff -= Number(t.amount)||0;
+      if(t.category === nome) eff += Number(t.amount)||0;
+      return;
+    }
+    if(t.account !== nome) return;
+    if(t.type === 'Entrata' || t.type === 'Rimborso Credito') eff += Number(t.amount)||0;
+    else if(t.type === 'Uscita Fissa' || t.type === 'Uscita Variabile' || t.type === 'Risparmio' || t.type === 'Investimento' || t.type === 'Rimborso Debito' || t.type === 'Prestito Dato') eff -= Number(t.amount)||0;
+  });
+  return conf.iniziale + eff;
+}
+
+function computeAll(){
+  var entrate = sumByType('Entrata');
+  var usciteFisse = sumByTypeLiquid('Uscita Fissa');
+  var usciteVar = sumByTypeLiquid('Uscita Variabile');
+  var risparmio = sumByType('Risparmio');
+  var investimento = sumByTypeLiquid('Investimento');
+  var rimborsi = sumByTypeLiquid('Rimborso Debito');
+  var prestitiDati_all = sumByType('Prestito Dato');
+  var prestitiDati = sumByTypeLiquid('Prestito Dato');
+  var rimborsiCredito = sumByType('Rimborso Credito');
+  var fondoTrasfNet = fondoTrasferimentiEffect();
+  var saldoConto = CFG.saldoIniziale + entrate - usciteFisse - usciteVar - risparmio - investimento - rimborsi - prestitiDati + rimborsiCredito - fondoTrasfNet;
+
+  var saldoContanti = contoAttuale('contanti');
+  var saldoCorrente = contoAttuale('corrente');
+
+  var debitiList = computeDebitiByPerson();
+  var debitiTotali = debitiList.reduce(function(s,d){ return s + d.dovuto; }, 0);
+
+  var creditiTotali = Math.max(0, prestitiDati_all - rimborsiCredito);
+
+  var fondoAccumulato = CFG.fondo.iniziale + risparmio - sumFondoOutflow() + fondoTrasfNet;
+
+  var rate = Number(CFG.crypto.usdtEurRate) || 1;
+  var cryptoInvestitoUSDT = CFG.crypto.coins.reduce(function(s,c){ return s + (Number(c.qty)||0)*(Number(c.buyPrice)||0); }, 0);
+  var cryptoValoreUSDT = CFG.crypto.coins.reduce(function(s,c){ return s + (Number(c.qty)||0)*(Number(c.currentPrice)||0); }, 0);
+  var cryptoInvestito = cryptoInvestitoUSDT * rate;
+  var cryptoValore = cryptoValoreUSDT * rate;
+  var cryptoPL = cryptoValore - cryptoInvestito;
+  var cryptoPLPercent = cryptoInvestito > 0 ? cryptoPL / cryptoInvestito : 0;
+  var cryptoRecuperoPct = (cryptoPL < 0 && cryptoValore > 0) ? (cryptoInvestito / cryptoValore) - 1 : null;
+  var bingxPL = CFG.crypto.bingxAttuale - CFG.crypto.bingxIniziale;
+
+  var quotaLucia = Number(CFG.crypto.quotaLuciaEUR) || 0;
+  var quotaMadre = Number(CFG.crypto.quotaMadreEUR) || 0;
+  var quotaMiaInvestita = Math.max(0, cryptoInvestito - quotaLucia - quotaMadre);
+  var pctMia = cryptoInvestito > 0 ? quotaMiaInvestita / cryptoInvestito : 0;
+  var pctLucia = cryptoInvestito > 0 ? quotaLucia / cryptoInvestito : 0;
+  var pctMadre = cryptoInvestito > 0 ? quotaMadre / cryptoInvestito : 0;
+  var cryptoValoreMia = cryptoValore * pctMia;
+  var cryptoValoreLucia = cryptoValore * pctLucia;
+  var cryptoValoreMadre = cryptoValore * pctMadre;
+
+  var investimentiTotali = cryptoValoreMia + CFG.crypto.bingxAttuale;
+
+  var patrimonioNetto = saldoConto + investimentiTotali + fondoAccumulato + creditiTotali - debitiTotali;
+
+  return {
+    entrate: entrate, usciteFisse: usciteFisse, usciteVar: usciteVar, risparmio: risparmio,
+    investimento: investimento, rimborsi: rimborsi, prestitiDati: prestitiDati, rimborsiCredito: rimborsiCredito,
+    saldoConto: saldoConto,
+    saldoContanti: saldoContanti, saldoCorrente: saldoCorrente,
+    debitiList: debitiList, debitiTotali: debitiTotali,
+    creditiTotali: creditiTotali,
+    fondoAccumulato: fondoAccumulato,
+    cryptoInvestito: cryptoInvestito, cryptoValore: cryptoValore, cryptoPL: cryptoPL, cryptoPLPercent: cryptoPLPercent, cryptoRecuperoPct: cryptoRecuperoPct, bingxPL: bingxPL,
+    quotaMiaInvestita: quotaMiaInvestita, cryptoValoreMia: cryptoValoreMia,
+    cryptoValoreLucia: cryptoValoreLucia, cryptoValoreMadre: cryptoValoreMadre,
+    pctMia: pctMia, pctLucia: pctLucia, pctMadre: pctMadre,
+    cryptoInvestitoUSDT: cryptoInvestitoUSDT, cryptoValoreUSDT: cryptoValoreUSDT,
+    investimentiTotali: investimentiTotali, patrimonioNetto: patrimonioNetto
+  };
+}
+
+function sumUpto(type, category, uptoMonth){
+  return TX.filter(function(t){
+    if(t.type !== type) return false;
+    if(category && t.category !== category) return false;
+    return monthKey(t.date) <= uptoMonth;
+  }).reduce(function(s,t){ return s + Number(t.amount || 0); }, 0);
+}
+
+function sumUptoLiquid(type, category, uptoMonth){
+  return TX.filter(function(t){
+    if(t.type !== type) return false;
+    if(category && t.category !== category) return false;
+    if(t.account === 'Fondo Emergenza') return false;
+    return monthKey(t.date) <= uptoMonth;
+  }).reduce(function(s,t){ return s + Number(t.amount || 0); }, 0);
+}
+
+function saldoContoAlMese(uptoMonth){
+  return CFG.saldoIniziale + sumUpto('Entrata', null, uptoMonth) - sumUptoLiquid('Uscita Fissa', null, uptoMonth)
+    - sumUptoLiquid('Uscita Variabile', null, uptoMonth) - sumUpto('Risparmio', null, uptoMonth) - sumUptoLiquid('Investimento', null, uptoMonth)
+    - sumUptoLiquid('Rimborso Debito', null, uptoMonth) - sumUptoLiquid('Prestito Dato', null, uptoMonth) + sumUpto('Rimborso Credito', null, uptoMonth)
+    - fondoTrasferimentiEffectUpto(uptoMonth);
+}
+
+function debitiResiduoAlMese(uptoMonth){
+  return CFG.debts.reduce(function(sum, d){
+    return sum + Math.max(0, d.iniziale - sumUpto('Rimborso Debito', d.name, uptoMonth));
+  }, 0);
+}
+
+function creditiResiduoAlMese(uptoMonth){
+  return getCreditPersons().reduce(function(sum, p){
+    var prestato = sumUpto('Prestito Dato', p, uptoMonth);
+    var rimborsato = sumUpto('Rimborso Credito', p, uptoMonth);
+    return sum + Math.max(0, prestato - rimborsato);
+  }, 0);
+}
+
+function fondoAlMese(uptoMonth){
+  return CFG.fondo.iniziale + sumUpto('Risparmio', null, uptoMonth) - fondoOutflowUpto(uptoMonth) + fondoTrasferimentiEffectUpto(uptoMonth);
+}
+
+/* ============================================================
+   PREVISIONE (proiezione risparmio futuro)
+   ============================================================ */
+var RATA_CARTA_MENSILE = 75;
+
+function computePrevisione(){
+  var c = computeAll();
+  var p = CFG.previsione;
+  var liquido = c.saldoContanti + c.saldoCorrente;
+  var fondo = c.fondoAccumulato;
+  var cartaDebt = c.debitiList.find(function(d){ return d.name === 'Carta di Credito'; });
+  var cartaRes = cartaDebt ? cartaDebt.dovuto : 0;
+
+  var oggi = new Date();
+  var target = new Date(p.dataObiettivo + 'T00:00:00');
+  var rows = [{ label:'Oggi', liquido:liquido, fondo:fondo, carta:cartaRes, patrimonio:liquido+fondo+c.investimentiTotali+c.creditiTotali-c.debitiTotali }];
+
+  var cursor = new Date(oggi.getFullYear(), oggi.getMonth()+1, 1);
+  var cartaEstintaLabel = null;
+  var guard = 0;
+
+  while(cursor <= target && guard < 240){
+    guard++;
+    var rata = 0;
+    if(p.includiRataCarta && cartaRes > 0){
+      rata = Math.min(RATA_CARTA_MENSILE, cartaRes);
+      cartaRes -= rata;
+      if(cartaRes === 0 && !cartaEstintaLabel){
+        cartaEstintaLabel = monthLabel(cursor.getFullYear() + '-' + String(cursor.getMonth()+1).padStart(2,'0'));
+      }
+    }
+    var net = p.redditoMensile - p.speseFisseMensili - p.speseVariabiliMensili - rata - p.contributoFondoMensile - p.rimborsoLuciaMensile;
+    liquido += net;
+    fondo += p.contributoFondoMensile;
+
+    var mk = cursor.getFullYear() + '-' + String(cursor.getMonth()+1).padStart(2,'0');
+    rows.push({ label: monthLabel(mk), liquido:liquido, fondo:fondo, carta:cartaRes, patrimonio: liquido+fondo+c.investimentiTotali+c.creditiTotali-(c.debitiTotali-(cartaDebt?cartaDebt.dovuto-cartaRes:0)) });
+
+    cursor.setMonth(cursor.getMonth()+1);
+  }
+
+  var last = rows[rows.length-1];
+  var start = rows[0];
+  return {
+    rows: rows,
+    liquidoStart: start.liquido, fondoStart: start.fondo,
+    liquidoFinal: last.liquido, fondoFinal: last.fondo, cartaFinal: last.carta,
+    risparmioLiquido: last.liquido - start.liquido,
+    risparmioFondo: last.fondo - start.fondo,
+    risparmioTotale: (last.liquido + last.fondo) - (start.liquido + start.fondo),
+    cartaEstintaLabel: cartaEstintaLabel,
+    mesiProiettati: rows.length - 1
+  };
+}
+
+/* ============================================================
+   PREVISIONE ETF (crescita composta con versamenti mensili)
+   ============================================================ */
+function computeEtfPrevisione(){
+  var p = CFG.etfPrevisione;
+  var annualRate = p.rendimentoAnnuo / 100;
+  var monthlyRate = Math.pow(1 + annualRate, 1/12) - 1;
+
+  var oggi = new Date();
+  var target = new Date(p.dataObiettivo + 'T00:00:00');
+
+  var value = p.capitaleIniziale;
+  var contributed = p.capitaleIniziale;
+  var rows = [{ label:'Oggi', value:value, contributed:contributed }];
+
+  var cursor = new Date(oggi.getFullYear(), oggi.getMonth()+1, 1);
+  var guard = 0;
+  while(cursor <= target && guard < 600){
+    guard++;
+    value = value * (1 + monthlyRate) + p.versamentoMensile;
+    contributed += p.versamentoMensile;
+    var mk = cursor.getFullYear() + '-' + String(cursor.getMonth()+1).padStart(2,'0');
+    rows.push({ label: monthLabel(mk), value:value, contributed:contributed });
+    cursor.setMonth(cursor.getMonth()+1);
+  }
+
+  var last = rows[rows.length-1];
+  return {
+    rows: rows,
+    valoreFinale: last.value,
+    totaleVersato: last.contributed,
+    guadagnoStimato: last.value - last.contributed,
+    mesiProiettati: rows.length - 1,
+    anniProiettati: (rows.length - 1) / 12
+  };
+}
+
+function getCreditPersons(){
+  var seen = {};
+  TX.forEach(function(t){ if(t.type === 'Prestito Dato') seen[t.category] = true; });
+  return Object.keys(seen).sort();
+}
+
+function computeCreditiByPerson(){
+  return getCreditPersons().map(function(persona){
+    var prestato = sumByType('Prestito Dato', persona);
+    var rimborsato = sumByType('Rimborso Credito', persona);
+    var residuo = Math.max(0, prestato - rimborsato);
+    return {persona: persona, prestato: prestato, rimborsato: rimborsato, residuo: residuo};
+  });
+}
+
+function getMonthsRange(){
+  if(TX.length === 0) return [monthKey(todayStr())];
+  var keys = {};
+  TX.forEach(function(t){ keys[monthKey(t.date)] = true; });
+  keys[monthKey(todayStr())] = true;
+  var arr = Object.keys(keys).sort();
+  return arr.slice(-12);
+}
+
+/* ---------- persistence: Supabase (archivio sui server, sincronizzato tra dispositivi) ---------- */
+var SUPABASE_URL = 'https://yzozuqfhgroajrpswatk.supabase.co';
+var SUPABASE_KEY = 'sb_publishable_wLUstHB1WxYj7syc12ZDGA_tcvH81MO';
+var TABELLA = 'tracker_data';
+
+var sb = null;
+var utente = null;
+var loadStatus = { tx:'pending', cfg:'pending', txDetail:'', cfgDetail:'', txCount:0 };
+var puoSalvare = false;          // true solo dopo una lettura riuscita dal server
+var ultimoAggiornamento = null;  // updated_at dell'ultima versione vista sul server
+var baseTX = {};                 // id -> JSON della transazione all'ultima sincronizzazione
+var baseCFG = {};                // chiave -> JSON delle impostazioni all'ultima sincronizzazione
+var salvataggioInAttesa = false;
+var salvataggioInCorso = false;
+var timerSalvataggio = null;
+
+function messaggioErrore(e){
+  if(!e) return 'errore sconosciuto';
+  return String(e.message || e.error_description || e.code || e);
+}
+
+function normalizzaCfg(loaded){
+  var def = defaultCfg();
+  var CFGo;
+  if(loaded){
+    CFGo = Object.assign({}, def, loaded);
+    CFGo.debts = loaded.debts || def.debts;
+    if(!Array.isArray(CFGo.debts)){
+      var oldDebts = CFGo.debts || {};
+      var migrated = Object.keys(oldDebts).map(function(k){
+        var entry = oldDebts[k] || {};
+        var label = (k === 'carta') ? 'Carta di Credito' : (k === 'giulia' ? 'Lucia' : k);
+        return {id:k, name:label, iniziale:Number(entry.iniziale)||0};
+      });
+      CFGo.debts = migrated.length ? migrated : def.debts;
+    }
+    CFGo.crypto = Object.assign({}, def.crypto, loaded.crypto);
+    if(!Array.isArray(CFGo.crypto.coins)) CFGo.crypto.coins = def.crypto.coins;
+    CFGo.fondo = Object.assign({}, def.fondo, loaded.fondo);
+    CFGo.conti = loaded.conti && loaded.conti.contanti && loaded.conti.corrente ? loaded.conti : def.conti;
+    CFGo.previsione = Object.assign({}, def.previsione, loaded.previsione);
+    CFGo.etfPrevisione = Object.assign({}, def.etfPrevisione, loaded.etfPrevisione);
+    CFGo.goals = Array.isArray(loaded.goals) ? loaded.goals : def.goals;
+    CFGo.patrimonio = Array.isArray(loaded.patrimonio) ? loaded.patrimonio : def.patrimonio;
+  } else {
+    CFGo = def;
+  }
+  return CFGo;
+}
+
+/* Fotografia dello stato appena sincronizzato: serve a capire cosa hai cambiato tu
+   quando un altro dispositivo ha salvato nel frattempo. */
+function fotografaBase(){
+  baseTX = {};
+  TX.forEach(function(t){ if(t && t.id) baseTX[t.id] = JSON.stringify(t); });
+  baseCFG = {};
+  Object.keys(CFG).forEach(function(k){ baseCFG[k] = JSON.stringify(CFG[k]); });
+}
+
+/* Unisce le tue modifiche locali con la versione più recente del server:
+   aggiunte, modifiche e cancellazioni tue vincono; il resto viene dal server. */
+function unisci(serverTX, serverCFG){
+  var risultato = Array.isArray(serverTX) ? serverTX.slice() : [];
+  var indice = {};
+  risultato.forEach(function(t, i){ if(t && t.id) indice[t.id] = i; });
+  var locali = {};
+  TX.forEach(function(t){
+    if(!t || !t.id) return;
+    locali[t.id] = true;
+    var j = JSON.stringify(t);
+    if(!(t.id in baseTX)){
+      if(t.id in indice) risultato[indice[t.id]] = t; else risultato.push(t);
+    } else if(baseTX[t.id] !== j){
+      if(t.id in indice) risultato[indice[t.id]] = t; else risultato.push(t);
+    }
+  });
+  Object.keys(baseTX).forEach(function(id){
+    if(!locali[id]) risultato = risultato.filter(function(t){ return !t || t.id !== id; });
+  });
+  var cfgServer = serverCFG && typeof serverCFG === 'object' ? serverCFG : {};
+  var cfgUnita = Object.assign({}, cfgServer);
+  Object.keys(CFG).forEach(function(k){
+    if(JSON.stringify(CFG[k]) !== baseCFG[k]) cfgUnita[k] = CFG[k];
+  });
+  return { tx: risultato, cfg: cfgUnita };
+}
+
+function chiaveCache(){ return 'ellecci_tracker_cache_' + (utente ? utente.id : 'anon'); }
+function salvaCacheLocale(){
+  try{ localStorage.setItem(chiaveCache(), JSON.stringify({ tx:TX, cfg:CFG, updated_at:ultimoAggiornamento })); }catch(e){}
+}
+function leggiCacheLocale(){
+  try{ var s = localStorage.getItem(chiaveCache()); return s ? JSON.parse(s) : null; }catch(e){ return null; }
+}
+
+async function leggiRiga(colonne){
+  var r = await sb.from(TABELLA).select(colonne).eq('user_id', utente.id).maybeSingle();
+  if(r.error) throw r.error;
+  return r.data;
+}
+
+function applicaRiga(riga){
+  if(riga){
+    TX = Array.isArray(riga.transactions) ? riga.transactions : [];
+    var s = (riga.settings && typeof riga.settings === 'object' && Object.keys(riga.settings).length) ? riga.settings : null;
+    CFG = normalizzaCfg(s);
+    ultimoAggiornamento = riga.updated_at || null;
+  } else {
+    TX = [];
+    CFG = defaultCfg();
+    ultimoAggiornamento = null;
+  }
+  loadStatus.tx = TX.length ? 'ok' : 'empty';
+  loadStatus.txDetail = '';
+  loadStatus.txCount = TX.length;
+  fotografaBase();
+  salvaCacheLocale();
+}
+
+async function loadData(){
+  loadStatus.tx = 'pending';
+  renderSyncStatus();
+  try{
+    var riga = await leggiRiga('transactions, settings, updated_at');
+    applicaRiga(riga);
+    puoSalvare = true;
+  }catch(e){
+    console.error('lettura archivio', e);
+    puoSalvare = false;
+    var cache = leggiCacheLocale();
+    if(cache && Array.isArray(cache.tx)){
+      TX = cache.tx;
+      CFG = normalizzaCfg(cache.cfg);
+      ultimoAggiornamento = cache.updated_at || null;
+      loadStatus.tx = 'offline';
+    } else {
+      TX = [];
+      CFG = defaultCfg();
+      loadStatus.tx = 'error';
+    }
+    loadStatus.txDetail = messaggioErrore(e);
+    loadStatus.txCount = TX.length;
+  }
+  renderAll();
+  if(loadStatus.tx === 'empty') apriScheda('backup');
+}
+
+/* Quando torni sull'app (da un'altra app o da un altro dispositivo), riallinea i dati */
+async function ricontrollaServer(){
+  if(!sb || !utente || salvataggioInCorso) return;
+  if(salvataggioInAttesa){ programmaSalvataggio(0); return; }
+  try{
+    var testa = await leggiRiga('updated_at');
+    var remoto = testa ? testa.updated_at : null;
+    if(!puoSalvare || remoto !== ultimoAggiornamento){
+      var riga = await leggiRiga('transactions, settings, updated_at');
+      applicaRiga(riga);
+      puoSalvare = true;
+      renderAll();
+    }
+  }catch(e){
+    console.error('ricontrollo', e);
+  }
+}
+
+var saveTimeout = null;
+function flagSaved(testo){
+  var el = document.getElementById('ft-saveflag');
+  if(!el) return;
+  el.textContent = testo || 'Salvato';
+  el.style.color = '';
+  el.classList.add('show');
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(function(){ el.classList.remove('show'); }, 1600);
+}
+function flagSaveError(msg){
+  var el = document.getElementById('ft-saveflag');
+  if(!el) return;
+  el.textContent = msg || 'Non salvato';
+  el.style.color = 'var(--red)';
+  el.classList.add('show');
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(function(){ el.classList.remove('show'); el.style.color = ''; }, 5000);
+}
+
+function programmaSalvataggio(ritardo){
+  salvataggioInAttesa = true;
+  clearTimeout(timerSalvataggio);
+  timerSalvataggio = setTimeout(eseguiSalvataggio, ritardo === undefined ? 350 : ritardo);
+}
+
+async function eseguiSalvataggio(){
+  if(salvataggioInCorso){ programmaSalvataggio(400); return; }
+  if(!puoSalvare){
+    flagSaveError('Non salvato: archivio non raggiungibile');
+    return;
+  }
+  salvataggioInCorso = true;
+  try{
+    var testa = await leggiRiga('transactions, settings, updated_at');
+    var remoto = testa ? testa.updated_at : null;
+    var daInviareTX = TX, daInviareCFG = CFG, unito = false;
+    if(remoto !== ultimoAggiornamento){
+      var u = unisci(testa ? testa.transactions : [], testa ? testa.settings : {});
+      daInviareTX = u.tx;
+      daInviareCFG = normalizzaCfg(u.cfg);
+      unito = true;
+    }
+    var ora = new Date().toISOString();
+    var r = await sb.from(TABELLA)
+      .upsert({ user_id: utente.id, transactions: daInviareTX, settings: daInviareCFG, updated_at: ora })
+      .select('updated_at')
+      .single();
+    if(r.error) throw r.error;
+    TX = daInviareTX;
+    CFG = daInviareCFG;
+    ultimoAggiornamento = r.data.updated_at;
+    fotografaBase();
+    salvaCacheLocale();
+    salvataggioInAttesa = false;
+    loadStatus.tx = TX.length ? 'ok' : 'empty';
+    loadStatus.txCount = TX.length;
+    if(unito){
+      renderAll();
+      flagSaved('Salvato e unito con l\'altro dispositivo');
+    } else {
+      renderSyncStatus();
+      flagSaved();
+    }
+  }catch(e){
+    console.error('salvataggio', e);
+    salvataggioInAttesa = true;
+    flagSaveError(navigator.onLine === false
+      ? 'Offline: salvo appena torni in linea (non chiudere l\'app)'
+      : 'Non salvato: ' + messaggioErrore(e));
+  }finally{
+    salvataggioInCorso = false;
+  }
+}
+
+/* Le funzioni che il resto del tracker chiama dopo ogni modifica */
+function saveTx(){ programmaSalvataggio(); }
+function saveCfg(){ programmaSalvataggio(); }
+
+window.addEventListener('online', function(){ if(salvataggioInAttesa) programmaSalvataggio(0); else ricontrollaServer(); });
+document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'visible') ricontrollaServer(); });
+window.addEventListener('beforeunload', function(e){
+  if(salvataggioInAttesa){ e.preventDefault(); e.returnValue = ''; }
+});
+
+/* ---------- accesso ---------- */
+function mostraAccesso(){
+  document.getElementById('accesso').classList.remove('hidden');
+  document.getElementById('ft-root').classList.add('hidden');
+}
+function mostraApp(){
+  document.getElementById('accesso').classList.add('hidden');
+  document.getElementById('ft-root').classList.remove('hidden');
+}
+
+async function avvia(){
+  if(typeof supabase === 'undefined' || !supabase.createClient){
+    document.getElementById('accesso-errore').textContent = 'Libreria di accesso non caricata. Controlla la connessione e riapri l\'app.';
+    mostraAccesso();
+    return;
+  }
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storageKey: 'ellecci-tracker-auth' }
+  });
+
+  document.getElementById('form-accesso').addEventListener('submit', async function(ev){
+    ev.preventDefault();
+    var email = document.getElementById('acc-email').value.trim();
+    var pwd = document.getElementById('acc-pwd').value;
+    var errEl = document.getElementById('accesso-errore');
+    var btn = document.getElementById('acc-btn');
+    errEl.textContent = '';
+    if(!email || !pwd){ errEl.textContent = 'Inserisci email e password.'; return; }
+    btn.disabled = true; btn.textContent = 'Accesso in corso…';
+    var r = await sb.auth.signInWithPassword({ email: email, password: pwd });
+    btn.disabled = false; btn.textContent = 'Accedi';
+    if(r.error){
+      errEl.textContent = /invalid/i.test(r.error.message) ? 'Email o password non corretti.' : ('Accesso non riuscito: ' + r.error.message);
+      return;
+    }
+    document.getElementById('acc-pwd').value = '';
+    utente = r.data.user;
+    mostraApp();
+    loadData();
+  });
+
+  document.getElementById('ft-esci').addEventListener('click', async function(){
+    if(salvataggioInAttesa && !confirm('Ci sono modifiche non ancora salvate. Uscire comunque?')) return;
+    await sb.auth.signOut();
+    try{ localStorage.removeItem(chiaveCache()); }catch(e){}
+    utente = null; TX = []; CFG = {}; puoSalvare = false;
+    mostraAccesso();
+  });
+
+  var s = await sb.auth.getSession();
+  if(s.data && s.data.session){
+    utente = s.data.session.user;
+    mostraApp();
+    loadData();
+  } else {
+    mostraAccesso();
+  }
+
+  sb.auth.onAuthStateChange(function(evento, sessione){
+    if(evento === 'SIGNED_OUT'){ utente = null; mostraAccesso(); }
+    if(sessione && sessione.user) utente = sessione.user;
+  });
+}
+
+function apriScheda(nome){
+  var btn = document.querySelector('#ft-tabs .tab-btn[data-tab="' + nome + '"]');
+  if(btn) btn.click();
+}
+
+function safeRender(panelId, fn){
+  try{
+    fn();
+  }catch(e){
+    console.error('Errore nel rendering di ' + panelId, e);
+    var el = document.getElementById('panel-' + panelId);
+    if(el){
+      el.innerHTML = '<div class="card"><div class="card-title">Questa sezione non si e caricata</div>'
+        + '<div style="font-size:12px; color:var(--ink-soft); line-height:1.6;">Si e verificato un errore tecnico: <span class="num">' + escapeHtml(String((e && e.message) || e)) + '</span><br>Copia questo messaggio e incollalo in chat cosi posso sistemarlo.</div></div>';
+    }
+  }
+}
+
+/* ---------- tabs ---------- */
+document.getElementById('ft-tabs').addEventListener('click', function(e){
+  var btn = e.target.closest('.tab-btn');
+  if(!btn) return;
+  document.querySelectorAll('#ft-root .tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('#ft-root .tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+});
+
+/* ---------- render dispatch ---------- */
+function renderAll(){
+  try{
+    var d = new Date();
+    document.getElementById('ft-lastupdate').textContent = 'Dati aggiornati al ' + d.toLocaleDateString('it-IT');
+    renderSyncStatus();
+  }catch(e){ console.error('Errore header', e); }
+  safeRender('dashboard', renderDashboard);
+  safeRender('conti', renderConti);
+  safeRender('log', renderLog);
+  safeRender('debiti', renderDebiti);
+  safeRender('crediti', renderCrediti);
+  safeRender('investimenti', renderInvestimenti);
+  safeRender('fondo', renderFondo);
+  safeRender('patrimonio', renderPatrimonio);
+  safeRender('previsione', renderPrevisione);
+  safeRender('etf', renderEtf);
+  safeRender('backup', renderBackup);
+}
+
+function renderSyncStatus(){
+  var el = document.getElementById('ft-syncstatus');
+  if(!el) return;
+  var s = loadStatus.tx;
+  if(s === 'ok'){
+    el.innerHTML = '<span style="color:var(--teal);">\u2713 Sincronizzato \u2014 ' + loadStatus.txCount + ' transazioni</span>';
+  } else if(s === 'pending'){
+    el.innerHTML = '<span style="color:var(--ink-faint);">Caricamento dall\'archivio\u2026</span>';
+  } else if(s === 'empty'){
+    el.innerHTML = '<span style="color:var(--gold);">Archivio vuoto: importa il tuo backup dalla scheda Backup.</span>';
+  } else if(s === 'offline'){
+    el.innerHTML = '<span style="color:var(--gold);">\u26a0 Offline: stai vedendo l\'ultima copia salvata qui, in sola lettura.</span>';
+  } else if(s === 'error'){
+    el.innerHTML = '<span style="color:var(--red);">\u26a0 Archivio non raggiungibile. Non modificare nulla finch\u00e9 non torna verde.'
+      + (loadStatus.txDetail ? ' <span style="color:var(--ink-faint);">[' + escapeHtml(loadStatus.txDetail) + ']</span>' : '') + '</span>';
+  }
+}
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+function renderDashboard(){
+  var c = computeAll();
+  var months = getMonthsRange();
+  var curMonth = monthKey(todayStr());
+  var entrateMese = sumByType('Entrata', null, curMonth);
+  var usciteMese = sumByTypeLiquid('Uscita Fissa', null, curMonth) + sumByTypeLiquid('Uscita Variabile', null, curMonth) + sumByTypeLiquid('Rimborso Debito', null, curMonth);
+
+  var html = '';
+  html += '<div class="kpi-grid">';
+  html += kpiCard('Contanti', fmt(c.saldoContanti,0), '');
+  html += kpiCard('Conto corrente', fmt(c.saldoCorrente,0), '');
+  html += kpiCard('Entrate mese corrente', fmt(entrateMese), 'pos');
+  html += kpiCard('Uscite mese corrente', fmt(usciteMese), 'neg');
+  html += kpiCard('Debiti totali', fmt(c.debitiTotali), 'neg');
+  html += kpiCard('Crediti (ti devono)', fmt(c.creditiTotali), 'pos');
+  html += kpiCard('Fondo emergenza', fmt(c.fondoAccumulato), '');
+  html += kpiCard('Investimenti totali', fmt(c.investimentiTotali), '');
+  html += kpiCard('Patrimonio netto', fmt(c.patrimonioNetto), c.patrimonioNetto >= 0 ? 'pos':'neg');
+  html += '</div>';
+
+  if(c.debitiList.length > 0){
+    html += '<div class="' + (c.debitiList.length >= 3 ? 'grid-3' : 'grid-2') + '">';
+    c.debitiList.forEach(function(d){
+      html += '<div class="card"><div class="card-title">Debito ' + escapeHtml(d.name) + '</div>' + railBlock(d.pagato, d.iniziale, 'red') + '<div class="rail-row"><span>Pagato ' + fmt(d.pagato,0) + '</span><span>Dovuto ' + fmt(d.dovuto,0) + '</span></div></div>';
+    });
+    html += '</div>';
+  }
+
+  html += '<div class="grid-2">';
+  html += '<div class="card"><div class="card-title">Entrate vs uscite - ultimi mesi</div>';
+  html += '<div style="position:relative; height:220px;"><canvas id="ft-chart-monthly" role="img" aria-label="Grafico entrate e uscite mensili"></canvas></div>';
+  html += '</div>';
+  html += '<div class="card"><div class="card-title">Saldo conto nel tempo</div>';
+  html += '<div style="position:relative; height:220px;"><canvas id="ft-chart-saldo" role="img" aria-label="Grafico saldo conto nel tempo"></canvas></div>';
+  html += '</div>';
+  html += '</div>';
+
+  html += '<div class="note">Per aggiornare questa dashboard aggiungi nuove voci nel tab Transazioni: tutto qui si calcola in automatico.</div>';
+
+  document.getElementById('panel-dashboard').innerHTML = html;
+
+  var ctx = document.getElementById('ft-chart-monthly');
+  if(chartMonthly){ chartMonthly.destroy(); }
+  var dataEntrate = months.map(function(m){ return Math.round(sumByType('Entrata', null, m)); });
+  var dataUscite = months.map(function(m){
+    return Math.round(sumByTypeLiquid('Uscita Fissa', null, m) + sumByTypeLiquid('Uscita Variabile', null, m) + sumByTypeLiquid('Rimborso Debito', null, m) + sumByType('Risparmio', null, m) + sumByTypeLiquid('Investimento', null, m));
+  });
+  chartMonthly = safeChart(ctx, {
+    type: 'bar',
+    data: {
+      labels: months.map(monthLabel),
+      datasets: [
+        {label:'Entrate', data:dataEntrate, backgroundColor:COLORS.teal, borderRadius:4, maxBarThickness:24},
+        {label:'Uscite', data:dataUscite, backgroundColor:COLORS.red, borderRadius:4, maxBarThickness:24}
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:true, labels:{boxWidth:10, font:{size:11}}} },
+      scales:{ y:{ ticks:{ callback:function(v){ return '\u20ac' + v; } } } }
+    }
+  });
+
+  var ctx2 = document.getElementById('ft-chart-saldo');
+  if(chartSaldo){ chartSaldo.destroy(); }
+  var dataSaldo = months.map(function(m){ return Math.round(saldoContoAlMese(m)); });
+  chartSaldo = safeChart(ctx2, {
+    type: 'line',
+    data: { labels: months.map(monthLabel), datasets:[{label:'Saldo conto', data:dataSaldo, borderColor:COLORS.teal, backgroundColor:COLORS.tealBg, fill:true, tension:0.3, pointRadius:3, pointBackgroundColor:COLORS.teal}] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:function(v){ return '\u20ac' + v; } } } } }
+  });
+}
+
+function kpiCard(label, val, cls){
+  return '<div class="kpi"><div class="kpi-label">' + label + '</div><div class="kpi-val ' + (cls||'') + '">' + val + '</div></div>';
+}
+function railBlock(current, target, color){
+  var pct = target > 0 ? Math.min(100, (current/target)*100) : 0;
+  return '<div class="rail"><div class="rail-fill" style="width:' + pct.toFixed(1) + '%; background:var(--' + color + ');"></div></div>';
+}
+
+/* ============================================================
+   LOG TRANSAZIONI
+   ============================================================ */
+/* ============================================================
+   CONTI (Contanti + Conto Corrente)
+   ============================================================ */
+function renderConti(){
+  var c = computeAll();
+  var html = '';
+
+  html += '<div class="note">Qui tieni traccia di dove si trovano fisicamente i tuoi soldi liquidi: contanti in tasca e saldo del conto corrente (non il fondo emergenza, quello ha la sua scheda). Sono collegati: se sposti contanti sul conto (o viceversa) usa il modulo qui sotto e si aggiornano entrambi insieme in automatico.</div>';
+
+  html += '<div class="grid-2">';
+  html += '<div class="card"><div class="card-title">Contanti</div>';
+  html += '<div style="font-size:28px; font-weight:600;" class="disp">' + fmt(c.saldoContanti,0) + '</div>';
+  html += '<div style="font-size:11px; color:var(--ink-soft); margin-bottom:12px;">checkpoint dal ' + fmtDate(CFG.conti.contanti.dal) + '</div>';
+  html += '<div class="form-grid">';
+  html += '<div><label>Correggi a (\u20ac)</label><input type="number" step="1" class="num-in" id="conti-fix-contanti" placeholder="' + Math.round(c.saldoContanti) + '"></div>';
+  html += '<div><button class="btn" style="width:100%;" onclick="ricalibraConto(\'contanti\')">Correggi saldo</button></div>';
+  html += '</div></div>';
+
+  html += '<div class="card"><div class="card-title">Conto corrente</div>';
+  html += '<div style="font-size:28px; font-weight:600;" class="disp">' + fmt(c.saldoCorrente,0) + '</div>';
+  html += '<div style="font-size:11px; color:var(--ink-soft); margin-bottom:12px;">checkpoint dal ' + fmtDate(CFG.conti.corrente.dal) + '</div>';
+  html += '<div class="form-grid">';
+  html += '<div><label>Correggi a (\u20ac)</label><input type="number" step="1" class="num-in" id="conti-fix-corrente" placeholder="' + Math.round(c.saldoCorrente) + '"></div>';
+  html += '<div><button class="btn" style="width:100%;" onclick="ricalibraConto(\'corrente\')">Correggi saldo</button></div>';
+  html += '</div></div>';
+  html += '</div>';
+
+  html += '<div class="card">';
+  html += '<div class="card-title">Sposta soldi tra contanti e conto</div>';
+  html += '<div class="form-grid">';
+  html += '<div><label>Direzione</label><select id="conti-trasf-dir"><option value="contanti-corrente">Contanti \u2192 Conto Corrente</option><option value="corrente-contanti">Conto Corrente \u2192 Contanti</option></select></div>';
+  html += '<div><label>Importo (\u20ac)</label><input type="number" step="0.01" min="0" class="num-in" id="conti-trasf-amount" placeholder="0.00"></div>';
+  html += '<div><label>Data</label><input type="date" id="conti-trasf-date" value="' + todayStr() + '"></div>';
+  html += '<div><button class="btn primary" style="width:100%;" onclick="addTrasferimento()">Sposta</button></div>';
+  html += '</div></div>';
+
+  html += '<div class="card"><div class="card-title">Dove sono i tuoi soldi</div>';
+  html += '<div style="position:relative; height:240px;"><canvas id="ft-chart-conti" role="img" aria-label="Grafico di dove si trovano i tuoi soldi tra contanti, conto, fondo e investimenti"></canvas></div>';
+  html += '</div>';
+
+  document.getElementById('panel-conti').innerHTML = html;
+
+  var labels = [];
+  var data = [];
+  var colors = [];
+  if(c.saldoContanti > 0){ labels.push('Contanti'); data.push(Math.round(c.saldoContanti)); colors.push(COLORS.gold); }
+  if(c.saldoCorrente > 0){ labels.push('Conto Corrente'); data.push(Math.round(c.saldoCorrente)); colors.push(COLORS.teal); }
+  if(c.fondoAccumulato > 0){ labels.push('Fondo Emergenza'); data.push(Math.round(c.fondoAccumulato)); colors.push(COLORS.blue); }
+  if(c.investimentiTotali > 0){ labels.push('Investimenti'); data.push(Math.round(c.investimentiTotali)); colors.push(COLORS.purple); }
+
+  var ctx = document.getElementById('ft-chart-conti');
+  if(chartConti){ chartConti.destroy(); }
+  if(data.length > 0){
+    chartConti = safeChart(ctx, {
+      type: 'doughnut',
+      data: { labels: labels, datasets:[{ data:data, backgroundColor:colors, borderColor:'#0B0D12', borderWidth:2 }] },
+      options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'right', labels:{ boxWidth:10, font:{size:11} } } } }
+    });
+  }
+}
+
+function ricalibraConto(chiave){
+  var input = document.getElementById('conti-fix-' + chiave);
+  var trueVal = parseFloat(input.value);
+  if(isNaN(trueVal) || trueVal < 0){
+    alert('Inserisci un importo valido.');
+    return;
+  }
+  var currentComputed = contoAttuale(chiave);
+  var delta = trueVal - currentComputed;
+  CFG.conti[chiave].iniziale = CFG.conti[chiave].iniziale + delta;
+  saveCfg();
+  renderAll();
+}
+window.ricalibraConto = ricalibraConto;
+
+function addTrasferimento(){
+  var dir = document.getElementById('conti-trasf-dir').value;
+  var amount = parseFloat(document.getElementById('conti-trasf-amount').value);
+  var date = document.getElementById('conti-trasf-date').value;
+  if(!amount || amount <= 0 || !date){
+    alert('Inserisci un importo valido e una data.');
+    return;
+  }
+  var source = dir === 'contanti-corrente' ? 'Contanti' : 'Conto Corrente';
+  var dest = dir === 'contanti-corrente' ? 'Conto Corrente' : 'Contanti';
+  TX.push({id:uid(), date:date, type:'Trasferimento', category:dest, amount:amount, account:source, note:'Spostamento tra conti'});
+  saveTx();
+  renderAll();
+}
+window.addTrasferimento = addTrasferimento;
+
+var editingTxId = null;
+
+function accountFieldHtml(current){
+  var opts = ['Conto Corrente','Contanti','Fondo Emergenza'];
+  current = current || 'Conto Corrente';
+  return '<label>Conto</label><select id="tx-account">' + opts.map(function(o){ return '<option value="' + o + '"' + (o===current?' selected':'') + '>' + o + '</option>'; }).join('') + '</select>';
+}
+
+function renderLog(){
+  var html = '';
+  html += '<div class="card">';
+  html += '<div class="card-title" id="tx-form-title">Aggiungi transazione</div>';
+  html += '<div class="form-grid">';
+  html += '<div><label>Data</label><input type="date" id="tx-date" value="' + todayStr() + '"></div>';
+  html += '<div><label>Tipo</label><select id="tx-type" class="type-select">' + TYPES.map(function(t){ return '<option value="' + t + '">' + t + '</option>'; }).join('') + '</select></div>';
+  html += '<div id="tx-cat-wrap"><label>Categoria</label><input type="text" id="tx-cat" list="ft-cat-list" placeholder="es. Tirocinio"></div>';
+  html += '<datalist id="ft-cat-list">' + CAT_SUGGEST.map(function(c){ return '<option value="' + c + '">'; }).join('') + '</datalist>';
+  html += '<div><label>Importo (\u20ac)</label><input type="number" step="0.01" min="0" id="tx-amount" class="num-in" placeholder="0.00"></div>';
+  html += '<div id="tx-account-wrap">' + accountFieldHtml() + '</div>';
+  html += '<div><label>Note</label><input type="text" id="tx-note" placeholder="opzionale"></div>';
+  html += '<div class="row-flex"><button class="btn primary" id="tx-add-btn" style="width:100%;">Aggiungi</button><button class="btn" id="tx-cancel-btn" style="display:none;" onclick="cancelEditTx()">Annulla</button></div>';
+  html += '</div></div>';
+
+  html += '<div class="card">';
+  html += '<div class="card-title">Storico transazioni<span style="font-weight:400; text-transform:none; letter-spacing:0;"><select id="tx-filter-month" style="width:auto; height:30px; padding:4px 8px; font-size:12px;"><option value="">Tutti i mesi</option>' + getAllMonthsForFilter().map(function(m){ return '<option value="' + m + '">' + monthLabel(m) + '</option>'; }).join('') + '</select></span></div>';
+  html += '<div id="tx-list-wrap"></div>';
+  html += '</div>';
+
+  document.getElementById('panel-log').innerHTML = html;
+  updateCatField();
+  document.getElementById('tx-type').addEventListener('change', updateCatField);
+  document.getElementById('tx-add-btn').addEventListener('click', handleAddTx);
+  document.getElementById('tx-filter-month').addEventListener('change', function(){ renderTxList(this.value); });
+  renderTxList('');
+}
+
+function getAllMonthsForFilter(){
+  var keys = {};
+  TX.forEach(function(t){ keys[monthKey(t.date)] = true; });
+  return Object.keys(keys).sort().reverse();
+}
+
+function updateCatField(keepAccount){
+  var type = document.getElementById('tx-type').value;
+  var wrap = document.getElementById('tx-cat-wrap');
+  var accWrap = document.getElementById('tx-account-wrap');
+  var curAccount = keepAccount ? document.getElementById('tx-account').value : null;
+  if(type === 'Rimborso Debito'){
+    wrap.innerHTML = '<label>Quale debito</label><select id="tx-cat">' + CFG.debts.map(function(d){ return '<option value="' + escapeHtml(d.name) + '">' + escapeHtml(d.name) + '</option>'; }).join('') + '</select>';
+    accWrap.innerHTML = accountFieldHtml(curAccount);
+  } else if(type === 'Prestito Dato'){
+    wrap.innerHTML = '<label>A chi presti</label><input type="text" id="tx-cat" placeholder="es. Madre, Fratello">';
+    accWrap.innerHTML = accountFieldHtml(curAccount);
+  } else if(type === 'Rimborso Credito'){
+    var persons = getCreditPersons();
+    if(persons.length === 0){
+      wrap.innerHTML = '<label>Da chi</label><input type="text" id="tx-cat" placeholder="Nessun prestito registrato">';
+    } else {
+      wrap.innerHTML = '<label>Da chi</label><select id="tx-cat">' + persons.map(function(p){ return '<option value="' + escapeHtml(p) + '">' + escapeHtml(p) + '</option>'; }).join('') + '</select>';
+    }
+    accWrap.innerHTML = accountFieldHtml(curAccount);
+  } else if(type === 'Trasferimento'){
+    wrap.innerHTML = '<label>Verso (destinazione)</label><select id="tx-cat">' + CONTI_NOMI.map(function(n){ return '<option value="' + n + '"' + (n==='Conto Corrente'?' selected':'') + '>' + n + '</option>'; }).join('') + '</select>';
+    accWrap.innerHTML = '<label>Da (origine)</label><select id="tx-account">' + CONTI_NOMI.map(function(n){ return '<option value="' + n + '"' + (n==='Contanti'?' selected':'') + '>' + n + '</option>'; }).join('') + '</select>';
+  } else {
+    wrap.innerHTML = '<label>Categoria</label><input type="text" id="tx-cat" list="ft-cat-list" placeholder="es. Tirocinio">';
+    accWrap.innerHTML = accountFieldHtml(curAccount);
+  }
+}
+
+function handleAddTx(){
+  var date = document.getElementById('tx-date').value;
+  var type = document.getElementById('tx-type').value;
+  var cat = document.getElementById('tx-cat').value.trim();
+  var amount = parseFloat(document.getElementById('tx-amount').value);
+  var account = document.getElementById('tx-account').value.trim();
+  var note = document.getElementById('tx-note').value.trim();
+
+  if(!date || !cat || !amount || amount <= 0){
+    alert('Compila almeno data, categoria e un importo maggiore di zero.');
+    return;
+  }
+
+  if(editingTxId){
+    var idx = TX.findIndex(function(t){ return t.id === editingTxId; });
+    if(idx !== -1){
+      TX[idx] = {id:editingTxId, date:date, type:type, category:cat, amount:amount, account:account, note:note};
+    }
+    cancelEditTx();
+  } else {
+    TX.push({id:uid(), date:date, type:type, category:cat, amount:amount, account:account, note:note});
+  }
+  saveTx();
+  renderAll();
+  var monthSel = document.getElementById('tx-filter-month');
+  if(monthSel) monthSel.value = '';
+}
+
+function editTx(id){
+  var t = TX.find(function(t){ return t.id === id; });
+  if(!t) return;
+  editingTxId = id;
+  document.getElementById('tx-date').value = t.date;
+  document.getElementById('tx-type').value = t.type;
+  updateCatField(true);
+  document.getElementById('tx-cat').value = t.category;
+  document.getElementById('tx-amount').value = t.amount;
+  var accEl = document.getElementById('tx-account');
+  if(accEl) accEl.value = t.account || '';
+  document.getElementById('tx-note').value = t.note || '';
+  document.getElementById('tx-form-title').textContent = 'Modifica transazione';
+  document.getElementById('tx-add-btn').textContent = 'Salva modifiche';
+  document.getElementById('tx-cancel-btn').style.display = '';
+  document.getElementById('panel-log').scrollIntoView({behavior:'smooth', block:'start'});
+}
+window.editTx = editTx;
+
+function cancelEditTx(){
+  editingTxId = null;
+  var titleEl = document.getElementById('tx-form-title');
+  var btnEl = document.getElementById('tx-add-btn');
+  var cancelEl = document.getElementById('tx-cancel-btn');
+  if(titleEl) titleEl.textContent = 'Aggiungi transazione';
+  if(btnEl) btnEl.textContent = 'Aggiungi';
+  if(cancelEl) cancelEl.style.display = 'none';
+  var dateEl = document.getElementById('tx-date');
+  if(dateEl) dateEl.value = todayStr();
+  var amtEl = document.getElementById('tx-amount');
+  if(amtEl) amtEl.value = '';
+  var noteEl = document.getElementById('tx-note');
+  if(noteEl) noteEl.value = '';
+}
+window.cancelEditTx = cancelEditTx;
+
+function deleteTx(id){
+  TX = TX.filter(function(t){ return t.id !== id; });
+  saveTx();
+  renderAll();
+}
+window.deleteTx = deleteTx;
+
+function renderTxList(filterMonth){
+  var wrap = document.getElementById('tx-list-wrap');
+  var list = TX.slice().sort(function(a,b){ return b.date.localeCompare(a.date); });
+  if(filterMonth){ list = list.filter(function(t){ return monthKey(t.date) === filterMonth; }); }
+  if(list.length === 0){
+    wrap.innerHTML = '<div class="empty">Nessuna transazione. Aggiungine una qui sopra.</div>';
+    return;
+  }
+  var html = '<table><thead><tr><th>Data</th><th>Tipo</th><th>Categoria</th><th>Importo</th><th>Conto</th><th>Note</th><th></th></tr></thead><tbody>';
+  list.forEach(function(t){
+    var meta = TYPE_META[t.type] || {};
+    html += '<tr>';
+    html += '<td class="num">' + fmtDate(t.date) + '</td>';
+    html += '<td><span class="badge-type" style="background:' + meta.bg + '; color:' + meta.fg + ';">' + t.type + '</span></td>';
+    html += '<td>' + escapeHtml(t.category) + '</td>';
+    html += '<td class="num">' + fmt(t.amount) + '</td>';
+    html += '<td>' + escapeHtml(t.account||'') + '</td>';
+    html += '<td style="color:var(--ink-soft); font-size:12px;">' + escapeHtml(t.note||'') + '</td>';
+    html += '<td><span class="del-row" style="margin-right:8px;" onclick="editTx(\'' + t.id + '\')">Modifica</span><span class="del-row" onclick="deleteTx(\'' + t.id + '\')">Elimina</span></td>';
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+
+function escapeHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ============================================================
+   DEBITI
+   ============================================================ */
+function renderDebiti(){
+  var c = computeAll();
+  var months = getMonthsRange();
+  var html = '';
+
+  html += '<div class="card"><div class="card-title">Totale debiti residui</div><div style="font-size:26px; font-weight:600;" class="disp">' + fmt(c.debitiTotali,0) + '</div></div>';
+
+  html += '<div class="card"><div class="card-title">Andamento debiti nel tempo</div>';
+  html += '<div style="position:relative; height:220px;"><canvas id="ft-chart-debiti" role="img" aria-label="Grafico andamento del debito residuo nel tempo"></canvas></div>';
+  html += '</div>';
+
+  html += '<div class="card">';
+  html += '<div class="card-title">Aggiungi nuovo debito</div>';
+  html += '<div class="form-grid">';
+  html += '<div><label>Nome (es. Prestito auto)</label><input type="text" id="debt-new-name" placeholder="es. Prestito auto"></div>';
+  html += '<div><label>Importo iniziale (\u20ac)</label><input type="number" step="1" min="0" class="num-in" id="debt-new-amount" placeholder="0"></div>';
+  html += '<div><button class="btn primary" style="width:100%;" onclick="addDebtNamed()">Aggiungi debito</button></div>';
+  html += '</div></div>';
+
+  if(c.debitiList.length === 0){
+    html += '<div class="card"><div class="empty">Nessun debito registrato.</div></div>';
+  } else {
+    c.debitiList.forEach(function(d){
+      var sid = safeId(d.id);
+      html += '<div class="card">';
+      html += '<div class="goal-head">';
+      html += '<input type="text" value="' + escapeHtml(d.name) + '" style="height:32px; font-weight:600; font-family:Unbounded,sans-serif; border:none; background:none; padding:0;" onchange="updateDebtField(\'' + d.id + '\',\'name\',this.value)">';
+      html += '<span class="del-row" onclick="deleteDebt(\'' + d.id + '\')">Elimina</span>';
+      html += '</div>';
+      html += '<div class="form-grid" style="margin-bottom:10px;"><div><label>Importo iniziale (\u20ac)</label><input type="number" step="1" class="num-in" value="' + d.iniziale + '" onchange="updateDebtField(\'' + d.id + '\',\'iniziale\',this.value)"></div></div>';
+      html += railBlock(d.pagato, d.iniziale, 'red');
+      html += '<div class="rail-row"><span>Pagato ' + fmt(d.pagato,0) + '</span><span>' + fmtPct(d.iniziale>0?d.pagato/d.iniziale:0) + '</span></div>';
+      html += '<div style="margin-top:14px; font-size:22px; font-weight:600;" class="disp">' + fmt(d.dovuto,0) + '</div>';
+      html += '<div style="font-size:12px; color:var(--ink-soft); margin-bottom:12px;">ancora dovuto</div>';
+      if(d.dovuto > 0){
+        html += '<div class="form-grid">';
+        html += '<div><label>Nuovo pagamento (\u20ac)</label><input type="number" step="0.01" min="0" class="num-in" id="debt-pay-amount-' + sid + '" placeholder="0.00"></div>';
+        html += '<div><label>Data</label><input type="date" id="debt-pay-date-' + sid + '" value="' + todayStr() + '"></div>';
+        html += '<div><button class="btn primary" style="width:100%;" onclick="addDebtPaymentGeneric(\'' + escapeJs(d.name) + '\',\'debt-pay-amount-' + sid + '\',\'debt-pay-date-' + sid + '\')">Registra pagamento</button></div>';
+        html += '</div>';
+      }
+      html += '</div>';
+    });
+  }
+
+  document.getElementById('panel-debiti').innerHTML = html;
+
+  var ctx = document.getElementById('ft-chart-debiti');
+  if(chartDebiti){ chartDebiti.destroy(); }
+  var data = months.map(function(m){ return Math.round(debitiResiduoAlMese(m)); });
+  chartDebiti = safeChart(ctx, {
+    type: 'line',
+    data: { labels: months.map(monthLabel), datasets:[{label:'Debito residuo', data:data, borderColor:COLORS.red, backgroundColor:COLORS.redBg, fill:true, tension:0.3, pointRadius:3, pointBackgroundColor:COLORS.red}] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:function(v){ return '\u20ac' + v; } } } } }
+  });
+}
+
+function addDebtNamed(){
+  var name = document.getElementById('debt-new-name').value.trim();
+  var amount = parseFloat(document.getElementById('debt-new-amount').value);
+  if(!name || !amount || amount <= 0){
+    alert('Inserisci un nome e un importo iniziale valido.');
+    return;
+  }
+  CFG.debts.push({id:uid(), name:name, iniziale:amount});
+  saveCfg();
+  renderAll();
+}
+window.addDebtNamed = addDebtNamed;
+
+function deleteDebt(id){
+  CFG.debts = CFG.debts.filter(function(d){ return d.id !== id; });
+  saveCfg();
+  renderAll();
+}
+window.deleteDebt = deleteDebt;
+
+function updateDebtField(id, field, value){
+  var d = CFG.debts.find(function(d){ return d.id === id; });
+  if(!d) return;
+  if(field === 'name') d.name = value;
+  else d.iniziale = parseFloat(value) || 0;
+  saveCfg();
+  renderAll();
+}
+window.updateDebtField = updateDebtField;
+
+function addDebtPaymentGeneric(debtName, amountElId, dateElId){
+  var amount = parseFloat(document.getElementById(amountElId).value);
+  var date = document.getElementById(dateElId).value;
+  if(!amount || amount <= 0 || !date){
+    alert('Inserisci un importo valido e una data.');
+    return;
+  }
+  TX.push({id:uid(), date:date, type:'Rimborso Debito', category:debtName, amount:amount, account:'Conto Corrente', note:''});
+  saveTx();
+  renderAll();
+}
+window.addDebtPaymentGeneric = addDebtPaymentGeneric;
+
+/* ============================================================
+   CREDITI (soldi che altri devono a te)
+   ============================================================ */
+function renderCrediti(){
+  var c = computeAll();
+  var lista = computeCreditiByPerson();
+  var months = getMonthsRange();
+
+  var html = '';
+  html += '<div class="card"><div class="card-title">Totale che ti devono</div><div style="font-size:26px; font-weight:600;" class="disp">' + fmt(c.creditiTotali,0) + '</div></div>';
+
+  html += '<div class="card"><div class="card-title">Andamento crediti nel tempo</div>';
+  html += '<div style="position:relative; height:220px;"><canvas id="ft-chart-crediti" role="img" aria-label="Grafico andamento dei crediti residui nel tempo"></canvas></div>';
+  html += '</div>';
+
+  html += '<div class="card">';
+  html += '<div class="card-title">Nuovo prestito dato</div>';
+  html += '<div class="form-grid">';
+  html += '<div><label>A chi</label><input type="text" id="cred-persona" placeholder="es. Madre, Fratello"></div>';
+  html += '<div><label>Importo (\u20ac)</label><input type="number" step="0.01" min="0" class="num-in" id="cred-amount" placeholder="0.00"></div>';
+  html += '<div><label>Data</label><input type="date" id="cred-date" value="' + todayStr() + '"></div>';
+  html += '<div><label>Note</label><input type="text" id="cred-note" placeholder="opzionale"></div>';
+  html += '<div><button class="btn primary" style="width:100%;" onclick="addPrestitoDato()">Registra prestito</button></div>';
+  html += '</div></div>';
+
+  if(lista.length === 0){
+    html += '<div class="card"><div class="empty">Nessun prestito registrato ancora.</div></div>';
+  } else {
+    lista.forEach(function(p){
+      html += '<div class="card">';
+      html += '<div class="card-title">' + escapeHtml(p.persona) + '</div>';
+      html += railBlock(p.rimborsato, p.prestato, 'purple');
+      html += '<div class="rail-row"><span>Rimborsato ' + fmt(p.rimborsato,0) + '</span><span>Prestato ' + fmt(p.prestato,0) + '</span></div>';
+      html += '<div style="margin-top:12px; font-size:20px; font-weight:600;" class="disp">' + fmt(p.residuo,0) + '</div>';
+      html += '<div style="font-size:12px; color:var(--ink-soft); margin-bottom:10px;">ancora da restituire</div>';
+      if(p.residuo > 0){
+        html += '<div class="form-grid">';
+        html += '<div><label>Rimborso ricevuto (\u20ac)</label><input type="number" step="0.01" min="0" class="num-in" id="cred-rec-amount-' + safeId(p.persona) + '" placeholder="0.00"></div>';
+        html += '<div><label>Data</label><input type="date" id="cred-rec-date-' + safeId(p.persona) + '" value="' + todayStr() + '"></div>';
+        html += '<div><button class="btn primary" style="width:100%;" onclick="addRimborsoCredito(\'' + escapeJs(p.persona) + '\',\'' + safeId(p.persona) + '\')">Registra rimborso</button></div>';
+        html += '</div>';
+      }
+      html += '</div>';
+    });
+  }
+
+  document.getElementById('panel-crediti').innerHTML = html;
+
+  var ctx = document.getElementById('ft-chart-crediti');
+  if(chartCrediti){ chartCrediti.destroy(); }
+  var data = months.map(function(m){ return Math.round(creditiResiduoAlMese(m)); });
+  chartCrediti = safeChart(ctx, {
+    type: 'line',
+    data: { labels: months.map(monthLabel), datasets:[{label:'Crediti residui', data:data, borderColor:COLORS.purple, backgroundColor:COLORS.purpleBg, fill:true, tension:0.3, pointRadius:3, pointBackgroundColor:COLORS.purple}] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:function(v){ return '\u20ac' + v; } } } } }
+  });
+}
+
+function safeId(s){ return String(s).replace(/[^a-zA-Z0-9]/g, ''); }
+function escapeJs(s){ return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+
+function addPrestitoDato(){
+  var persona = document.getElementById('cred-persona').value.trim();
+  var amount = parseFloat(document.getElementById('cred-amount').value);
+  var date = document.getElementById('cred-date').value;
+  var note = document.getElementById('cred-note').value.trim();
+  if(!persona || !amount || amount <= 0 || !date){
+    alert('Inserisci nome, importo valido e data.');
+    return;
+  }
+  TX.push({id:uid(), date:date, type:'Prestito Dato', category:persona, amount:amount, account:'Contanti', note:note});
+  saveTx();
+  renderAll();
+}
+window.addPrestitoDato = addPrestitoDato;
+
+function addRimborsoCredito(persona, safeIdVal){
+  var amountEl = document.getElementById('cred-rec-amount-' + safeIdVal);
+  var dateEl = document.getElementById('cred-rec-date-' + safeIdVal);
+  var amount = parseFloat(amountEl.value);
+  var date = dateEl.value;
+  if(!amount || amount <= 0 || !date){
+    alert('Inserisci un importo valido e una data.');
+    return;
+  }
+  TX.push({id:uid(), date:date, type:'Rimborso Credito', category:persona, amount:amount, account:'Contanti', note:''});
+  saveTx();
+  renderAll();
+}
+window.addRimborsoCredito = addRimborsoCredito;
+
+/* ============================================================
+   INVESTIMENTI
+   ============================================================ */
+function renderInvestimenti(){
+  var c = computeAll();
+  var rate = Number(CFG.crypto.usdtEurRate) || 1;
+  var html = '';
+
+  html += '<div class="kpi-grid">';
+  html += kpiCard('Investito totale (EUR)', fmt(c.cryptoInvestito));
+  html += kpiCard('Valore attuale (EUR)', fmt(c.cryptoValore));
+  html += kpiCard('P&amp;L crypto (EUR)', fmt(c.cryptoPL), c.cryptoPL>=0?'pos':'neg');
+  html += kpiCard('P&amp;L crypto (%)', fmtPct(c.cryptoPLPercent), c.cryptoPL>=0?'pos':'neg');
+  if(c.cryptoRecuperoPct !== null){
+    html += kpiCard('Serve per pareggiare', fmtPct(c.cryptoRecuperoPct), '');
+  }
+  html += '</div>';
+
+  html += '<div class="note">Strategia: aspettare la ripresa o l\'altcoin season, poi vendere senza aspettare grandi profitti. Non vendere in perdita. Priorita: rimborsare prima la madre di Lucia e poi Lucia.</div>';
+
+  html += '<div class="card">';
+  html += '<div class="card-title">Di chi sono questi soldi</div>';
+  html += '<div class="form-grid" style="margin-bottom:12px;">';
+  html += '<div><label>Quota di Lucia (\u20ac investiti)</label><input type="number" step="1" class="num-in" id="quota-lucia" value="' + CFG.crypto.quotaLuciaEUR + '"></div>';
+  html += '<div><label>Quota madre di Lucia (\u20ac investiti)</label><input type="number" step="1" class="num-in" id="quota-madre" value="' + CFG.crypto.quotaMadreEUR + '"></div>';
+  html += '<div><span class="kpi-label">Quota mia (\u20ac investiti)</span><div class="kpi-val">' + fmt(c.quotaMiaInvestita,0) + '</div></div>';
+  html += '</div>';
+  html += '<table><thead><tr><th></th><th>% del totale</th><th>Investito (EUR)</th><th>Valore attuale (EUR)</th></tr></thead><tbody>';
+  html += '<tr><td style="font-weight:600;">Mia</td><td class="num">' + fmtPct(c.pctMia) + '</td><td class="num">' + fmt(c.quotaMiaInvestita,0) + '</td><td class="num" style="font-weight:600; color:var(--teal);">' + fmt(c.cryptoValoreMia,0) + '</td></tr>';
+  html += '<tr><td style="font-weight:600;">Lucia</td><td class="num">' + fmtPct(c.pctLucia) + '</td><td class="num">' + fmt(CFG.crypto.quotaLuciaEUR,0) + '</td><td class="num">' + fmt(c.cryptoValoreLucia,0) + '</td></tr>';
+  html += '<tr><td style="font-weight:600;">Madre di Lucia</td><td class="num">' + fmtPct(c.pctMadre) + '</td><td class="num">' + fmt(CFG.crypto.quotaMadreEUR,0) + '</td><td class="num">' + fmt(c.cryptoValoreMadre,0) + '</td></tr>';
+  html += '</tbody></table>';
+  html += '<div style="font-size:11px; color:var(--ink-soft); margin-top:10px;">Il valore attuale si ripartisce nelle stesse proporzioni dell\'investito: se il portafoglio sale o scende, ogni quota si aggiorna da sola. Solo la quota mia entra nel calcolo del mio patrimonio netto: quella di Lucia e di sua madre non gravano ne a favore ne contro il mio patrimonio.</div>';
+  html += '</div>';
+
+  html += '<div class="card">';
+  html += '<div class="card-title">Cambio USDT \u2192 EUR</div>';
+  html += '<div class="form-grid">';
+  html += '<div><label>1 USDT = quanti EUR</label><input type="number" step="0.001" class="num-in" id="usdt-rate" value="' + rate + '"></div>';
+  html += '<div><span class="kpi-label">Investito totale (USDT)</span><div class="kpi-val">' + fmtUsdt(c.cryptoInvestitoUSDT) + '</div></div>';
+  html += '<div><span class="kpi-label">Valore attuale (USDT)</span><div class="kpi-val">' + fmtUsdt(c.cryptoValoreUSDT) + '</div></div>';
+  html += '</div>';
+  html += '<div style="font-size:11px; color:var(--ink-soft); margin-top:8px;">Le altcoin sono comprate spot in coppia con USDT (es. ETH/USDT), quindi prezzo di acquisto e prezzo attuale nella tabella sotto vanno inseriti in USDT. Qui sopra il tasso serve solo per convertire i totali in euro nelle card in alto.</div>';
+  html += '</div>';
+
+  html += '<div class="grid-2">';
+  html += '<div class="card"><div class="card-title">Allocazione portfolio (EUR)</div>';
+  html += '<div style="position:relative; height:240px;"><canvas id="ft-chart-alloc" role="img" aria-label="Grafico allocazione portfolio investimenti"></canvas></div>';
+  html += '</div>';
+  html += '<div class="card"><div class="card-title">Valore attuale per proprietario</div>';
+  html += '<div style="position:relative; height:240px;"><canvas id="ft-chart-owner" role="img" aria-label="Grafico ripartizione valore attuale tra i proprietari"></canvas></div>';
+  html += '</div>';
+  html += '</div>';
+
+  html += '<div class="card">';
+  html += '<div class="card-title">Portfolio altcoin (prezzi in USDT)<button class="btn" onclick="addCoin()">+ Aggiungi coin</button></div>';
+  html += '<table><thead><tr><th>Coin</th><th>Quantita</th><th>Prezzo acquisto (USDT)</th><th>Investito (USDT)</th><th>Prezzo attuale (USDT)</th><th>Valore attuale (USDT)</th><th>P&amp;L (USDT)</th><th>P&amp;L %</th><th>Serve per pareggiare</th><th></th></tr></thead><tbody>';
+  CFG.crypto.coins.forEach(function(coin){
+    var qty = Number(coin.qty)||0;
+    var buyPrice = Number(coin.buyPrice)||0;
+    var invested = qty*buyPrice;
+    var value = qty*(Number(coin.currentPrice)||0);
+    var pl = value - invested;
+    var plPct = buyPrice > 0 ? (pl/invested) : null;
+    var recuperoPct = (buyPrice > 0 && pl < 0 && value > 0) ? (invested/value) - 1 : null;
+    html += '<tr>';
+    html += '<td><input type="text" value="' + escapeHtml(coin.name) + '" style="height:30px;" onchange="updateCoin(\'' + coin.id + '\',\'name\',this.value)"></td>';
+    html += '<td><input type="number" step="any" class="num-in" value="' + coin.qty + '" style="height:30px; width:90px;" onchange="updateCoin(\'' + coin.id + '\',\'qty\',this.value)"></td>';
+    html += '<td><input type="number" step="any" class="num-in" value="' + coin.buyPrice + '" style="height:30px; width:100px;" onchange="updateCoin(\'' + coin.id + '\',\'buyPrice\',this.value)"></td>';
+    html += '<td class="num">' + invested.toFixed(2) + '</td>';
+    html += '<td><input type="number" step="any" class="num-in" value="' + coin.currentPrice + '" style="height:30px; width:100px;" onchange="updateCoin(\'' + coin.id + '\',\'currentPrice\',this.value)"></td>';
+    html += '<td class="num">' + value.toFixed(2) + '</td>';
+    html += '<td class="num" style="color:' + (pl>=0?'var(--teal)':'var(--red)') + ';">' + pl.toFixed(2) + '</td>';
+    html += '<td class="num" style="color:' + (plPct===null?'var(--ink-faint)':(plPct>=0?'var(--teal)':'var(--red)')) + ';">' + (plPct===null ? 'N/D' : fmtPct(plPct)) + '</td>';
+    html += '<td class="num" style="color:var(--gold);">' + (recuperoPct===null ? '\u2014' : '+' + fmtPct(recuperoPct)) + '</td>';
+    html += '<td><span class="del-row" onclick="deleteCoin(\'' + coin.id + '\')">Elimina</span></td>';
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  html += '<div style="font-size:11px; color:var(--ink-soft); margin-top:8px;">N/D = manca il prezzo di acquisto. "Serve per pareggiare" mostra la percentuale di risalita necessaria per tornare al prezzo di acquisto, visibile solo per le coin attualmente in perdita.</div>';
+  html += '</div>';
+
+  html += '<div class="card"><div class="card-title">BingX - trading</div>';
+  html += '<div class="form-grid">';
+  html += '<div><label>Deposito iniziale (\u20ac)</label><input type="number" step="0.01" class="num-in" id="bingx-iniziale" value="' + CFG.crypto.bingxIniziale + '"></div>';
+  html += '<div><label>Saldo attuale (\u20ac)</label><input type="number" step="0.01" class="num-in" id="bingx-attuale" value="' + CFG.crypto.bingxAttuale + '"></div>';
+  html += '<div><span class="kpi-label">P&amp;L</span><div class="kpi-val ' + (c.bingxPL>=0?'pos':'neg') + '">' + fmt(c.bingxPL) + '</div></div>';
+  html += '</div><div style="font-size:11px; color:var(--ink-soft); margin-top:8px;">Il saldo BingX e interamente tuo, non entra nella ripartizione con Lucia e sua madre.</div></div>';
+
+  document.getElementById('panel-investimenti').innerHTML = html;
+
+  document.getElementById('quota-lucia').addEventListener('change', function(){
+    CFG.crypto.quotaLuciaEUR = parseFloat(this.value) || 0; saveCfg(); renderAll();
+  });
+  document.getElementById('quota-madre').addEventListener('change', function(){
+    CFG.crypto.quotaMadreEUR = parseFloat(this.value) || 0; saveCfg(); renderAll();
+  });
+  document.getElementById('usdt-rate').addEventListener('change', function(){
+    CFG.crypto.usdtEurRate = parseFloat(this.value) || 1; saveCfg(); renderAll();
+  });
+  document.getElementById('bingx-iniziale').addEventListener('change', function(){
+    CFG.crypto.bingxIniziale = parseFloat(this.value) || 0; saveCfg(); renderAll();
+  });
+  document.getElementById('bingx-attuale').addEventListener('change', function(){
+    CFG.crypto.bingxAttuale = parseFloat(this.value) || 0; saveCfg(); renderAll();
+  });
+
+  var allocLabels = [];
+  var allocData = [];
+  var allocColors = [COLORS.purple, COLORS.teal, COLORS.gold, COLORS.blue, COLORS.red, '#8CC7B5', '#D9A6E0', '#E0C56A'];
+  CFG.crypto.coins.forEach(function(coin){
+    var valueUSDT = (Number(coin.qty)||0)*(Number(coin.currentPrice)||0);
+    var valueEUR = valueUSDT * rate;
+    if(valueEUR > 0){ allocLabels.push(coin.name); allocData.push(Math.round(valueEUR)); }
+  });
+  if(CFG.crypto.bingxAttuale > 0){ allocLabels.push('BingX'); allocData.push(Math.round(CFG.crypto.bingxAttuale)); }
+
+  var ctxAlloc = document.getElementById('ft-chart-alloc');
+  if(chartAlloc){ chartAlloc.destroy(); }
+  if(allocData.length === 0){
+    ctxAlloc.getContext('2d').clearRect(0,0,ctxAlloc.width,ctxAlloc.height);
+  } else {
+    chartAlloc = safeChart(ctxAlloc, {
+      type: 'doughnut',
+      data: { labels: allocLabels, datasets:[{ data:allocData, backgroundColor: allocColors.slice(0, allocData.length), borderColor:'#0B0D12', borderWidth:2 }] },
+      options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'right', labels:{ boxWidth:10, font:{size:11} } } } }
+    });
+  }
+
+  var ownerLabels = ['Mia', 'Lucia', 'Madre di Lucia'];
+  var ownerData = [Math.round(c.cryptoValoreMia), Math.round(c.cryptoValoreLucia), Math.round(c.cryptoValoreMadre)];
+  var ownerColors = [COLORS.teal, COLORS.gold, COLORS.purple];
+  var ctxOwner = document.getElementById('ft-chart-owner');
+  if(chartOwner){ chartOwner.destroy(); }
+  if(ownerData.every(function(v){ return v===0; })){
+    ctxOwner.getContext('2d').clearRect(0,0,ctxOwner.width,ctxOwner.height);
+  } else {
+    chartOwner = safeChart(ctxOwner, {
+      type: 'doughnut',
+      data: { labels: ownerLabels, datasets:[{ data:ownerData, backgroundColor: ownerColors, borderColor:'#0B0D12', borderWidth:2 }] },
+      options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'right', labels:{ boxWidth:10, font:{size:11} } } } }
+    });
+  }
+}
+
+function addCoin(){
+  CFG.crypto.coins.push({id:uid(), name:'Nuova coin', qty:0, buyPrice:0, currentPrice:0});
+  saveCfg(); renderAll();
+}
+window.addCoin = addCoin;
+function deleteCoin(id){
+  CFG.crypto.coins = CFG.crypto.coins.filter(function(c){ return c.id !== id; });
+  saveCfg(); renderAll();
+}
+window.deleteCoin = deleteCoin;
+function updateCoin(id, field, value){
+  var coin = CFG.crypto.coins.find(function(c){ return c.id === id; });
+  if(!coin) return;
+  coin[field] = (field === 'name') ? value : (parseFloat(value) || 0);
+  saveCfg(); renderAll();
+}
+window.updateCoin = updateCoin;
+
+/* ============================================================
+   FONDO EMERGENZA + OBIETTIVI
+   ============================================================ */
+function renderFondo(){
+  var c = computeAll();
+  var html = '';
+
+  html += '<div class="card">';
+  html += '<div class="card-title">Fondo emergenza</div>';
+  html += '<div class="form-grid" style="margin-bottom:10px;">';
+  html += '<div><label>Obiettivo fase 1 (\u20ac)</label><input type="number" step="1" class="num-in" id="fondo-f1" value="' + CFG.fondo.obiettivoFase1 + '"></div>';
+  html += '<div><label>Obiettivo finale (\u20ac)</label><input type="number" step="1" class="num-in" id="fondo-f2" value="' + CFG.fondo.obiettivoFinale + '"></div>';
+  html += '</div>';
+  html += '<div style="font-size:22px; font-weight:600;" class="disp">' + fmt(c.fondoAccumulato,0) + '</div>';
+  html += '<div style="font-size:12px; color:var(--ink-soft); margin-bottom:8px;">accumulato</div>';
+  html += railBlock(c.fondoAccumulato, CFG.fondo.obiettivoFase1, 'blue');
+  html += '<div class="rail-row"><span>Fase 1</span><span>' + fmtPct(CFG.fondo.obiettivoFase1>0?c.fondoAccumulato/CFG.fondo.obiettivoFase1:0) + '</span></div>';
+  html += railBlock(c.fondoAccumulato, CFG.fondo.obiettivoFinale, 'teal');
+  html += '<div class="rail-row"><span>Obiettivo finale</span><span>' + fmtPct(CFG.fondo.obiettivoFinale>0?c.fondoAccumulato/CFG.fondo.obiettivoFinale:0) + '</span></div>';
+  html += '<div class="form-grid" style="margin-top:14px;">';
+  html += '<div><label>Correggi saldo a (\u20ac)</label><input type="number" step="1" class="num-in" id="fondo-fix-amount" placeholder="' + Math.round(c.fondoAccumulato) + '"></div>';
+  html += '<div><button class="btn" style="width:100%;" onclick="ricalibraFondo()">Correggi saldo</button></div>';
+  html += '</div>';
+  html += '<div class="form-grid" style="margin-top:14px;">';
+  html += '<div><label>Nuovo versamento (\u20ac)</label><input type="number" step="0.01" min="0" class="num-in" id="fondo-add-amount" placeholder="50.00"></div>';
+  html += '<div><label>Data</label><input type="date" id="fondo-add-date" value="' + todayStr() + '"></div>';
+  html += '<div><button class="btn primary" style="width:100%;" onclick="addFondoContribution()">Versa nel fondo</button></div>';
+  html += '</div>';
+  html += '<div class="form-grid" style="margin-top:10px;">';
+  html += '<div><label>Prelievo dal fondo (\u20ac)</label><input type="number" step="0.01" min="0" class="num-in" id="fondo-out-amount" placeholder="0.00"></div>';
+  html += '<div><label>Per cosa</label><input type="text" id="fondo-out-note" placeholder="es. Spesa imprevista"></div>';
+  html += '<div><label>Data</label><input type="date" id="fondo-out-date" value="' + todayStr() + '"></div>';
+  html += '<div><button class="btn" style="width:100%;" onclick="addFondoWithdrawal()">Preleva dal fondo</button></div>';
+  html += '</div></div>';
+
+  html += '<div class="card"><div class="card-title">Fondo accumulato nel tempo</div>';
+  html += '<div style="position:relative; height:220px;"><canvas id="ft-chart-fondo" role="img" aria-label="Grafico fondo emergenza accumulato nel tempo"></canvas></div>';
+  html += '</div>';
+
+  html += '<div class="card"><div class="card-title">Obiettivi di vita<button class="btn" onclick="addGoal()">+ Aggiungi obiettivo</button></div>';
+  CFG.goals.forEach(function(g){
+    var current = g.autoLink === 'patrimonio' ? c.patrimonioNetto : Number(g.current)||0;
+    var pct = g.target > 0 ? Math.min(100, (current/g.target)*100) : 0;
+    html += '<div style="padding:12px 0; border-bottom:1px solid var(--line);">';
+    html += '<div class="goal-head">';
+    html += '<input type="text" value="' + escapeHtml(g.name) + '" style="height:32px; font-weight:600; font-family:Unbounded,sans-serif; border:none; background:none; padding:0;" onchange="updateGoal(\'' + g.id + '\',\'name\',this.value)">';
+    html += '<span class="del-row" onclick="deleteGoal(\'' + g.id + '\')">Elimina</span>';
+    html += '</div>';
+    if(g.target > 0){
+      html += railBlock(current, g.target, 'teal');
+      html += '<div class="rail-row"><span>' + fmt(current,0) + (g.autoLink?' (automatico)':'') + '</span><span>Target ' + fmt(g.target,0) + '</span></div>';
+      html += '<div class="form-grid" style="margin-top:8px;">';
+      html += '<div><label>Target (\u20ac)</label><input type="number" step="1" class="num-in" value="' + g.target + '" onchange="updateGoal(\'' + g.id + '\',\'target\',this.value)"></div>';
+      if(!g.autoLink){
+        html += '<div><label>Attuale (\u20ac)</label><input type="number" step="1" class="num-in" value="' + g.current + '" onchange="updateGoal(\'' + g.id + '\',\'current\',this.value)"></div>';
+      }
+      html += '<div><label>Note</label><input type="text" value="' + escapeHtml(g.note||'') + '" onchange="updateGoal(\'' + g.id + '\',\'note\',this.value)"></div>';
+      html += '</div>';
+    } else {
+      html += '<div class="form-grid" style="margin-top:4px;">';
+      html += '<div><label>Note</label><input type="text" value="' + escapeHtml(g.note||'') + '" onchange="updateGoal(\'' + g.id + '\',\'note\',this.value)"></div>';
+      html += '</div>';
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+
+  document.getElementById('panel-fondo').innerHTML = html;
+
+  document.getElementById('fondo-f1').addEventListener('change', function(){ CFG.fondo.obiettivoFase1 = parseFloat(this.value)||0; saveCfg(); renderAll(); });
+  document.getElementById('fondo-f2').addEventListener('change', function(){ CFG.fondo.obiettivoFinale = parseFloat(this.value)||0; saveCfg(); renderAll(); });
+
+  var months = getMonthsRange();
+  var ctx = document.getElementById('ft-chart-fondo');
+  if(chartFondo){ chartFondo.destroy(); }
+  var data = months.map(function(m){ return Math.round(fondoAlMese(m)); });
+  chartFondo = safeChart(ctx, {
+    type: 'bar',
+    data: { labels: months.map(monthLabel), datasets:[{label:'Fondo accumulato', data:data, backgroundColor:COLORS.blue, borderRadius:4, maxBarThickness:28}] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:function(v){ return '\u20ac' + v; } } } } }
+  });
+}
+
+function addFondoContribution(){
+  var amount = parseFloat(document.getElementById('fondo-add-amount').value);
+  var date = document.getElementById('fondo-add-date').value;
+  if(!amount || amount <= 0 || !date){ alert('Inserisci un importo valido e una data.'); return; }
+  TX.push({id:uid(), date:date, type:'Risparmio', category:'Fondo Emergenza', amount:amount, account:'Conto Corrente', note:''});
+  saveTx(); renderAll();
+}
+window.addFondoContribution = addFondoContribution;
+
+function addFondoWithdrawal(){
+  var amount = parseFloat(document.getElementById('fondo-out-amount').value);
+  var date = document.getElementById('fondo-out-date').value;
+  var note = document.getElementById('fondo-out-note').value.trim();
+  if(!amount || amount <= 0 || !date){ alert('Inserisci un importo valido e una data.'); return; }
+  TX.push({id:uid(), date:date, type:'Uscita Variabile', category: note || 'Prelievo fondo emergenza', amount:amount, account:'Fondo Emergenza', note:note});
+  saveTx(); renderAll();
+}
+window.addFondoWithdrawal = addFondoWithdrawal;
+
+function ricalibraFondo(){
+  var input = document.getElementById('fondo-fix-amount');
+  var trueVal = parseFloat(input.value);
+  if(isNaN(trueVal) || trueVal < 0){
+    alert('Inserisci un importo valido.');
+    return;
+  }
+  var c = computeAll();
+  var delta = trueVal - c.fondoAccumulato;
+  CFG.fondo.iniziale = CFG.fondo.iniziale + delta;
+  saveCfg();
+  renderAll();
+}
+window.ricalibraFondo = ricalibraFondo;
+
+function addGoal(){
+  CFG.goals.push({id:uid(), name:'Nuovo obiettivo', target:1000, current:0, note:'', autoLink:null});
+  saveCfg(); renderAll();
+}
+window.addGoal = addGoal;
+function deleteGoal(id){
+  CFG.goals = CFG.goals.filter(function(g){ return g.id !== id; });
+  saveCfg(); renderAll();
+}
+window.deleteGoal = deleteGoal;
+function updateGoal(id, field, value){
+  var g = CFG.goals.find(function(g){ return g.id === id; });
+  if(!g) return;
+  if(field === 'name' || field === 'note') g[field] = value;
+  else g[field] = parseFloat(value) || 0;
+  saveCfg(); renderAll();
+}
+window.updateGoal = updateGoal;
+
+/* ============================================================
+   PATRIMONIO NETTO
+   ============================================================ */
+function renderPatrimonio(){
+  var c = computeAll();
+  var html = '';
+
+  html += '<div class="note">Qui tieni traccia del tuo patrimonio netto una volta all\'anno (o quando vuoi tu), per vedere la crescita nel corso di anni e decenni. Patrimonio netto = Saldo conto + Investimenti + Fondo emergenza + Crediti (soldi che ti devono) - Debiti. Premi il pulsante qui sotto e l\'anno corrente si compila da solo con i valori gia calcolati nelle altre schede: non serve ricopiare nulla a mano.</div>';
+
+  html += '<div class="card">';
+  html += '<div class="card-title">Snapshot annuale<span><button class="btn primary" onclick="updatePatrimonioWithCurrent()">Aggiorna anno corrente con dati di oggi</button> <button class="btn" onclick="addPatrimonioYear()">+ Aggiungi anno</button></span></div>';
+  html += '<table><thead><tr><th>Anno</th><th>Eta</th><th>Saldo</th><th>Investimenti</th><th>Fondo</th><th>Crediti</th><th>Debiti</th><th>Patrimonio netto</th><th></th></tr></thead><tbody>';
+  var sorted = CFG.patrimonio.slice().sort(function(a,b){ return a.year - b.year; });
+  sorted.forEach(function(p){
+    var netto = (Number(p.saldo)||0) + (Number(p.investimenti)||0) + (Number(p.fondo)||0) + (Number(p.crediti)||0) - (Number(p.debiti)||0);
+    var age = p.year - CFG.birthYear;
+    html += '<tr>';
+    html += '<td class="num">' + p.year + '</td>';
+    html += '<td class="num">' + age + '</td>';
+    html += '<td><input type="number" step="1" class="num-in" value="' + p.saldo + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'saldo\',this.value)"></td>';
+    html += '<td><input type="number" step="1" class="num-in" value="' + p.investimenti + '" style="height:30px; width:105px;" onchange="updatePatrimonio(' + p.year + ',\'investimenti\',this.value)"></td>';
+    html += '<td><input type="number" step="1" class="num-in" value="' + p.fondo + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'fondo\',this.value)"></td>';
+    html += '<td><input type="number" step="1" class="num-in" value="' + (p.crediti||0) + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'crediti\',this.value)"></td>';
+    html += '<td><input type="number" step="1" class="num-in" value="' + p.debiti + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'debiti\',this.value)"></td>';
+    html += '<td class="num" style="font-weight:600;">' + fmt(netto,0) + '</td>';
+    html += '<td><span class="del-row" onclick="deletePatrimonioYear(' + p.year + ')">Elimina</span></td>';
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+
+  html += '<div class="card"><div class="card-title">Crescita nel tempo</div>';
+  html += '<div style="position:relative; height:280px;"><canvas id="ft-chart-patrimonio" role="img" aria-label="Grafico crescita patrimonio netto per anno"></canvas></div>';
+  html += '</div>';
+
+  document.getElementById('panel-patrimonio').innerHTML = html;
+
+  var ctx = document.getElementById('ft-chart-patrimonio');
+  if(chartPatrimonio){ chartPatrimonio.destroy(); }
+  var labels = sorted.map(function(p){ return p.year; });
+  var data = sorted.map(function(p){ return Math.round((Number(p.saldo)||0)+(Number(p.investimenti)||0)+(Number(p.fondo)||0)+(Number(p.crediti)||0)-(Number(p.debiti)||0)); });
+  chartPatrimonio = safeChart(ctx, {
+    type: 'line',
+    data: { labels: labels, datasets: [{ label:'Patrimonio netto', data:data, borderColor:COLORS.teal, backgroundColor:COLORS.tealBg, fill:true, tension:0.25, pointRadius:4, pointBackgroundColor:COLORS.teal }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:function(v){ return '\u20ac' + v; } } } } }
+  });
+}
+
+function updatePatrimonioWithCurrent(){
+  var year = new Date().getFullYear();
+  var c = computeAll();
+  var existing = CFG.patrimonio.find(function(p){ return p.year === year; });
+  var vals = {
+    saldo: Math.round(c.saldoConto),
+    investimenti: Math.round(c.investimentiTotali),
+    fondo: Math.round(c.fondoAccumulato),
+    crediti: Math.round(c.creditiTotali),
+    debiti: Math.round(c.debitiTotali)
+  };
+  if(existing){
+    Object.assign(existing, vals);
+  } else {
+    CFG.patrimonio.push(Object.assign({year:year}, vals));
+  }
+  saveCfg();
+  renderAll();
+}
+window.updatePatrimonioWithCurrent = updatePatrimonioWithCurrent;
+
+/* ============================================================
+   PREVISIONE - render
+   ============================================================ */
+function renderPrevisione(){
+  var prev = computePrevisione();
+  var p = CFG.previsione;
+  var c = computeAll();
+  var html = '';
+
+  html += '<div class="note">Proiezione basata sui tuoi dati attuali (saldo liquido, fondo, debito carta) e sulle ipotesi qui sotto, che puoi modificare liberamente. Non tiene conto di eventuali extra imprevisti: e una stima, non una certezza.</div>';
+
+  html += '<div class="card">';
+  html += '<div class="card-title">Ipotesi della proiezione</div>';
+  html += '<div class="form-grid">';
+  html += '<div><label>Reddito mensile (\u20ac)</label><input type="number" step="1" class="num-in" id="prev-reddito" value="' + p.redditoMensile + '"></div>';
+  html += '<div><label>Spese fisse mensili (\u20ac)</label><input type="number" step="1" class="num-in" id="prev-fisse" value="' + p.speseFisseMensili + '"></div>';
+  html += '<div><label>Spese variabili mensili (\u20ac)</label><input type="number" step="1" class="num-in" id="prev-variabili" value="' + p.speseVariabiliMensili + '"></div>';
+  html += '<div><label>Versamento fondo mensile (\u20ac)</label><input type="number" step="1" class="num-in" id="prev-fondo" value="' + p.contributoFondoMensile + '"></div>';
+  html += '<div><label>Rimborso Lucia mensile (\u20ac)</label><input type="number" step="1" class="num-in" id="prev-lucia" value="' + p.rimborsoLuciaMensile + '"></div>';
+  html += '<div><label>Fino a</label><input type="date" id="prev-target" value="' + p.dataObiettivo + '"></div>';
+  html += '</div>';
+  html += '<div style="margin-top:10px; display:flex; align-items:center; gap:8px;"><input type="checkbox" id="prev-carta" style="width:auto; height:auto;" ' + (p.includiRataCarta ? 'checked' : '') + '><label style="margin:0;" for="prev-carta">Continua a pagare la rata carta di credito (\u20ac75/mese) finche non e estinta</label></div>';
+  html += '<div style="margin-top:14px;"><button class="btn primary" onclick="updatePrevisioneAssumptions()">Aggiorna proiezione</button></div>';
+  html += '</div>';
+
+  html += '<div class="kpi-grid">';
+  html += kpiCard('Mesi proiettati', prev.mesiProiettati, '');
+  html += kpiCard('Risparmio liquido stimato', fmt(prev.risparmioLiquido,0), prev.risparmioLiquido>=0?'pos':'neg');
+  html += kpiCard('Fondo a fine periodo', fmt(prev.fondoFinal,0), '');
+  html += kpiCard('Risparmio totale stimato', fmt(prev.risparmioTotale,0), prev.risparmioTotale>=0?'pos':'neg');
+  html += '</div>';
+
+  html += '<div class="card"><div class="card-title">A ' + fmtDate(p.dataObiettivo) + '</div>';
+  html += '<table><tbody>';
+  html += '<tr><td>Saldo liquido (conto + contanti)</td><td class="num" style="font-weight:600;">' + fmt(prev.liquidoFinal,0) + '</td></tr>';
+  html += '<tr><td>Fondo emergenza</td><td class="num" style="font-weight:600;">' + fmt(prev.fondoFinal,0) + '</td></tr>';
+  html += '<tr><td>Debito carta di credito residuo</td><td class="num" style="font-weight:600; color:' + (prev.cartaFinal>0?'var(--red)':'var(--teal)') + ';">' + (prev.cartaFinal>0?fmt(prev.cartaFinal,0):'Estinta \u2713') + '</td></tr>';
+  if(prev.cartaEstintaLabel){
+    html += '<tr><td>Carta estinta a</td><td class="num" style="font-weight:600; color:var(--teal);">' + prev.cartaEstintaLabel + '</td></tr>';
+  }
+  html += '</tbody></table></div>';
+
+  html += '<div class="card"><div class="card-title">Andamento proiettato</div>';
+  html += '<div style="position:relative; height:260px;"><canvas id="ft-chart-previsione" role="img" aria-label="Grafico proiezione risparmio futuro"></canvas></div>';
+  html += '</div>';
+
+  document.getElementById('panel-previsione').innerHTML = html;
+
+  var ctx = document.getElementById('ft-chart-previsione');
+  if(chartPrevisione){ chartPrevisione.destroy(); }
+  chartPrevisione = safeChart(ctx, {
+    type: 'line',
+    data: {
+      labels: prev.rows.map(function(r){ return r.label; }),
+      datasets: [
+        {label:'Liquido (conto+contanti)', data:prev.rows.map(function(r){ return Math.round(r.liquido); }), borderColor:COLORS.teal, backgroundColor:COLORS.tealBg, fill:false, tension:0.25, pointRadius:3},
+        {label:'Fondo emergenza', data:prev.rows.map(function(r){ return Math.round(r.fondo); }), borderColor:COLORS.blue, backgroundColor:COLORS.blueBg, fill:false, tension:0.25, pointRadius:3},
+        {label:'Debito carta residuo', data:prev.rows.map(function(r){ return Math.round(r.carta); }), borderColor:COLORS.red, backgroundColor:COLORS.redBg, fill:false, tension:0.25, pointRadius:3}
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:true, labels:{boxWidth:10, font:{size:10}}} },
+      scales:{ y:{ ticks:{ callback:function(v){ return '\u20ac' + v; } } } }
+    }
+  });
+}
+
+function updatePrevisioneAssumptions(){
+  CFG.previsione.redditoMensile = parseFloat(document.getElementById('prev-reddito').value) || 0;
+  CFG.previsione.speseFisseMensili = parseFloat(document.getElementById('prev-fisse').value) || 0;
+  CFG.previsione.speseVariabiliMensili = parseFloat(document.getElementById('prev-variabili').value) || 0;
+  CFG.previsione.contributoFondoMensile = parseFloat(document.getElementById('prev-fondo').value) || 0;
+  CFG.previsione.rimborsoLuciaMensile = parseFloat(document.getElementById('prev-lucia').value) || 0;
+  CFG.previsione.includiRataCarta = document.getElementById('prev-carta').checked;
+  var targetVal = document.getElementById('prev-target').value;
+  if(targetVal) CFG.previsione.dataObiettivo = targetVal;
+  saveCfg();
+  renderAll();
+}
+window.updatePrevisioneAssumptions = updatePrevisioneAssumptions;
+
+/* ============================================================
+   ETF - render
+   ============================================================ */
+function renderEtf(){
+  var etf = computeEtfPrevisione();
+  var p = CFG.etfPrevisione;
+  var html = '';
+
+  html += '<div class="note">Simulazione di crescita composta per un investimento passivo (es. ETF su indice globale/S&amp;P 500). Il 7% annuo e una media storica di lungo periodo, non una garanzia: i rendimenti reali variano di anno in anno e possono anche essere negativi per periodi prolungati. Questa e una stima illustrativa, non un consiglio di investimento.</div>';
+
+  html += '<div class="card">';
+  html += '<div class="card-title">Ipotesi della simulazione</div>';
+  html += '<div class="form-grid">';
+  html += '<div><label>Capitale iniziale (\u20ac)</label><input type="number" step="1" class="num-in" id="etf-capitale" value="' + p.capitaleIniziale + '"></div>';
+  html += '<div><label>Versamento mensile (\u20ac)</label><input type="number" step="1" class="num-in" id="etf-versamento" value="' + p.versamentoMensile + '"></div>';
+  html += '<div><label>Rendimento annuo atteso (%)</label><input type="number" step="0.1" class="num-in" id="etf-rendimento" value="' + p.rendimentoAnnuo + '"></div>';
+  html += '<div><label>Fino a</label><input type="date" id="etf-target" value="' + p.dataObiettivo + '"></div>';
+  html += '</div>';
+  html += '<div style="margin-top:14px;"><button class="btn primary" onclick="updateEtfAssumptions()">Aggiorna simulazione</button></div>';
+  html += '</div>';
+
+  html += '<div class="kpi-grid">';
+  html += kpiCard('Anni proiettati', etf.anniProiettati.toFixed(1), '');
+  html += kpiCard('Totale versato', fmt(etf.totaleVersato,0), '');
+  html += kpiCard('Guadagno stimato', fmt(etf.guadagnoStimato,0), 'pos');
+  html += kpiCard('Valore finale stimato', fmt(etf.valoreFinale,0), 'pos');
+  html += '</div>';
+
+  html += '<div class="card"><div class="card-title">Crescita del portafoglio nel tempo</div>';
+  html += '<div style="position:relative; height:280px;"><canvas id="ft-chart-etf" role="img" aria-label="Grafico crescita composta investimento ETF nel tempo"></canvas></div>';
+  html += '</div>';
+
+  document.getElementById('panel-etf').innerHTML = html;
+
+  var ctx = document.getElementById('ft-chart-etf');
+  if(chartEtf){ chartEtf.destroy(); }
+  chartEtf = safeChart(ctx, {
+    type: 'line',
+    data: {
+      labels: etf.rows.map(function(r){ return r.label; }),
+      datasets: [
+        {label:'Valore portafoglio', data:etf.rows.map(function(r){ return Math.round(r.value); }), borderColor:COLORS.teal, backgroundColor:COLORS.tealBg, fill:true, tension:0.25, pointRadius:0},
+        {label:'Totale versato', data:etf.rows.map(function(r){ return Math.round(r.contributed); }), borderColor:COLORS.neutral, backgroundColor:'transparent', borderDash:[5,4], fill:false, tension:0, pointRadius:0}
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:true, labels:{boxWidth:10, font:{size:10}}} },
+      scales:{ y:{ ticks:{ callback:function(v){ return '\u20ac' + v; } } }, x:{ ticks:{ maxTicksLimit:12 } } }
+    }
+  });
+}
+
+function updateEtfAssumptions(){
+  CFG.etfPrevisione.capitaleIniziale = parseFloat(document.getElementById('etf-capitale').value) || 0;
+  CFG.etfPrevisione.versamentoMensile = parseFloat(document.getElementById('etf-versamento').value) || 0;
+  CFG.etfPrevisione.rendimentoAnnuo = parseFloat(document.getElementById('etf-rendimento').value) || 0;
+  var targetVal = document.getElementById('etf-target').value;
+  if(targetVal) CFG.etfPrevisione.dataObiettivo = targetVal;
+  saveCfg();
+  renderAll();
+}
+window.updateEtfAssumptions = updateEtfAssumptions;
+
+/* ============================================================
+   BACKUP - esporta e importa i dati manualmente
+   ============================================================ */
+function renderBackup(){
+  var html = '';
+
+  html += '<div class="card">';
+  html += '<div class="card-title">Esporta per l\'analisi in chat</div>';
+  html += '<div style="font-size:12px; color:var(--ink-soft); margin-bottom:10px;">Genera un riepilogo completo dei tuoi dati da incollare in chat, cosi posso analizzarli davvero invece di basarmi solo su quello che mi racconti. Oppure scarica il file CSV da aprire in Excel o allegare direttamente.</div>';
+  html += '<button class="btn primary" onclick="generaRiepilogo()">Genera riepilogo per la chat</button>';
+  html += '<button class="btn" style="margin-left:8px;" onclick="copiaRiepilogo()">Copia</button>';
+  html += '<button class="btn" style="margin-left:8px;" onclick="scaricaCSV()">Scarica CSV</button>';
+  html += '<textarea id="analisi-export" placeholder="Il riepilogo comparira qui..." style="margin-top:10px; min-height:200px;"></textarea>';
+  html += '<div id="analisi-status"></div>';
+  html += '</div>';
+
+  html += '<div class="note">Il backup serve per avere una copia di sicurezza dei tuoi dati o per importarli la prima volta dal vecchio tracker. Il salvataggio normale \u00e8 automatico.</div>';
+
+  html += '<div class="card">';
+  html += '<div class="card-title">1. Esporta i tuoi dati (backup completo)</div>';
+  html += '<div style="font-size:12px; color:var(--ink-soft); margin-bottom:10px;">Premi il pulsante: nel riquadro comparira tutto il contenuto del tracker. Copialo e mandatelo dove ti serve (email, note, WhatsApp a te stesso).</div>';
+  html += '<button class="btn primary" onclick="esportaDati()">Genera backup</button>';
+  html += '<button class="btn" style="margin-left:8px;" onclick="copiaBackup()">Copia negli appunti</button>';
+  html += '<textarea id="backup-export" placeholder="Il backup comparira qui..." readonly style="margin-top:10px;"></textarea>';
+  html += '<div id="backup-export-status"></div>';
+  html += '</div>';
+
+  html += '<div class="card">';
+  html += '<div class="card-title">2. Importa dati da un backup</div>';
+  html += '<div style="font-size:12px; color:var(--ink-soft); margin-bottom:10px;">Incolla qui il backup generato dall\'altro dispositivo e premi Importa. Attenzione: sostituisce completamente i dati presenti su questo dispositivo.</div>';
+  html += '<textarea id="backup-import" placeholder="Incolla qui il testo del backup..."></textarea>';
+  html += '<div style="margin-top:10px;"><button class="btn primary" onclick="importaDati()">Importa e sostituisci</button></div>';
+  html += '<div id="backup-import-status"></div>';
+  html += '</div>';
+
+  html += '<div class="card">';
+  html += '<div class="card-title">Stato dell\'archivio</div>';
+  var statoTxt = '';
+  if(loadStatus.tx === 'ok') statoTxt = '<span style="color:var(--teal);">Sincronizzato. I dati stanno nel tuo archivio privato, protetto dal tuo login: li ritrovi identici da telefono e computer.</span>';
+  else if(loadStatus.tx === 'empty') statoTxt = '<span style="color:var(--gold);">Archivio vuoto. Incolla qui sopra il backup del vecchio tracker e premi "Importa e sostituisci".</span>';
+  else if(loadStatus.tx === 'offline') statoTxt = '<span style="color:var(--gold);">Sei offline: vedi l\'ultima copia salvata su questo dispositivo, ma le modifiche non si salvano finch\u00e9 non torni in linea.</span>';
+  else statoTxt = '<span style="color:var(--red);">Archivio non raggiungibile in questo momento. Non modificare nulla: riapri l\'app e controlla che la riga in alto torni verde.</span>';
+  html += '<div style="font-size:13px;">' + statoTxt + '</div>';
+  if(utente && utente.email) html += '<div style="font-size:12px; color:var(--ink-faint); margin-top:8px;">Account: ' + escapeHtml(utente.email) + '</div>';
+  html += '</div>';
+
+  document.getElementById('panel-backup').innerHTML = html;
+}
+
+function esportaDati(){
+  try{
+    var payload = { versione:1, esportatoIl: new Date().toISOString(), transazioni: TX, impostazioni: CFG };
+    document.getElementById('backup-export').value = JSON.stringify(payload);
+    document.getElementById('backup-export-status').innerHTML = '<div class="status-msg ok">Backup generato: ' + TX.length + ' transazioni. Ora copialo.</div>';
+  }catch(e){
+    document.getElementById('backup-export-status').innerHTML = '<div class="status-msg err">Errore nella generazione: ' + escapeHtml(String(e && e.message || e)) + '</div>';
+  }
+}
+window.esportaDati = esportaDati;
+
+function copiaBackup(){
+  var ta = document.getElementById('backup-export');
+  if(!ta.value){
+    document.getElementById('backup-export-status').innerHTML = '<div class="status-msg err">Prima premi "Genera backup".</div>';
+    return;
+  }
+  var done = false;
+  try{
+    ta.removeAttribute('readonly');
+    ta.select();
+    ta.setSelectionRange(0, 999999);
+    done = document.execCommand('copy');
+    ta.setAttribute('readonly','readonly');
+  }catch(e){ done = false; }
+  if(!done && navigator.clipboard){
+    navigator.clipboard.writeText(ta.value).then(function(){
+      document.getElementById('backup-export-status').innerHTML = '<div class="status-msg ok">Copiato negli appunti.</div>';
+    }).catch(function(){
+      document.getElementById('backup-export-status').innerHTML = '<div class="status-msg err">Copia automatica non riuscita: seleziona il testo a mano e copialo.</div>';
+    });
+    return;
+  }
+  document.getElementById('backup-export-status').innerHTML = done
+    ? '<div class="status-msg ok">Copiato negli appunti.</div>'
+    : '<div class="status-msg err">Copia automatica non riuscita: seleziona il testo a mano e copialo.</div>';
+}
+window.copiaBackup = copiaBackup;
+
+function importaDati(){
+  var raw = document.getElementById('backup-import').value.trim();
+  var statusEl = document.getElementById('backup-import-status');
+  if(!raw){
+    statusEl.innerHTML = '<div class="status-msg err">Incolla prima il testo del backup.</div>';
+    return;
+  }
+  var parsed;
+  try{
+    parsed = JSON.parse(raw);
+  }catch(e){
+    statusEl.innerHTML = '<div class="status-msg err">Il testo incollato non e un backup valido. Assicurati di aver copiato tutto, dall\'inizio alla fine.</div>';
+    return;
+  }
+  if(!parsed || !Array.isArray(parsed.transazioni) || !parsed.impostazioni){
+    statusEl.innerHTML = '<div class="status-msg err">Backup incompleto o in un formato non riconosciuto.</div>';
+    return;
+  }
+  TX = parsed.transazioni;
+  var def = defaultCfg();
+  var loaded = parsed.impostazioni;
+  CFG = Object.assign({}, def, loaded);
+  CFG.debts = Array.isArray(loaded.debts) ? loaded.debts : def.debts;
+  CFG.crypto = Object.assign({}, def.crypto, loaded.crypto);
+  if(!Array.isArray(CFG.crypto.coins)) CFG.crypto.coins = def.crypto.coins;
+  CFG.fondo = Object.assign({}, def.fondo, loaded.fondo);
+  CFG.conti = loaded.conti && loaded.conti.contanti && loaded.conti.corrente ? loaded.conti : def.conti;
+  CFG.previsione = Object.assign({}, def.previsione, loaded.previsione);
+  CFG.etfPrevisione = Object.assign({}, def.etfPrevisione, loaded.etfPrevisione);
+  CFG.goals = Array.isArray(loaded.goals) ? loaded.goals : def.goals;
+  CFG.patrimonio = Array.isArray(loaded.patrimonio) ? loaded.patrimonio : def.patrimonio;
+
+  loadStatus.tx = 'ok';
+  loadStatus.txCount = TX.length;
+
+  saveTx();
+  saveCfg();
+  renderAll();
+
+  var el = document.getElementById('backup-import-status');
+  if(el) el.innerHTML = '<div class="status-msg ok">Importate ' + TX.length + ' transazioni. Il tracker e ora aggiornato.</div>';
+}
+window.importaDati = importaDati;
+
+/* ============================================================
+   ESPORTAZIONE PER ANALISI
+   ============================================================ */
+function generaRiepilogo(){
+  try{
+    var c = computeAll();
+    var L = [];
+    var oggi = new Date().toLocaleDateString('it-IT');
+
+    L.push('=== RIEPILOGO TRACKER FINANZIARIO ===');
+    L.push('Generato il: ' + oggi);
+    L.push('');
+    L.push('--- SITUAZIONE ATTUALE ---');
+    L.push('Contanti: ' + c.saldoContanti.toFixed(2) + ' EUR');
+    L.push('Conto corrente: ' + c.saldoCorrente.toFixed(2) + ' EUR');
+    L.push('Fondo emergenza: ' + c.fondoAccumulato.toFixed(2) + ' EUR');
+    L.push('Crediti (soldi che mi devono): ' + c.creditiTotali.toFixed(2) + ' EUR');
+    L.push('Debiti totali: ' + c.debitiTotali.toFixed(2) + ' EUR');
+    L.push('Patrimonio netto: ' + c.patrimonioNetto.toFixed(2) + ' EUR');
+    L.push('');
+
+    L.push('--- DEBITI ---');
+    c.debitiList.forEach(function(d){
+      L.push(d.name + ': iniziale ' + d.iniziale.toFixed(2) + ', pagato ' + d.pagato.toFixed(2) + ', ancora dovuto ' + d.dovuto.toFixed(2) + ' EUR');
+    });
+    L.push('');
+
+    L.push('--- CREDITI ---');
+    var crediti = computeCreditiByPerson();
+    if(crediti.length === 0){ L.push('Nessuno'); }
+    crediti.forEach(function(p){
+      L.push(p.persona + ': prestato ' + p.prestato.toFixed(2) + ', rimborsato ' + p.rimborsato.toFixed(2) + ', residuo ' + p.residuo.toFixed(2) + ' EUR');
+    });
+    L.push('');
+
+    L.push('--- INVESTIMENTI CRYPTO ---');
+    L.push('Cambio USDT/EUR usato: ' + (CFG.crypto.usdtEurRate));
+    L.push('Investito totale: ' + c.cryptoInvestito.toFixed(2) + ' EUR (' + c.cryptoInvestitoUSDT.toFixed(2) + ' USDT)');
+    L.push('Valore attuale: ' + c.cryptoValore.toFixed(2) + ' EUR (' + c.cryptoValoreUSDT.toFixed(2) + ' USDT)');
+    L.push('P&L: ' + c.cryptoPL.toFixed(2) + ' EUR (' + (c.cryptoPLPercent*100).toFixed(2) + '%)');
+    if(c.cryptoRecuperoPct !== null){
+      L.push('Serve per pareggiare: +' + (c.cryptoRecuperoPct*100).toFixed(2) + '%');
+    }
+    L.push('Quota mia investita: ' + c.quotaMiaInvestita.toFixed(2) + ' EUR -> vale ora ' + c.cryptoValoreMia.toFixed(2) + ' EUR');
+    L.push('Quota Lucia investita: ' + (CFG.crypto.quotaLuciaEUR).toFixed(2) + ' EUR -> vale ora ' + c.cryptoValoreLucia.toFixed(2) + ' EUR');
+    L.push('Quota madre di Lucia investita: ' + (CFG.crypto.quotaMadreEUR).toFixed(2) + ' EUR -> vale ora ' + c.cryptoValoreMadre.toFixed(2) + ' EUR');
+    L.push('BingX: depositato ' + CFG.crypto.bingxIniziale.toFixed(2) + ', saldo attuale ' + CFG.crypto.bingxAttuale.toFixed(2) + ' EUR');
+    L.push('');
+    L.push('Dettaglio coin (prezzi in USDT):');
+    CFG.crypto.coins.forEach(function(coin){
+      var qty = Number(coin.qty)||0, bp = Number(coin.buyPrice)||0, cp = Number(coin.currentPrice)||0;
+      var inv = qty*bp, val = qty*cp, pl = val-inv;
+      var pct = bp > 0 ? ((pl/inv)*100).toFixed(2)+'%' : 'N/D';
+      L.push('  ' + coin.name + ': qty ' + qty + ', acquisto ' + bp + ', attuale ' + cp + ', investito ' + inv.toFixed(2) + ', valore ' + val.toFixed(2) + ', P&L ' + pl.toFixed(2) + ' (' + pct + ')');
+    });
+    L.push('');
+
+    L.push('--- FONDO EMERGENZA ---');
+    L.push('Accumulato: ' + c.fondoAccumulato.toFixed(2) + ' EUR');
+    L.push('Obiettivo fase 1: ' + CFG.fondo.obiettivoFase1 + ' EUR');
+    L.push('Obiettivo finale: ' + CFG.fondo.obiettivoFinale + ' EUR');
+    L.push('');
+
+    L.push('--- OBIETTIVI ---');
+    CFG.goals.forEach(function(g){
+      var cur = g.autoLink === 'patrimonio' ? c.patrimonioNetto : (Number(g.current)||0);
+      L.push(g.name + (g.target > 0 ? ': ' + cur.toFixed(0) + ' / ' + g.target + ' EUR' : ': (senza target)') + (g.note ? ' — ' + g.note : ''));
+    });
+    L.push('');
+
+    L.push('--- RIEPILOGO PER MESE ---');
+    var mesi = {};
+    TX.forEach(function(t){ mesi[monthKey(t.date)] = true; });
+    Object.keys(mesi).sort().forEach(function(m){
+      var e = sumByType('Entrata', null, m);
+      var uf = sumByTypeLiquid('Uscita Fissa', null, m);
+      var uv = sumByTypeLiquid('Uscita Variabile', null, m);
+      var rd = sumByTypeLiquid('Rimborso Debito', null, m);
+      var ri = sumByType('Risparmio', null, m);
+      L.push(monthLabel(m) + ': entrate ' + e.toFixed(2) + ', uscite fisse ' + uf.toFixed(2) + ', uscite variabili ' + uv.toFixed(2) + ', rimborsi debito ' + rd.toFixed(2) + ', risparmio ' + ri.toFixed(2));
+    });
+    L.push('');
+
+    L.push('--- TUTTE LE TRANSAZIONI (' + TX.length + ') ---');
+    L.push('Data | Tipo | Categoria | Importo EUR | Conto | Note');
+    TX.slice().sort(function(a,b){ return a.date.localeCompare(b.date); }).forEach(function(t){
+      L.push(fmtDate(t.date) + ' | ' + t.type + ' | ' + t.category + ' | ' + Number(t.amount).toFixed(2) + ' | ' + (t.account||'') + ' | ' + (t.note||''));
+    });
+
+    document.getElementById('analisi-export').value = L.join('\n');
+    document.getElementById('analisi-status').innerHTML = '<div class="status-msg ok">Riepilogo generato con ' + TX.length + ' transazioni. Copialo e incollalo in chat.</div>';
+  }catch(e){
+    document.getElementById('analisi-status').innerHTML = '<div class="status-msg err">Errore: ' + escapeHtml(String(e && e.message || e)) + '</div>';
+  }
+}
+window.generaRiepilogo = generaRiepilogo;
+
+function copiaRiepilogo(){
+  var ta = document.getElementById('analisi-export');
+  if(!ta.value){
+    document.getElementById('analisi-status').innerHTML = '<div class="status-msg err">Prima premi "Genera riepilogo per la chat".</div>';
+    return;
+  }
+  var done = false;
+  try{
+    ta.select();
+    ta.setSelectionRange(0, 999999);
+    done = document.execCommand('copy');
+  }catch(e){ done = false; }
+  if(!done && navigator.clipboard){
+    navigator.clipboard.writeText(ta.value).then(function(){
+      document.getElementById('analisi-status').innerHTML = '<div class="status-msg ok">Copiato. Ora incollalo in chat.</div>';
+    }).catch(function(){
+      document.getElementById('analisi-status').innerHTML = '<div class="status-msg err">Copia automatica non riuscita: seleziona il testo a mano e copialo.</div>';
+    });
+    return;
+  }
+  document.getElementById('analisi-status').innerHTML = done
+    ? '<div class="status-msg ok">Copiato. Ora incollalo in chat.</div>'
+    : '<div class="status-msg err">Copia automatica non riuscita: seleziona il testo a mano e copialo.</div>';
+}
+window.copiaRiepilogo = copiaRiepilogo;
+
+function csvCell(v){
+  var s = String(v === undefined || v === null ? '' : v);
+  if(s.indexOf('"') !== -1 || s.indexOf(';') !== -1 || s.indexOf('\n') !== -1){
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
+  return s;
+}
+
+function scaricaCSV(){
+  try{
+    var righe = [];
+    righe.push(['Data','Tipo','Categoria','Importo EUR','Conto','Note'].join(';'));
+    TX.slice().sort(function(a,b){ return a.date.localeCompare(b.date); }).forEach(function(t){
+      righe.push([
+        csvCell(fmtDate(t.date)),
+        csvCell(t.type),
+        csvCell(t.category),
+        csvCell(Number(t.amount).toFixed(2).replace('.', ',')),
+        csvCell(t.account || ''),
+        csvCell(t.note || '')
+      ].join(';'));
+    });
+    var csv = '\ufeff' + righe.join('\r\n');
+    var blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'transazioni_' + new Date().toISOString().slice(0,10) + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    document.getElementById('analisi-status').innerHTML = '<div class="status-msg ok">File CSV scaricato con ' + TX.length + ' transazioni. Puoi aprirlo in Excel o allegarlo in chat.</div>';
+  }catch(e){
+    document.getElementById('analisi-status').innerHTML = '<div class="status-msg err">Download non riuscito su questo dispositivo: usa il riepilogo testuale qui sopra. [' + escapeHtml(String(e && e.message || e)) + ']</div>';
+  }
+}
+window.scaricaCSV = scaricaCSV;
+
+function addPatrimonioYear(){
+  var maxYear = CFG.patrimonio.reduce(function(m,p){ return Math.max(m,p.year); }, CFG.birthYear);
+  var last = CFG.patrimonio.find(function(p){ return p.year === maxYear; });
+  CFG.patrimonio.push({ year: maxYear+1, saldo: last?last.saldo:0, investimenti: last?last.investimenti:0, fondo: last?last.fondo:0, crediti: last?(last.crediti||0):0, debiti: last?last.debiti:0 });
+  saveCfg(); renderAll();
+}
+window.addPatrimonioYear = addPatrimonioYear;
+function deletePatrimonioYear(year){
+  CFG.patrimonio = CFG.patrimonio.filter(function(p){ return p.year !== year; });
+  saveCfg(); renderAll();
+}
+window.deletePatrimonioYear = deletePatrimonioYear;
+function updatePatrimonio(year, field, value){
+  var p = CFG.patrimonio.find(function(p){ return p.year === year; });
+  if(!p) return;
+  p[field] = parseFloat(value) || 0;
+  saveCfg(); renderAll();
+}
+window.updatePatrimonio = updatePatrimonio;
+
+window.ftApp = {};
+avvia();
+
+})();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(e){ console.error('sw', e); }); });
+}
+</script>
+</body>
+</html>
