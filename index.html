@@ -124,6 +124,9 @@
   #ft-root table{width:100%; border-collapse:collapse; font-size:13px;}
   #ft-root th{text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-soft); font-weight:600; padding:6px 8px; border-bottom:1px solid var(--line);}
   #ft-root td{padding:8px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  /* Portfolio altcoin: la colonna del nome resta ferma a sinistra quando scorri la tabella sul telefono */
+  #ft-root .coin-col{position:sticky; left:-18px; z-index:1; background:var(--card); box-shadow:1px 0 0 var(--line); padding-left:18px;}
+  #ft-root input.coin-name{font-family:'IBM Plex Mono',monospace; font-weight:600; text-transform:uppercase; letter-spacing:.02em; min-width:64px; padding:6px 8px;}
   #ft-root tr:last-child td{border-bottom:none;}
   #ft-root .row-flex{display:flex; align-items:center; gap:8px;}
   #ft-root .empty{text-align:center; color:var(--ink-faint); font-size:13px; padding:24px 0;}
@@ -1649,7 +1652,7 @@ function renderInvestimenti(){
 
   html += '<div class="card">';
   html += '<div class="card-title">Portfolio altcoin (prezzi in USDT)<button class="btn" onclick="addCoin()">+ Aggiungi coin</button></div>';
-  html += '<table><thead><tr><th>Coin</th><th>Quantita</th><th>Prezzo acquisto (USDT)</th><th>Investito (USDT)</th><th>Prezzo attuale (USDT)</th><th>Valore attuale (USDT)</th><th>P&amp;L (USDT)</th><th>P&amp;L %</th><th>Serve per pareggiare</th><th></th></tr></thead><tbody>';
+  html += '<table><thead><tr><th class="coin-col">Coin</th><th>Quantita</th><th>Prezzo acquisto (USDT)</th><th>Investito (USDT)</th><th>Prezzo attuale (USDT)</th><th>Valore attuale (USDT)</th><th>P&amp;L (USDT)</th><th>P&amp;L %</th><th>Serve per pareggiare</th><th></th></tr></thead><tbody>';
   CFG.crypto.coins.forEach(function(coin){
     var qty = Number(coin.qty)||0;
     var buyPrice = Number(coin.buyPrice)||0;
@@ -1659,7 +1662,8 @@ function renderInvestimenti(){
     var plPct = buyPrice > 0 ? (pl/invested) : null;
     var recuperoPct = (buyPrice > 0 && pl < 0 && value > 0) ? (invested/value) - 1 : null;
     html += '<tr>';
-    html += '<td><input type="text" value="' + escapeHtml(coin.name) + '" style="height:30px;" onchange="updateCoin(\'' + coin.id + '\',\'name\',this.value)"></td>';
+    var larghezzaNome = Math.max(4, String(coin.name||'').length) + 3;
+    html += '<td class="coin-col"><input type="text" class="coin-name" value="' + escapeHtml(coin.name) + '" style="height:30px; width:' + larghezzaNome + 'ch;" title="' + escapeHtml(coin.name) + '" onchange="updateCoin(\'' + coin.id + '\',\'name\',this.value)"></td>';
     html += '<td><input type="number" step="any" class="num-in" value="' + coin.qty + '" style="height:30px; width:90px;" onchange="updateCoin(\'' + coin.id + '\',\'qty\',this.value)"></td>';
     html += '<td><input type="number" step="any" class="num-in" value="' + coin.buyPrice + '" style="height:30px; width:100px;" onchange="updateCoin(\'' + coin.id + '\',\'buyPrice\',this.value)"></td>';
     html += '<td class="num">' + invested.toFixed(2) + '</td>';
