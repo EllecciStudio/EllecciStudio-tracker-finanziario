@@ -364,13 +364,14 @@ function sumByType(type, category, monthFilter){
   }).reduce(function(s,t){ return s + Number(t.amount || 0); }, 0);
 }
 
-// Somma solo le transazioni pagate con soldi liquidi (esclude quelle finanziate dal Fondo Emergenza)
+// Somma solo le transazioni pagate con soldi liquidi (esclude quelle finanziate dal Fondo Emergenza
+// e le rettifiche, che cambiano un credito o un debito senza che si muovano soldi)
 function sumByTypeLiquid(type, category, monthFilter){
   return TX.filter(function(t){
     if(t.type !== type) return false;
     if(category && t.category !== category) return false;
     if(monthFilter && monthKey(t.date) !== monthFilter) return false;
-    if(t.account === 'Fondo Emergenza') return false;
+    if(t.account === 'Fondo Emergenza' || t.account === 'Rettifica') return false;
     return true;
   }).reduce(function(s,t){ return s + Number(t.amount || 0); }, 0);
 }
@@ -520,7 +521,7 @@ function sumUptoLiquid(type, category, uptoMonth){
   return TX.filter(function(t){
     if(t.type !== type) return false;
     if(category && t.category !== category) return false;
-    if(t.account === 'Fondo Emergenza') return false;
+    if(t.account === 'Fondo Emergenza' || t.account === 'Rettifica') return false;
     return monthKey(t.date) <= uptoMonth;
   }).reduce(function(s,t){ return s + Number(t.amount || 0); }, 0);
 }
@@ -1568,6 +1569,9 @@ function addPrestitoDato(){
     alert('Inserisci nome, importo valido e data.');
     return;
   }
+  // Se la persona esiste gia (anche scritta con maiuscole diverse) uso lo stesso nome, cosi non si creano doppioni
+  var esistente = getCreditPersons().filter(function(p){ return p.toLowerCase() === persona.toLowerCase(); })[0];
+  if(esistente) persona = esistente;
   TX.push({id:uid(), date:date, type:'Prestito Dato', category:persona, amount:amount, account:'Contanti', note:note});
   saveTx();
   renderAll();
