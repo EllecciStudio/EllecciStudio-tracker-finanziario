@@ -1,0 +1,31 @@
+# Ellecci Studio — Keep-alive Supabase
+# Il piano gratuito di Supabase mette in pausa il progetto dopo 7 giorni senza richieste.
+# Ogni 3 giorni questa azione fa una piccola lettura sul database (tabella tracker_data).
+# Usa solo URL e chiave "publishable", già pubbliche in index.html: con la Row Level Security
+# la lettura non restituisce nessun dato, ma conta come attività.
+
+name: Keep-alive Supabase
+
+on:
+  schedule:
+    - cron: "17 7 */3 * *"   # ogni 3 giorni alle 07:17 UTC (09:17 ora italiana)
+  workflow_dispatch:          # per lanciarlo a mano
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lettura sul database Supabase
+        run: |
+          URL=$(grep -oP "SUPABASE_URL = '\K[^']+" index.html)
+          KEY=$(grep -oP "SUPABASE_KEY = '\K[^']+" index.html)
+          STATUS=$(curl -s -o risposta.txt -w "%{http_code}" \
+            "$URL/rest/v1/tracker_data?select=updated_at&limit=1" \
+            -H "apikey: $KEY" -H "Authorization: Bearer $KEY")
+          echo "Risposta Supabase: $STATUS"
+          if [ "$STATUS" -ge 400 ]; then
+            cat risposta.txt
+            echo "Lettura fallita: il progetto potrebbe essere in pausa (riattivalo con Restore dalla dashboard)."
+            exit 1
+          fi
