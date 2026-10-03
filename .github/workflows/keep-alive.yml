@@ -1,8 +1,9 @@
 # Ellecci Studio — Keep-alive Supabase
 # Il piano gratuito di Supabase mette in pausa il progetto dopo 7 giorni senza richieste.
 # Ogni 3 giorni questa azione fa una piccola lettura sul database (tabella tracker_data).
-# Usa solo URL e chiave "publishable", già pubbliche in index.html: con la Row Level Security
-# la lettura non restituisce nessun dato, ma conta come attività.
+# Usa solo URL e chiave "publishable", già pubbliche in index.html. Senza login il database
+# risponde "permission denied" (codice 42501): è giusto così, i dati restano protetti,
+# ma la richiesta arriva fino al database e conta come attività.
 
 name: Keep-alive Supabase
 
@@ -25,7 +26,7 @@ jobs:
             -H "apikey: $KEY")
           echo "Risposta Supabase: $STATUS"
           echo "::notice::Supabase $STATUS $(head -c 200 risposta.txt | tr -d '\n')"
-          if [ "$STATUS" -ge 400 ]; then
+          if [ "$STATUS" -ge 400 ] && ! grep -q '"42501"' risposta.txt; then
             echo "Lettura fallita: il progetto potrebbe essere in pausa (riattivalo con Restore dalla dashboard)."
             exit 1
           fi
