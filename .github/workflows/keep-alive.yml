@@ -24,7 +24,7 @@ jobs:
             "$URL/rest/v1/tracker_data?select=updated_at&limit=1" \
             -H "apikey: $KEY")
           echo "Risposta Supabase: $STATUS"
-          head -c 300 risposta.txt; echo
+          echo "::notice::Supabase $STATUS $(head -c 200 risposta.txt | tr -d '\n')"
           if [ "$STATUS" -ge 400 ]; then
             echo "Lettura fallita: il progetto potrebbe essere in pausa (riattivalo con Restore dalla dashboard)."
             exit 1
