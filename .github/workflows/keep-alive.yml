@@ -22,10 +22,10 @@ jobs:
           KEY=$(grep -oP "SUPABASE_KEY = '\K[^']+" index.html)
           STATUS=$(curl -s -o risposta.txt -w "%{http_code}" \
             "$URL/rest/v1/tracker_data?select=updated_at&limit=1" \
-            -H "apikey: $KEY" -H "Authorization: Bearer $KEY")
+            -H "apikey: $KEY")
           echo "Risposta Supabase: $STATUS"
+          head -c 300 risposta.txt; echo
           if [ "$STATUS" -ge 400 ]; then
-            cat risposta.txt
             echo "Lettura fallita: il progetto potrebbe essere in pausa (riattivalo con Restore dalla dashboard)."
             exit 1
           fi
