@@ -338,6 +338,7 @@ function fmt(n, dec){
   n = Number(n) || 0;
   return new Intl.NumberFormat('it-IT', {style:'currency', currency:'EUR', minimumFractionDigits:dec, maximumFractionDigits:dec}).format(n);
 }
+function cent(n){ return Math.round((Number(n)||0)*100)/100; }
 function fmtUsdt(n, dec){
   dec = (dec === undefined) ? 2 : dec;
   n = Number(n) || 0;
@@ -1062,8 +1063,8 @@ function renderDashboard(){
 
   var html = '';
   html += '<div class="kpi-grid">';
-  html += kpiCard('Contanti', fmt(c.saldoContanti,0), '');
-  html += kpiCard('Conto corrente', fmt(c.saldoCorrente,0), '');
+  html += kpiCard('Contanti', fmt(c.saldoContanti), '');
+  html += kpiCard('Conto corrente', fmt(c.saldoCorrente), '');
   html += kpiCard('Entrate mese corrente', fmt(entrateMese), 'pos');
   html += kpiCard('Uscite mese corrente', fmt(usciteMese), 'neg');
   html += kpiCard('Debiti totali', fmt(c.debitiTotali), 'neg');
@@ -1076,7 +1077,7 @@ function renderDashboard(){
   if(c.debitiList.length > 0){
     html += '<div class="' + (c.debitiList.length >= 3 ? 'grid-3' : 'grid-2') + '">';
     c.debitiList.forEach(function(d){
-      html += '<div class="card"><div class="card-title">Debito ' + escapeHtml(d.name) + '</div>' + railBlock(d.pagato, d.iniziale, 'red') + '<div class="rail-row"><span>Pagato ' + fmt(d.pagato,0) + '</span><span>Dovuto ' + fmt(d.dovuto,0) + '</span></div></div>';
+      html += '<div class="card"><div class="card-title">Debito ' + escapeHtml(d.name) + '</div>' + railBlock(d.pagato, d.iniziale, 'red') + '<div class="rail-row"><span>Pagato ' + fmt(d.pagato) + '</span><span>Dovuto ' + fmt(d.dovuto) + '</span></div></div>';
     });
     html += '</div>';
   }
@@ -1096,9 +1097,9 @@ function renderDashboard(){
 
   var ctx = document.getElementById('ft-chart-monthly');
   if(chartMonthly){ chartMonthly.destroy(); }
-  var dataEntrate = months.map(function(m){ return Math.round(sumByType('Entrata', null, m)); });
+  var dataEntrate = months.map(function(m){ return cent(sumByType('Entrata', null, m)); });
   var dataUscite = months.map(function(m){
-    return Math.round(sumByTypeLiquid('Uscita Fissa', null, m) + sumByTypeLiquid('Uscita Variabile', null, m) + sumByTypeLiquid('Rimborso Debito', null, m) + sumByType('Risparmio', null, m) + sumByTypeLiquid('Investimento', null, m));
+    return cent(sumByTypeLiquid('Uscita Fissa', null, m) + sumByTypeLiquid('Uscita Variabile', null, m) + sumByTypeLiquid('Rimborso Debito', null, m) + sumByType('Risparmio', null, m) + sumByTypeLiquid('Investimento', null, m));
   });
   chartMonthly = safeChart(ctx, {
     type: 'bar',
@@ -1118,7 +1119,7 @@ function renderDashboard(){
 
   var ctx2 = document.getElementById('ft-chart-saldo');
   if(chartSaldo){ chartSaldo.destroy(); }
-  var dataSaldo = months.map(function(m){ return Math.round(saldoContoAlMese(m)); });
+  var dataSaldo = months.map(function(m){ return cent(saldoContoAlMese(m)); });
   chartSaldo = safeChart(ctx2, {
     type: 'line',
     data: { labels: months.map(monthLabel), datasets:[{label:'Saldo conto', data:dataSaldo, borderColor:COLORS.teal, backgroundColor:COLORS.tealBg, fill:true, tension:0.3, pointRadius:3, pointBackgroundColor:COLORS.teal}] },
@@ -1148,18 +1149,18 @@ function renderConti(){
 
   html += '<div class="grid-2">';
   html += '<div class="card"><div class="card-title">Contanti</div>';
-  html += '<div style="font-size:28px; font-weight:600;" class="disp">' + fmt(c.saldoContanti,0) + '</div>';
+  html += '<div style="font-size:28px; font-weight:600;" class="disp">' + fmt(c.saldoContanti) + '</div>';
   html += '<div style="font-size:11px; color:var(--ink-soft); margin-bottom:12px;">checkpoint dal ' + fmtDate(CFG.conti.contanti.dal) + '</div>';
   html += '<div class="form-grid">';
-  html += '<div><label>Correggi a (\u20ac)</label><input type="number" step="1" class="num-in" id="conti-fix-contanti" placeholder="' + Math.round(c.saldoContanti) + '"></div>';
+  html += '<div><label>Correggi a (\u20ac)</label><input type="number" step="0.01" class="num-in" id="conti-fix-contanti" placeholder="' + c.saldoContanti.toFixed(2) + '"></div>';
   html += '<div><button class="btn" style="width:100%;" onclick="ricalibraConto(\'contanti\')">Correggi saldo</button></div>';
   html += '</div></div>';
 
   html += '<div class="card"><div class="card-title">Conto corrente</div>';
-  html += '<div style="font-size:28px; font-weight:600;" class="disp">' + fmt(c.saldoCorrente,0) + '</div>';
+  html += '<div style="font-size:28px; font-weight:600;" class="disp">' + fmt(c.saldoCorrente) + '</div>';
   html += '<div style="font-size:11px; color:var(--ink-soft); margin-bottom:12px;">checkpoint dal ' + fmtDate(CFG.conti.corrente.dal) + '</div>';
   html += '<div class="form-grid">';
-  html += '<div><label>Correggi a (\u20ac)</label><input type="number" step="1" class="num-in" id="conti-fix-corrente" placeholder="' + Math.round(c.saldoCorrente) + '"></div>';
+  html += '<div><label>Correggi a (\u20ac)</label><input type="number" step="0.01" class="num-in" id="conti-fix-corrente" placeholder="' + c.saldoCorrente.toFixed(2) + '"></div>';
   html += '<div><button class="btn" style="width:100%;" onclick="ricalibraConto(\'corrente\')">Correggi saldo</button></div>';
   html += '</div></div>';
   html += '</div>';
@@ -1182,10 +1183,10 @@ function renderConti(){
   var labels = [];
   var data = [];
   var colors = [];
-  if(c.saldoContanti > 0){ labels.push('Contanti'); data.push(Math.round(c.saldoContanti)); colors.push(COLORS.gold); }
-  if(c.saldoCorrente > 0){ labels.push('Conto Corrente'); data.push(Math.round(c.saldoCorrente)); colors.push(COLORS.teal); }
-  if(c.fondoAccumulato > 0){ labels.push('Fondo Emergenza'); data.push(Math.round(c.fondoAccumulato)); colors.push(COLORS.blue); }
-  if(c.investimentiTotali > 0){ labels.push('Investimenti'); data.push(Math.round(c.investimentiTotali)); colors.push(COLORS.purple); }
+  if(c.saldoContanti > 0){ labels.push('Contanti'); data.push(cent(c.saldoContanti)); colors.push(COLORS.gold); }
+  if(c.saldoCorrente > 0){ labels.push('Conto Corrente'); data.push(cent(c.saldoCorrente)); colors.push(COLORS.teal); }
+  if(c.fondoAccumulato > 0){ labels.push('Fondo Emergenza'); data.push(cent(c.fondoAccumulato)); colors.push(COLORS.blue); }
+  if(c.investimentiTotali > 0){ labels.push('Investimenti'); data.push(cent(c.investimentiTotali)); colors.push(COLORS.purple); }
 
   var ctx = document.getElementById('ft-chart-conti');
   if(chartConti){ chartConti.destroy(); }
@@ -1407,7 +1408,7 @@ function renderDebiti(){
   var months = getMonthsRange();
   var html = '';
 
-  html += '<div class="card"><div class="card-title">Totale debiti residui</div><div style="font-size:26px; font-weight:600;" class="disp">' + fmt(c.debitiTotali,0) + '</div></div>';
+  html += '<div class="card"><div class="card-title">Totale debiti residui</div><div style="font-size:26px; font-weight:600;" class="disp">' + fmt(c.debitiTotali) + '</div></div>';
 
   html += '<div class="card"><div class="card-title">Andamento debiti nel tempo</div>';
   html += '<div style="position:relative; height:220px;"><canvas id="ft-chart-debiti" role="img" aria-label="Grafico andamento del debito residuo nel tempo"></canvas></div>';
@@ -1417,7 +1418,7 @@ function renderDebiti(){
   html += '<div class="card-title">Aggiungi nuovo debito</div>';
   html += '<div class="form-grid">';
   html += '<div><label>Nome (es. Prestito auto)</label><input type="text" id="debt-new-name" placeholder="es. Prestito auto"></div>';
-  html += '<div><label>Importo iniziale (\u20ac)</label><input type="number" step="1" min="0" class="num-in" id="debt-new-amount" placeholder="0"></div>';
+  html += '<div><label>Importo iniziale (\u20ac)</label><input type="number" step="any" min="0" class="num-in" id="debt-new-amount" placeholder="0"></div>';
   html += '<div><button class="btn primary" style="width:100%;" onclick="addDebtNamed()">Aggiungi debito</button></div>';
   html += '</div></div>';
 
@@ -1431,10 +1432,10 @@ function renderDebiti(){
       html += '<input type="text" value="' + escapeHtml(d.name) + '" style="height:32px; font-weight:600; font-family:Unbounded,sans-serif; border:none; background:none; padding:0;" onchange="updateDebtField(\'' + d.id + '\',\'name\',this.value)">';
       html += '<span class="del-row" onclick="deleteDebt(\'' + d.id + '\')">Elimina</span>';
       html += '</div>';
-      html += '<div class="form-grid" style="margin-bottom:10px;"><div><label>Importo iniziale (\u20ac)</label><input type="number" step="1" class="num-in" value="' + d.iniziale + '" onchange="updateDebtField(\'' + d.id + '\',\'iniziale\',this.value)"></div></div>';
+      html += '<div class="form-grid" style="margin-bottom:10px;"><div><label>Importo iniziale (\u20ac)</label><input type="number" step="any" class="num-in" value="' + d.iniziale + '" onchange="updateDebtField(\'' + d.id + '\',\'iniziale\',this.value)"></div></div>';
       html += railBlock(d.pagato, d.iniziale, 'red');
-      html += '<div class="rail-row"><span>Pagato ' + fmt(d.pagato,0) + '</span><span>' + fmtPct(d.iniziale>0?d.pagato/d.iniziale:0) + '</span></div>';
-      html += '<div style="margin-top:14px; font-size:22px; font-weight:600;" class="disp">' + fmt(d.dovuto,0) + '</div>';
+      html += '<div class="rail-row"><span>Pagato ' + fmt(d.pagato) + '</span><span>' + fmtPct(d.iniziale>0?d.pagato/d.iniziale:0) + '</span></div>';
+      html += '<div style="margin-top:14px; font-size:22px; font-weight:600;" class="disp">' + fmt(d.dovuto) + '</div>';
       html += '<div style="font-size:12px; color:var(--ink-soft); margin-bottom:12px;">ancora dovuto</div>';
       if(d.dovuto > 0){
         html += '<div class="form-grid">';
@@ -1451,7 +1452,7 @@ function renderDebiti(){
 
   var ctx = document.getElementById('ft-chart-debiti');
   if(chartDebiti){ chartDebiti.destroy(); }
-  var data = months.map(function(m){ return Math.round(debitiResiduoAlMese(m)); });
+  var data = months.map(function(m){ return cent(debitiResiduoAlMese(m)); });
   chartDebiti = safeChart(ctx, {
     type: 'line',
     data: { labels: months.map(monthLabel), datasets:[{label:'Debito residuo', data:data, borderColor:COLORS.red, backgroundColor:COLORS.redBg, fill:true, tension:0.3, pointRadius:3, pointBackgroundColor:COLORS.red}] },
@@ -1511,7 +1512,7 @@ function renderCrediti(){
   var months = getMonthsRange();
 
   var html = '';
-  html += '<div class="card"><div class="card-title">Totale che ti devono</div><div style="font-size:26px; font-weight:600;" class="disp">' + fmt(c.creditiTotali,0) + '</div></div>';
+  html += '<div class="card"><div class="card-title">Totale che ti devono</div><div style="font-size:26px; font-weight:600;" class="disp">' + fmt(c.creditiTotali) + '</div></div>';
 
   html += '<div class="card"><div class="card-title">Andamento crediti nel tempo</div>';
   html += '<div style="position:relative; height:220px;"><canvas id="ft-chart-crediti" role="img" aria-label="Grafico andamento dei crediti residui nel tempo"></canvas></div>';
@@ -1534,8 +1535,8 @@ function renderCrediti(){
       html += '<div class="card">';
       html += '<div class="card-title">' + escapeHtml(p.persona) + '</div>';
       html += railBlock(p.rimborsato, p.prestato, 'purple');
-      html += '<div class="rail-row"><span>Rimborsato ' + fmt(p.rimborsato,0) + '</span><span>Prestato ' + fmt(p.prestato,0) + '</span></div>';
-      html += '<div style="margin-top:12px; font-size:20px; font-weight:600;" class="disp">' + fmt(p.residuo,0) + '</div>';
+      html += '<div class="rail-row"><span>Rimborsato ' + fmt(p.rimborsato) + '</span><span>Prestato ' + fmt(p.prestato) + '</span></div>';
+      html += '<div style="margin-top:12px; font-size:20px; font-weight:600;" class="disp">' + fmt(p.residuo) + '</div>';
       html += '<div style="font-size:12px; color:var(--ink-soft); margin-bottom:10px;">ancora da restituire</div>';
       if(p.residuo > 0){
         html += '<div class="form-grid">';
@@ -1552,7 +1553,7 @@ function renderCrediti(){
 
   var ctx = document.getElementById('ft-chart-crediti');
   if(chartCrediti){ chartCrediti.destroy(); }
-  var data = months.map(function(m){ return Math.round(creditiResiduoAlMese(m)); });
+  var data = months.map(function(m){ return cent(creditiResiduoAlMese(m)); });
   chartCrediti = safeChart(ctx, {
     type: 'line',
     data: { labels: months.map(monthLabel), datasets:[{label:'Crediti residui', data:data, borderColor:COLORS.purple, backgroundColor:COLORS.purpleBg, fill:true, tension:0.3, pointRadius:3, pointBackgroundColor:COLORS.purple}] },
@@ -1619,14 +1620,14 @@ function renderInvestimenti(){
   html += '<div class="card">';
   html += '<div class="card-title">Di chi sono questi soldi</div>';
   html += '<div class="form-grid" style="margin-bottom:12px;">';
-  html += '<div><label>Quota di Lucia (\u20ac investiti)</label><input type="number" step="1" class="num-in" id="quota-lucia" value="' + CFG.crypto.quotaLuciaEUR + '"></div>';
-  html += '<div><label>Quota madre di Lucia (\u20ac investiti)</label><input type="number" step="1" class="num-in" id="quota-madre" value="' + CFG.crypto.quotaMadreEUR + '"></div>';
-  html += '<div><span class="kpi-label">Quota mia (\u20ac investiti)</span><div class="kpi-val">' + fmt(c.quotaMiaInvestita,0) + '</div></div>';
+  html += '<div><label>Quota di Lucia (\u20ac investiti)</label><input type="number" step="any" class="num-in" id="quota-lucia" value="' + CFG.crypto.quotaLuciaEUR + '"></div>';
+  html += '<div><label>Quota madre di Lucia (\u20ac investiti)</label><input type="number" step="any" class="num-in" id="quota-madre" value="' + CFG.crypto.quotaMadreEUR + '"></div>';
+  html += '<div><span class="kpi-label">Quota mia (\u20ac investiti)</span><div class="kpi-val">' + fmt(c.quotaMiaInvestita) + '</div></div>';
   html += '</div>';
   html += '<table><thead><tr><th></th><th>% del totale</th><th>Investito (EUR)</th><th>Valore attuale (EUR)</th></tr></thead><tbody>';
-  html += '<tr><td style="font-weight:600;">Mia</td><td class="num">' + fmtPct(c.pctMia) + '</td><td class="num">' + fmt(c.quotaMiaInvestita,0) + '</td><td class="num" style="font-weight:600; color:var(--teal);">' + fmt(c.cryptoValoreMia,0) + '</td></tr>';
-  html += '<tr><td style="font-weight:600;">Lucia</td><td class="num">' + fmtPct(c.pctLucia) + '</td><td class="num">' + fmt(CFG.crypto.quotaLuciaEUR,0) + '</td><td class="num">' + fmt(c.cryptoValoreLucia,0) + '</td></tr>';
-  html += '<tr><td style="font-weight:600;">Madre di Lucia</td><td class="num">' + fmtPct(c.pctMadre) + '</td><td class="num">' + fmt(CFG.crypto.quotaMadreEUR,0) + '</td><td class="num">' + fmt(c.cryptoValoreMadre,0) + '</td></tr>';
+  html += '<tr><td style="font-weight:600;">Mia</td><td class="num">' + fmtPct(c.pctMia) + '</td><td class="num">' + fmt(c.quotaMiaInvestita) + '</td><td class="num" style="font-weight:600; color:var(--teal);">' + fmt(c.cryptoValoreMia) + '</td></tr>';
+  html += '<tr><td style="font-weight:600;">Lucia</td><td class="num">' + fmtPct(c.pctLucia) + '</td><td class="num">' + fmt(CFG.crypto.quotaLuciaEUR) + '</td><td class="num">' + fmt(c.cryptoValoreLucia) + '</td></tr>';
+  html += '<tr><td style="font-weight:600;">Madre di Lucia</td><td class="num">' + fmtPct(c.pctMadre) + '</td><td class="num">' + fmt(CFG.crypto.quotaMadreEUR) + '</td><td class="num">' + fmt(c.cryptoValoreMadre) + '</td></tr>';
   html += '</tbody></table>';
   html += '<div style="font-size:11px; color:var(--ink-soft); margin-top:10px;">Il valore attuale si ripartisce nelle stesse proporzioni dell\'investito: se il portafoglio sale o scende, ogni quota si aggiorna da sola. Solo la quota mia entra nel calcolo del mio patrimonio netto: quella di Lucia e di sua madre non gravano ne a favore ne contro il mio patrimonio.</div>';
   html += '</div>';
@@ -1710,9 +1711,9 @@ function renderInvestimenti(){
   CFG.crypto.coins.forEach(function(coin){
     var valueUSDT = (Number(coin.qty)||0)*(Number(coin.currentPrice)||0);
     var valueEUR = valueUSDT * rate;
-    if(valueEUR > 0){ allocLabels.push(coin.name); allocData.push(Math.round(valueEUR)); }
+    if(valueEUR > 0){ allocLabels.push(coin.name); allocData.push(cent(valueEUR)); }
   });
-  if(CFG.crypto.bingxAttuale > 0){ allocLabels.push('BingX'); allocData.push(Math.round(CFG.crypto.bingxAttuale)); }
+  if(CFG.crypto.bingxAttuale > 0){ allocLabels.push('BingX'); allocData.push(cent(CFG.crypto.bingxAttuale)); }
 
   var ctxAlloc = document.getElementById('ft-chart-alloc');
   if(chartAlloc){ chartAlloc.destroy(); }
@@ -1727,7 +1728,7 @@ function renderInvestimenti(){
   }
 
   var ownerLabels = ['Mia', 'Lucia', 'Madre di Lucia'];
-  var ownerData = [Math.round(c.cryptoValoreMia), Math.round(c.cryptoValoreLucia), Math.round(c.cryptoValoreMadre)];
+  var ownerData = [cent(c.cryptoValoreMia), cent(c.cryptoValoreLucia), cent(c.cryptoValoreMadre)];
   var ownerColors = [COLORS.teal, COLORS.gold, COLORS.purple];
   var ctxOwner = document.getElementById('ft-chart-owner');
   if(chartOwner){ chartOwner.destroy(); }
@@ -1770,17 +1771,17 @@ function renderFondo(){
   html += '<div class="card">';
   html += '<div class="card-title">Fondo emergenza</div>';
   html += '<div class="form-grid" style="margin-bottom:10px;">';
-  html += '<div><label>Obiettivo fase 1 (\u20ac)</label><input type="number" step="1" class="num-in" id="fondo-f1" value="' + CFG.fondo.obiettivoFase1 + '"></div>';
-  html += '<div><label>Obiettivo finale (\u20ac)</label><input type="number" step="1" class="num-in" id="fondo-f2" value="' + CFG.fondo.obiettivoFinale + '"></div>';
+  html += '<div><label>Obiettivo fase 1 (\u20ac)</label><input type="number" step="any" class="num-in" id="fondo-f1" value="' + CFG.fondo.obiettivoFase1 + '"></div>';
+  html += '<div><label>Obiettivo finale (\u20ac)</label><input type="number" step="any" class="num-in" id="fondo-f2" value="' + CFG.fondo.obiettivoFinale + '"></div>';
   html += '</div>';
-  html += '<div style="font-size:22px; font-weight:600;" class="disp">' + fmt(c.fondoAccumulato,0) + '</div>';
+  html += '<div style="font-size:22px; font-weight:600;" class="disp">' + fmt(c.fondoAccumulato) + '</div>';
   html += '<div style="font-size:12px; color:var(--ink-soft); margin-bottom:8px;">accumulato</div>';
   html += railBlock(c.fondoAccumulato, CFG.fondo.obiettivoFase1, 'blue');
   html += '<div class="rail-row"><span>Fase 1</span><span>' + fmtPct(CFG.fondo.obiettivoFase1>0?c.fondoAccumulato/CFG.fondo.obiettivoFase1:0) + '</span></div>';
   html += railBlock(c.fondoAccumulato, CFG.fondo.obiettivoFinale, 'teal');
   html += '<div class="rail-row"><span>Obiettivo finale</span><span>' + fmtPct(CFG.fondo.obiettivoFinale>0?c.fondoAccumulato/CFG.fondo.obiettivoFinale:0) + '</span></div>';
   html += '<div class="form-grid" style="margin-top:14px;">';
-  html += '<div><label>Correggi saldo a (\u20ac)</label><input type="number" step="1" class="num-in" id="fondo-fix-amount" placeholder="' + Math.round(c.fondoAccumulato) + '"></div>';
+  html += '<div><label>Correggi saldo a (\u20ac)</label><input type="number" step="0.01" class="num-in" id="fondo-fix-amount" placeholder="' + c.fondoAccumulato.toFixed(2) + '"></div>';
   html += '<div><button class="btn" style="width:100%;" onclick="ricalibraFondo()">Correggi saldo</button></div>';
   html += '</div>';
   html += '<div class="form-grid" style="margin-top:14px;">';
@@ -1810,11 +1811,11 @@ function renderFondo(){
     html += '</div>';
     if(g.target > 0){
       html += railBlock(current, g.target, 'teal');
-      html += '<div class="rail-row"><span>' + fmt(current,0) + (g.autoLink?' (automatico)':'') + '</span><span>Target ' + fmt(g.target,0) + '</span></div>';
+      html += '<div class="rail-row"><span>' + fmt(current) + (g.autoLink?' (automatico)':'') + '</span><span>Target ' + fmt(g.target) + '</span></div>';
       html += '<div class="form-grid" style="margin-top:8px;">';
-      html += '<div><label>Target (\u20ac)</label><input type="number" step="1" class="num-in" value="' + g.target + '" onchange="updateGoal(\'' + g.id + '\',\'target\',this.value)"></div>';
+      html += '<div><label>Target (\u20ac)</label><input type="number" step="any" class="num-in" value="' + g.target + '" onchange="updateGoal(\'' + g.id + '\',\'target\',this.value)"></div>';
       if(!g.autoLink){
-        html += '<div><label>Attuale (\u20ac)</label><input type="number" step="1" class="num-in" value="' + g.current + '" onchange="updateGoal(\'' + g.id + '\',\'current\',this.value)"></div>';
+        html += '<div><label>Attuale (\u20ac)</label><input type="number" step="any" class="num-in" value="' + g.current + '" onchange="updateGoal(\'' + g.id + '\',\'current\',this.value)"></div>';
       }
       html += '<div><label>Note</label><input type="text" value="' + escapeHtml(g.note||'') + '" onchange="updateGoal(\'' + g.id + '\',\'note\',this.value)"></div>';
       html += '</div>';
@@ -1835,7 +1836,7 @@ function renderFondo(){
   var months = getMonthsRange();
   var ctx = document.getElementById('ft-chart-fondo');
   if(chartFondo){ chartFondo.destroy(); }
-  var data = months.map(function(m){ return Math.round(fondoAlMese(m)); });
+  var data = months.map(function(m){ return cent(fondoAlMese(m)); });
   chartFondo = safeChart(ctx, {
     type: 'bar',
     data: { labels: months.map(monthLabel), datasets:[{label:'Fondo accumulato', data:data, backgroundColor:COLORS.blue, borderRadius:4, maxBarThickness:28}] },
@@ -1915,12 +1916,12 @@ function renderPatrimonio(){
     html += '<tr>';
     html += '<td class="num">' + p.year + '</td>';
     html += '<td class="num">' + age + '</td>';
-    html += '<td><input type="number" step="1" class="num-in" value="' + p.saldo + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'saldo\',this.value)"></td>';
-    html += '<td><input type="number" step="1" class="num-in" value="' + p.investimenti + '" style="height:30px; width:105px;" onchange="updatePatrimonio(' + p.year + ',\'investimenti\',this.value)"></td>';
-    html += '<td><input type="number" step="1" class="num-in" value="' + p.fondo + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'fondo\',this.value)"></td>';
-    html += '<td><input type="number" step="1" class="num-in" value="' + (p.crediti||0) + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'crediti\',this.value)"></td>';
-    html += '<td><input type="number" step="1" class="num-in" value="' + p.debiti + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'debiti\',this.value)"></td>';
-    html += '<td class="num" style="font-weight:600;">' + fmt(netto,0) + '</td>';
+    html += '<td><input type="number" step="any" class="num-in" value="' + p.saldo + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'saldo\',this.value)"></td>';
+    html += '<td><input type="number" step="any" class="num-in" value="' + p.investimenti + '" style="height:30px; width:105px;" onchange="updatePatrimonio(' + p.year + ',\'investimenti\',this.value)"></td>';
+    html += '<td><input type="number" step="any" class="num-in" value="' + p.fondo + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'fondo\',this.value)"></td>';
+    html += '<td><input type="number" step="any" class="num-in" value="' + (p.crediti||0) + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'crediti\',this.value)"></td>';
+    html += '<td><input type="number" step="any" class="num-in" value="' + p.debiti + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'debiti\',this.value)"></td>';
+    html += '<td class="num" style="font-weight:600;">' + fmt(netto) + '</td>';
     html += '<td><span class="del-row" onclick="deletePatrimonioYear(' + p.year + ')">Elimina</span></td>';
     html += '</tr>';
   });
@@ -1935,7 +1936,7 @@ function renderPatrimonio(){
   var ctx = document.getElementById('ft-chart-patrimonio');
   if(chartPatrimonio){ chartPatrimonio.destroy(); }
   var labels = sorted.map(function(p){ return p.year; });
-  var data = sorted.map(function(p){ return Math.round((Number(p.saldo)||0)+(Number(p.investimenti)||0)+(Number(p.fondo)||0)+(Number(p.crediti)||0)-(Number(p.debiti)||0)); });
+  var data = sorted.map(function(p){ return cent((Number(p.saldo)||0)+(Number(p.investimenti)||0)+(Number(p.fondo)||0)+(Number(p.crediti)||0)-(Number(p.debiti)||0)); });
   chartPatrimonio = safeChart(ctx, {
     type: 'line',
     data: { labels: labels, datasets: [{ label:'Patrimonio netto', data:data, borderColor:COLORS.teal, backgroundColor:COLORS.tealBg, fill:true, tension:0.25, pointRadius:4, pointBackgroundColor:COLORS.teal }] },
@@ -1948,11 +1949,11 @@ function updatePatrimonioWithCurrent(){
   var c = computeAll();
   var existing = CFG.patrimonio.find(function(p){ return p.year === year; });
   var vals = {
-    saldo: Math.round(c.saldoConto),
-    investimenti: Math.round(c.investimentiTotali),
-    fondo: Math.round(c.fondoAccumulato),
-    crediti: Math.round(c.creditiTotali),
-    debiti: Math.round(c.debitiTotali)
+    saldo: cent(c.saldoConto),
+    investimenti: cent(c.investimentiTotali),
+    fondo: cent(c.fondoAccumulato),
+    crediti: cent(c.creditiTotali),
+    debiti: cent(c.debitiTotali)
   };
   if(existing){
     Object.assign(existing, vals);
@@ -1978,11 +1979,11 @@ function renderPrevisione(){
   html += '<div class="card">';
   html += '<div class="card-title">Ipotesi della proiezione</div>';
   html += '<div class="form-grid">';
-  html += '<div><label>Reddito mensile (\u20ac)</label><input type="number" step="1" class="num-in" id="prev-reddito" value="' + p.redditoMensile + '"></div>';
-  html += '<div><label>Spese fisse mensili (\u20ac)</label><input type="number" step="1" class="num-in" id="prev-fisse" value="' + p.speseFisseMensili + '"></div>';
-  html += '<div><label>Spese variabili mensili (\u20ac)</label><input type="number" step="1" class="num-in" id="prev-variabili" value="' + p.speseVariabiliMensili + '"></div>';
-  html += '<div><label>Versamento fondo mensile (\u20ac)</label><input type="number" step="1" class="num-in" id="prev-fondo" value="' + p.contributoFondoMensile + '"></div>';
-  html += '<div><label>Rimborso Lucia mensile (\u20ac)</label><input type="number" step="1" class="num-in" id="prev-lucia" value="' + p.rimborsoLuciaMensile + '"></div>';
+  html += '<div><label>Reddito mensile (\u20ac)</label><input type="number" step="any" class="num-in" id="prev-reddito" value="' + p.redditoMensile + '"></div>';
+  html += '<div><label>Spese fisse mensili (\u20ac)</label><input type="number" step="any" class="num-in" id="prev-fisse" value="' + p.speseFisseMensili + '"></div>';
+  html += '<div><label>Spese variabili mensili (\u20ac)</label><input type="number" step="any" class="num-in" id="prev-variabili" value="' + p.speseVariabiliMensili + '"></div>';
+  html += '<div><label>Versamento fondo mensile (\u20ac)</label><input type="number" step="any" class="num-in" id="prev-fondo" value="' + p.contributoFondoMensile + '"></div>';
+  html += '<div><label>Rimborso Lucia mensile (\u20ac)</label><input type="number" step="any" class="num-in" id="prev-lucia" value="' + p.rimborsoLuciaMensile + '"></div>';
   html += '<div><label>Fino a</label><input type="date" id="prev-target" value="' + p.dataObiettivo + '"></div>';
   html += '</div>';
   html += '<div style="margin-top:10px; display:flex; align-items:center; gap:8px;"><input type="checkbox" id="prev-carta" style="width:auto; height:auto;" ' + (p.includiRataCarta ? 'checked' : '') + '><label style="margin:0;" for="prev-carta">Continua a pagare la rata carta di credito (\u20ac75/mese) finche non e estinta</label></div>';
@@ -2059,8 +2060,8 @@ function renderEtf(){
   html += '<div class="card">';
   html += '<div class="card-title">Ipotesi della simulazione</div>';
   html += '<div class="form-grid">';
-  html += '<div><label>Capitale iniziale (\u20ac)</label><input type="number" step="1" class="num-in" id="etf-capitale" value="' + p.capitaleIniziale + '"></div>';
-  html += '<div><label>Versamento mensile (\u20ac)</label><input type="number" step="1" class="num-in" id="etf-versamento" value="' + p.versamentoMensile + '"></div>';
+  html += '<div><label>Capitale iniziale (\u20ac)</label><input type="number" step="any" class="num-in" id="etf-capitale" value="' + p.capitaleIniziale + '"></div>';
+  html += '<div><label>Versamento mensile (\u20ac)</label><input type="number" step="any" class="num-in" id="etf-versamento" value="' + p.versamentoMensile + '"></div>';
   html += '<div><label>Rendimento annuo atteso (%)</label><input type="number" step="0.1" class="num-in" id="etf-rendimento" value="' + p.rendimentoAnnuo + '"></div>';
   html += '<div><label>Fino a</label><input type="date" id="etf-target" value="' + p.dataObiettivo + '"></div>';
   html += '</div>';

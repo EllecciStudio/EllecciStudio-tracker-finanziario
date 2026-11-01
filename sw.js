@@ -1,6 +1,6 @@
 /* Tracker finanziario · Ellecci Studio — service worker
    L'app si apre anche senza rete; i dati passano sempre da Supabase e non vengono messi in cache qui. */
-const VERSIONE = 'tracker-v1';
+const VERSIONE = 'tracker-v2';
 const GUSCIO = ['./', 'index.html', 'manifest.webmanifest', 'icona-180.png', 'icona-192.png', 'icona-512.png', 'lib/chart.umd.js', 'lib/supabase.js'];
 
 self.addEventListener('install', e => {
