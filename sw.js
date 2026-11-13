@@ -1,6 +1,6 @@
 /* Tracker finanziario · Ellecci Studio — service worker
    L'app si apre anche senza rete; i dati passano sempre da Supabase e non vengono messi in cache qui. */
-const VERSIONE = 'tracker-v2';
+const VERSIONE = 'tracker-v3';
 const GUSCIO = ['./', 'index.html', 'manifest.webmanifest', 'icona-180.png', 'icona-192.png', 'icona-512.png', 'lib/chart.umd.js', 'lib/supabase.js'];
 
 self.addEventListener('install', e => {
@@ -28,6 +28,10 @@ self.addEventListener('fetch', e => {
 
   // Tutto il resto fuori dal sito (Supabase compreso) va sempre in rete, mai in cache
   if (url.origin !== self.location.origin) return;
+
+  // Pagine in sottocartelle (per esempio l'anteprima del nuovo stile): sempre dalla rete, senza toccare la copia dell'app
+  const radice = new URL(self.registration.scope).pathname;
+  if (url.pathname !== radice && url.pathname !== radice + 'index.html' && (req.mode === 'navigate' || url.pathname.endsWith('/') || url.pathname.endsWith('.html'))) return;
 
   // Pagina: prima la rete (così ricevi gli aggiornamenti), se manca la rete la copia salvata
   if (req.mode === 'navigate' || url.pathname.endsWith('/') || url.pathname.endsWith('index.html')) {

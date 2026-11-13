@@ -15,7 +15,7 @@ da **venderla**. Luigi non è uno sviluppatore: spiega le modifiche in italiano 
 - Nessun passaggio di build: tutto è in `index.html` (HTML, CSS e JS insieme). Librerie incluse in `lib/`
   (Supabase JS 2.117.2, Chart.js 4.4.1), per non dipendere da CDN.
 - Quando cambi i file del "guscio" (index.html, icone, lib), **aumenta `VERSIONE` in `sw.js`**
-  (oggi `tracker-v2`), altrimenti il telefono può continuare a mostrare la versione vecchia.
+  (oggi `tracker-v3`), altrimenti il telefono può continuare a mostrare la versione vecchia.
 - Prima di un push controlla l'app a larghezza telefono (circa 390 px) e il funzionamento offline.
 
 ## Dati e sincronizzazione
@@ -45,3 +45,12 @@ dashboard · log · conti · debiti · crediti · fondo · investimenti · patri
 Servirà ripensare: account multipli e onboarding, pagamenti (su iPhone di norma acquisti in-app Apple),
 privacy/GDPR per dati finanziari di altre persone, backup e supporto. Per la pubblicazione sugli store
 Luigi ha salvato come riferimento un corso su React Native + Expo + Supabase.
+
+## Nuovo stile "kit Ellecci" (anteprima dal 13/11/2026)
+Luigi ha rinominato l'app **VaultWatch** e sta provando un nuovo stile (nero minimale come il video "Ember", pannelli in vetro scuro;
+interruttore per provare il "vetro chiaro su nero", salvato in localStorage `vw_vetro`). È in `anteprima/index.html`, generata da `index.html`
+con lo script del kit: stesse funzioni e stessi dati (stesso login), cambiano solo aspetto, barra laterale sul computer, numero grande del
+patrimonio nella Dashboard e grafici con linee luminose. L'anteprima non registra il service worker e il service worker non la mette in cache.
+Quando Luigi conferma: rigenerarla da `index.html` aggiornato (le modifiche fatte nel frattempo all'app non devono perdersi), metterla al posto
+di `index.html` con i percorsi della radice, togliere `anteprima/`, aumentare `VERSIONE`. Poi lo stesso kit va adattato alle altre app
+(Trading Studio, PlateLog, BandPilot, AltSonar).
