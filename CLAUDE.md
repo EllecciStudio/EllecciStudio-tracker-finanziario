@@ -54,3 +54,7 @@ patrimonio nella Dashboard e grafici con linee luminose. L'anteprima non registr
 Quando Luigi conferma: rigenerarla da `index.html` aggiornato (le modifiche fatte nel frattempo all'app non devono perdersi), metterla al posto
 di `index.html` con i percorsi della radice, togliere `anteprima/`, aumentare `VERSIONE`. Poi lo stesso kit va adattato alle altre app
 (Trading Studio, PlateLog, BandPilot, AltSonar).
+
+## Sistema di design
+Prima di toccare l'interfaccia leggi `DESIGN.md` (sistema di design comune di Ellecci Studio, 15/11/2026; stesso testo della skill personale
+`ellecci-design-system`). Se una regola di questo CLAUDE.md è diversa, vince questo file.
