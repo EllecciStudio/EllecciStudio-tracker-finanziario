@@ -1,0 +1,187 @@
+<style id="vw-kit">
+/* ============================================================
+   Kit Ellecci · VaultWatch
+   Regole: DESIGN.md (15/11/2026) — vetro scuro, colore principale verde,
+   angoli tondi, alone dietro la scheda principale, pulsante attivo bianco,
+   barra in basso che galleggia sul telefono.
+   ============================================================ */
+:root{
+  --vw-principale:#4EDB9C;
+  --vw-principale-alone:rgba(78,219,156,.35);
+  --vw-pannello:rgba(255,255,255,.028);
+  --vw-risalto:linear-gradient(170deg, rgba(255,255,255,.055), rgba(255,255,255,.015));
+  --vw-solido:#070708;
+  --vw-bordo:rgba(255,255,255,.075);
+  --vw-bordo-risalto:rgba(255,255,255,.07);
+  --vw-luce:rgba(255,255,255,.075);
+  --vw-sfoca:18px;
+  --vw-ombra:0 14px 40px rgba(0,0,0,.5);
+  --vw-righe:rgba(255,255,255,.05);
+  --vw-curva:cubic-bezier(0.23, 1, 0.32, 1);
+}
+html, body{ background:#000; }
+/* striscia nera sotto la barra di stato dell'iPhone */
+body::after{ content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top, 0px); background:#000; z-index:20; }
+
+.vw-vetro{ -webkit-backdrop-filter:blur(var(--vw-sfoca)) saturate(140%); backdrop-filter:blur(var(--vw-sfoca)) saturate(140%); }
+@media (prefers-reduced-transparency:reduce){
+  .vw-vetro{ -webkit-backdrop-filter:none; backdrop-filter:none; }
+  #ft-root .barra-basso, #ft-root .lato{ background:#11141B !important; }
+}
+
+/* ---------- accesso ---------- */
+#accesso{ max-width:400px; }
+#accesso .acc-vetro{ position:relative; overflow:hidden; padding:30px 24px 24px; border-radius:28px; background:var(--vw-risalto); border:1px solid var(--vw-bordo-risalto); box-shadow:inset 0 1px 0 var(--vw-luce), var(--vw-ombra); }
+#accesso .acc-vetro::before{ content:""; position:absolute; left:-30%; bottom:-60%; width:120%; height:110%; pointer-events:none; z-index:-1;
+  background:radial-gradient(closest-side, var(--vw-principale-alone), transparent); filter:blur(28px); opacity:.5; }
+#accesso .logo{ width:52px; height:52px; margin-bottom:18px; }
+#accesso .firma{ font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.68rem; letter-spacing:.16em; margin-bottom:8px; }
+#accesso h1{ font-weight:600; font-size:2rem; letter-spacing:-.03em; margin-bottom:10px; }
+#accesso h1 span, #ft-root .wordmark span{ color:var(--vw-principale); }
+#accesso label{ font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; }
+#accesso input{ background:rgba(255,255,255,.035); border-color:var(--vw-bordo); border-radius:12px; }
+#accesso button{ border-radius:999px; background:var(--vw-principale); border-color:var(--vw-principale); color:#05070a; font-weight:600; box-shadow:0 0 22px rgba(78,219,156,.25); transition:transform .14s var(--vw-curva); }
+#accesso button:active{ transform:scale(.97); }
+
+/* ---------- impianto: telefono ---------- */
+#ft-root{
+  --card:var(--vw-solido); --line:var(--vw-righe);
+  max-width:1320px; padding:0 0 calc(96px + env(safe-area-inset-bottom, 0px)); background:transparent;
+  display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-areas:"testa piede" "main main"; column-gap:12px;
+}
+#ft-root:not(.hidden){ display:grid; }
+#ft-root .lato{ display:contents; }
+#ft-root .app-header{ grid-area:testa; margin:2px 0 12px; display:block; }
+#ft-root .marchio{ align-items:center; gap:11px; }
+#ft-root .marchio img{ width:34px; height:34px; }
+#ft-root .wordmark{ font-family:'Unbounded',sans-serif; font-weight:600; font-size:19px; letter-spacing:-.03em; line-height:1.1; }
+#ft-root .occhiello{ font-family:'IBM Plex Mono',monospace; font-size:9.5px; font-weight:500; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint); }
+#ft-root .stato-righe{ margin-top:10px; display:flex; flex-direction:column; gap:3px; }
+#ft-root .app-sub{ font-size:11.5px; }
+#ft-root .lato-piede{ grid-area:piede; display:flex; flex-direction:column; align-items:flex-end; gap:6px; margin-top:4px; }
+#ft-root .lato-piede .bottoni{ display:flex; gap:6px; order:-1; }
+#ft-root .btn-esci{ font-size:11.5px; border-color:var(--vw-bordo); background:rgba(255,255,255,.03); padding:6px 12px; border-radius:999px; white-space:nowrap; }
+#ft-root .btn-esci:hover{ background:rgba(255,255,255,.07); }
+#ft-root .contenuto{ grid-area:main; min-width:0; }
+#ft-root .testata{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin:2px 2px 14px; }
+#ft-root .testata h2{ font-family:'Unbounded',sans-serif; font-size:20px; font-weight:600; letter-spacing:-.03em; margin-top:4px; }
+#ft-root .testata-data{ font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); padding-bottom:3px; }
+
+/* le sezioni: sul telefono diventano il pannello "Altro", aperto dalla barra in basso */
+#ft-root .tabs{
+  position:fixed; z-index:30; left:max(16px, env(safe-area-inset-left, 0px)); right:max(16px, env(safe-area-inset-right, 0px));
+  bottom:calc(86px + env(safe-area-inset-bottom, 0px));
+  display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:16px; overflow:visible;
+  border:1px solid var(--vw-bordo); border-radius:28px; background:rgba(14,16,21,.86); box-shadow:inset 0 1px 0 var(--vw-luce), var(--vw-ombra);
+  opacity:0; transform:translateY(10px) scale(.96); transform-origin:bottom center; pointer-events:none; visibility:hidden;
+  transition:opacity .2s var(--vw-curva), transform .25s var(--vw-curva), visibility 0s .25s;
+}
+html.vw-altro #ft-root .tabs{ opacity:1; transform:none; pointer-events:auto; visibility:visible; transition:opacity .2s var(--vw-curva), transform .25s var(--vw-curva); }
+#ft-root .tab-btn{
+  border:1px solid rgba(255,255,255,.08); margin:0; border-radius:999px; padding:9px 14px; font-size:13px; min-height:40px;
+  transition:background .2s, color .2s, border-color .2s;
+}
+#ft-root .tab-btn.active{ color:#05070a; background:var(--ink); border-color:var(--ink); font-weight:600; }
+
+/* barra in basso che galleggia */
+#ft-root .barra-basso{
+  position:fixed; z-index:31; left:50%; bottom:calc(16px + env(safe-area-inset-bottom, 0px)); transform:translateX(-50%);
+  display:flex; gap:6px; padding:6px; border-radius:999px;
+  background:rgba(20,22,28,.75); border:1px solid rgba(255,255,255,.09); box-shadow:inset 0 1px 0 var(--vw-luce), var(--vw-ombra);
+}
+#ft-root .barra-basso button{
+  width:46px; height:46px; border-radius:50%; display:grid; place-items:center; padding:0; margin:0;
+  background:transparent; border:1px solid rgba(255,255,255,.06); color:var(--ink-soft); cursor:pointer;
+  transition:background .2s, color .2s, transform .14s var(--vw-curva);
+}
+#ft-root .barra-basso button svg{ width:19px; height:19px; }
+#ft-root .barra-basso button:active{ transform:scale(.94); }
+#ft-root .barra-basso button.on{ background:var(--ink); color:#05070a; border-color:var(--ink); }
+#ft-root .barra-basso button.principale{ background:var(--vw-principale); color:#05070a; border-color:transparent; box-shadow:0 0 18px var(--vw-principale-alone); }
+#ft-root .barra-basso button:focus-visible{ outline:2px solid var(--vw-principale); outline-offset:2px; }
+
+/* ---------- pannelli ---------- */
+#ft-root .card{ background:var(--vw-pannello); border:1px solid var(--vw-bordo); border-radius:24px; box-shadow:inset 0 1px 0 var(--vw-luce); padding:18px; }
+#ft-root .card-title{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; font-weight:500; letter-spacing:.12em; margin-bottom:14px; }
+#ft-root .kpi-grid{ grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
+#ft-root .kpi{ background:var(--vw-pannello); border:1px solid var(--vw-bordo); border-radius:16px; box-shadow:inset 0 1px 0 var(--vw-luce); padding:14px 14px 13px; }
+#ft-root .kpi-label{ font-family:'IBM Plex Mono',monospace; font-size:9.5px; font-weight:500; letter-spacing:.11em; text-transform:uppercase; margin-bottom:10px; line-height:1.35; }
+#ft-root .kpi-val{ font-size:19px; font-weight:500; letter-spacing:-.02em; }
+
+/* scheda principale: vetro sfumato + alone di luce verde in basso a sinistra (una sola per schermata) */
+#ft-root .hero{
+  position:relative; isolation:isolate; overflow:hidden; border-radius:24px; padding:20px 20px 18px; margin-bottom:12px;
+  background:var(--vw-risalto); border:1px solid var(--vw-bordo-risalto); box-shadow:inset 0 1px 0 var(--vw-luce), var(--vw-ombra);
+}
+#ft-root .hero::after{ content:""; position:absolute; left:-25%; bottom:-70%; width:110%; height:130%; pointer-events:none; z-index:-1;
+  background:radial-gradient(closest-side, var(--vw-principale-alone), transparent); filter:blur(28px); opacity:.5; }
+#ft-root .hero.neg::after{ background:radial-gradient(closest-side, rgba(255,106,92,.3), transparent); }
+#ft-root .hero-testa{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+#ft-root .hero-val{ font-family:'Unbounded',sans-serif; font-weight:600; font-size:clamp(30px, 9vw, 48px); letter-spacing:-.035em; line-height:1.05; margin:12px 0 16px; white-space:nowrap; }
+#ft-root .hero-val .dec{ font-size:.48em; color:var(--ink-soft); letter-spacing:-.01em; }
+#ft-root .hero-righe{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px 18px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; }
+#ft-root .delta{ display:flex; flex-direction:column; gap:3px; }
+#ft-root .delta b{ font-weight:500; }
+#ft-root .delta.pos b{ color:var(--teal); } #ft-root .delta.neg b{ color:var(--red); }
+#ft-root .delta small{ font-size:9.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-faint); }
+#ft-root .vivo{ display:inline-flex; align-items:center; gap:7px; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft); }
+#ft-root .vivo i{ width:6px; height:6px; border-radius:50%; background:var(--teal); box-shadow:0 0 8px var(--teal); }
+#ft-root .vivo.off i{ background:var(--gold); box-shadow:0 0 8px var(--gold); }
+
+/* ---------- moduli e tabelle ---------- */
+#ft-root input, #ft-root select, #ft-root textarea{ background:rgba(255,255,255,.035); border-color:var(--vw-bordo); border-radius:12px; }
+#ft-root input, #ft-root select{ height:40px; }
+#ft-root select option{ background:#0B0D12; }
+#ft-root input:focus, #ft-root select:focus, #ft-root textarea:focus{ border-color:rgba(78,219,156,.7); box-shadow:0 0 0 3px rgba(78,219,156,.18); }
+#ft-root button.btn{ background:#11141B; border-color:#262B36; border-radius:999px; min-height:40px; padding-inline:16px; transition:background .15s, transform .14s var(--vw-curva); }
+#ft-root button.btn:hover{ background:#181c25; }
+#ft-root button.btn:active{ transform:scale(.97); }
+#ft-root button.btn.primary{ background:var(--vw-principale); border-color:var(--vw-principale); color:#05070a; font-weight:600; box-shadow:0 0 18px rgba(78,219,156,.22); }
+#ft-root button.btn.primary:hover{ background:#6ae3ad; }
+#ft-root th{ font-family:'IBM Plex Mono',monospace; font-size:9.5px; font-weight:500; letter-spacing:.11em; }
+#ft-root td{ border-bottom-color:var(--vw-righe); }
+#ft-root .rail{ background:rgba(255,255,255,.06); border-radius:999px; }
+#ft-root .rail-fill{ border-radius:999px; }
+#ft-root .note{ background:rgba(232,176,75,.06); border-color:rgba(232,176,75,.28); border-radius:16px; }
+#ft-root .status-msg{ border-radius:12px; }
+#ft-root .stamp{ border-radius:6px; }
+#ft-root .coin-col{ background:var(--vw-solido); }
+#ft-root .firma-piede{ font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; }
+
+/* ---------- computer: barra laterale ---------- */
+@media (min-width:960px){
+  body{ padding:16px 20px 28px; }
+  #ft-root{ grid-template-columns:244px minmax(0,1fr); grid-template-areas:none; column-gap:26px; align-items:start; padding-bottom:0; }
+  #ft-root .barra-basso{ display:none; }
+  #ft-root .lato{
+    display:flex; flex-direction:column; gap:22px; grid-column:1; grid-row:1;
+    position:sticky; top:16px; height:calc(100vh - 32px); overflow-y:auto; scrollbar-width:none;
+    padding:20px 12px 14px; border-radius:24px;
+    background:var(--vw-pannello); border:1px solid var(--vw-bordo); box-shadow:inset 0 1px 0 var(--vw-luce), var(--vw-ombra);
+  }
+  #ft-root .app-header, #ft-root .tabs, #ft-root .lato-piede{ grid-area:auto; }
+  #ft-root .app-header{ margin:0; padding:0 8px; }
+  #ft-root .tabs{
+    position:static; flex-direction:column; flex-wrap:nowrap; overflow:visible; margin:0; padding:0; gap:2px;
+    background:none; border:0; border-radius:0; box-shadow:none; counter-reset:scheda;
+    opacity:1; transform:none; pointer-events:auto; visibility:visible; transition:none;
+    -webkit-backdrop-filter:none; backdrop-filter:none;
+  }
+  #ft-root .tab-btn{ text-align:left; border-color:transparent; border-radius:999px; padding:9px 14px; min-height:0; font-size:13px; display:flex; align-items:center; }
+  #ft-root .tab-btn:not(.active):hover{ background:rgba(255,255,255,.05); }
+  #ft-root .tab-btn::before{ counter-increment:scheda; content:counter(scheda, decimal-leading-zero); font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:var(--ink-faint); margin-right:12px; }
+  #ft-root .tab-btn.active::before{ color:rgba(5,7,10,.55); }
+  #ft-root .lato-piede{ margin-top:auto; align-items:stretch; padding:12px 8px 0; border-top:1px solid var(--vw-bordo); }
+  #ft-root .lato-piede .bottoni{ justify-content:flex-end; order:0; }
+  #ft-root .contenuto{ grid-column:2; grid-row:1; }
+  #ft-root .testata{ margin:6px 2px 18px; }
+  #ft-root .testata h2{ font-size:24px; }
+  #ft-root .testata-data{ font-size:11px; }
+  #ft-root .hero{ padding:26px 28px 22px; }
+  #ft-root .hero-righe{ display:flex; gap:12px 36px; }
+  #ft-root .kpi-grid{ grid-template-columns:repeat(4, minmax(0,1fr)); }
+}
+@media (prefers-reduced-motion:reduce){
+  #ft-root .tab-btn, #ft-root .tabs, #ft-root .barra-basso button{ transition:none; }
+}
+</style>

@@ -46,13 +46,16 @@ Servirà ripensare: account multipli e onboarding, pagamenti (su iPhone di norma
 privacy/GDPR per dati finanziari di altre persone, backup e supporto. Per la pubblicazione sugli store
 Luigi ha salvato come riferimento un corso su React Native + Expo + Supabase.
 
-## Nuovo stile "kit Ellecci" (anteprima dal 13/11/2026)
-Luigi ha rinominato l'app **VaultWatch** e sta provando un nuovo stile (nero minimale come il video "Ember", pannelli in vetro scuro;
-interruttore per provare il "vetro chiaro su nero", salvato in localStorage `vw_vetro`). È in `anteprima/index.html`, generata da `index.html`
-con lo script del kit: stesse funzioni e stessi dati (stesso login), cambiano solo aspetto, barra laterale sul computer, numero grande del
-patrimonio nella Dashboard e grafici con linee luminose. L'anteprima non registra il service worker e il service worker non la mette in cache.
-Quando Luigi conferma: rigenerarla da `index.html` aggiornato (le modifiche fatte nel frattempo all'app non devono perdersi), metterla al posto
-di `index.html` con i percorsi della radice, togliere `anteprima/`, aumentare `VERSIONE`. Poi lo stesso kit va adattato alle altre app
+## Nuovo stile "kit Ellecci" (anteprima dal 13/11/2026, rifatta il 15/11/2026)
+Luigi ha rinominato l'app **VaultWatch**. Il nuovo stile segue `DESIGN.md` (scelte del 15/11: solo vetro scuro, il vetro chiaro è scartato;
+colore principale verde, angoli 16/24 px, alone verde dietro il patrimonio, pulsanti attivi bianchi, pulsante principale verde,
+sul telefono barra in basso a pillola con Dashboard / Transazioni / + (apre Transazioni sul campo Importo) / Conti / Altro (pannello con tutte
+le sezioni), sul computer barra laterale; nei grafici a linea punto evidenziato sull'ultimo valore con fumetto chiaro).
+È in `anteprima/index.html`, **generata** da `index.html` con `python3 strumenti/kit-ellecci/genera.py index.html anteprima/index.html ../`
+(lo stile sta in `strumenti/kit-ellecci/kit.css`): stesse funzioni e stessi dati (stesso login), cambia solo l'aspetto. Non modificare
+l'anteprima a mano: si cambiano `genera.py`/`kit.css` e si rigenera. L'anteprima non registra il service worker e il service worker non la mette in cache.
+Quando Luigi conferma: `python3 strumenti/kit-ellecci/genera.py index.html index.html ''` (dall'`index.html` aggiornato, così le modifiche fatte
+nel frattempo all'app non si perdono), togliere `anteprima/`, aumentare `VERSIONE`. Poi lo stesso kit va adattato alle altre app
 (Trading Studio, Embrix, BandPilot, AltSonar).
 
 ## Sistema di design
