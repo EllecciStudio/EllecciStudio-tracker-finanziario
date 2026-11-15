@@ -5,7 +5,7 @@ Identità comune di tutte le app di Luigi (Ellecci Studio): **VaultWatch** (trac
 
 ## Principi
 - **Il nero è la scena, il colore è l'informazione.** Lo sfondo resta nero; il colore compare solo dove dice qualcosa (su/giù, azione, stato, scelta).
-- **Un accento dominante per schermata.** Il verde acqua è l'azione principale; gli altri colori hanno un ruolo fisso e non si usano per decorare.
+- **Un colore principale per app, uno solo per schermata** (scelta di Luigi del 15/11/2026): verde acqua per VaultWatch e Ellecci Trading Studio, arancio per PlateLog e BandPilot, viola per AltSonar. Gli altri colori hanno un ruolo fisso e non si usano per decorare.
 - **Grafici prima delle tabelle.** Luigi preferisce vedere l'andamento nel tempo: dove c'è una serie di numeri, prima il grafico, poi il dettaglio.
 - **Marchio sempre presente.** Ogni app, pagina o file porta nome e logo "Ellecci Studio"; ogni prodotto ha il suo nome e logo, simili a quello di Ellecci.
 - **Tutto in italiano**, testi brevi e concreti; i pulsanti dicono l'azione ("Salva il trade", non "OK").
@@ -25,9 +25,19 @@ rosso:   "#FF6A5C"  # negativo, errore, giù, stop             · fondo tinta "#
 oro:     "#E8B04B"  # attenzione, in evidenza, scelte di Luigi · fondo tinta "#2B2210"
 blu:     "#8FD3FF"  # informazione, link, dati neutri          · fondo tinta "#0F2230"
 viola:   "#B79BEB"  # speciale (GEX, premium, IA)              · fondo tinta "#1F1A33"
+arancio: "#FF7A3D"  # colore principale di PlateLog e BandPilot · fondo tinta "#2E1A10"
 neutro:  "#9AA1AC"                                           · fondo tinta "#15181F"
 ```
-- Verde/rosso **solo** per su/giù, guadagno/perdita, successo/errore: mai come decorazione.
+- Verde/rosso **solo** per su/giù, guadagno/perdita, successo/errore: mai come decorazione (anche nelle app dove il verde è il colore principale: lì il verde dei pulsanti e il verde di "su" sono lo stesso colore, quindi il segno + / − o la freccia ci sono sempre).
+- **Colore principale per app** (pulsante principale, voce attiva della barra in basso, linea del grafico principale, alone):
+
+| App | Principale | Note |
+|---|---|---|
+| VaultWatch (tracker) | verde `#4EDB9C` | |
+| Ellecci Trading Studio | verde `#4EDB9C` | |
+| PlateLog (palestra) | arancio `#FF7A3D` | rosso di errore/calo → `#FF4D6D`, per non confonderlo con l'arancio |
+| BandPilot (bot BTC) | arancio `#FF7A3D` | come PlateLog; perdite in `#FF4D6D` |
+| AltSonar (radar altcoin) | viola `#B79BEB` | il ruolo "speciale" passa al blu |
 - Etichette di stato = testo colorato su "fondo tinta" dello stesso colore.
 - Contrasto: testo normale ≥ 4,5:1, testo grande e icone ≥ 3:1. Il colore non è mai l'unico segnale (icona, segno + / −, parola).
 - Le app sono nere per scelta di Luigi: niente tema chiaro se non lo chiede.
@@ -43,7 +53,8 @@ Pannelli in vetro solo per gli elementi che galleggiano o vanno in risalto (barr
 --vetro-bordo: rgba(255,255,255,.2); --vetro-sfoca: 30px;
 --ombra: 0 14px 40px rgba(0,0,0,.5);
 ```
-Il vetro ha sempre un bordo di 1px e una luce sul lato in alto, mai un alone colorato. Con `prefers-reduced-transparency` si passa a `card-2` pieno.
+Il vetro ha sempre un bordo di 1px e una luce sul lato in alto (bordo più chiaro). Con `prefers-reduced-transparency` o su dispositivi lenti si passa a `card-2` pieno.
+**Alone di luce** (dai riferimenti del 15/11/2026): una sola macchia sfocata del colore principale dietro la scheda più importante della schermata (`radial-gradient` del colore a ~35% → trasparente, `filter: blur(28px)`, opacità ~.5, in basso a sinistra della scheda); mai su altre schede, mai dietro al testo lungo. Le schede in risalto possono avere un vetro leggermente sfumato: `linear-gradient(170deg, rgba(255,255,255,.055), rgba(255,255,255,.015))` + bordo `rgba(255,255,255,.07)`.
 
 ## Tipografia
 - **Unbounded** (500/600): titoli, nomi dei prodotti, numeri grandi. Mai per testi lunghi.
@@ -62,15 +73,16 @@ Il vetro ha sempre un bordo di 1px e una luce sul lato in alto, mai un alone col
 
 ## Spazi, forme, profondità
 - Scala da 4: **4 · 8 · 12 · 16 · 24 · 32 · 48 · 64**. Gruppi stretti dentro, separazioni larghe fuori; più spazio sopra un titolo che sotto.
-- Raggi: 6px controlli e chip, 10px card, 14px pannelli e finestre, pillola solo per chip e interruttori.
+- Raggi (più tondi dal 15/11/2026): 6px controlli piccoli, 16px schede piccole, **24px** schede principali e pannelli, 28px finestre; pillola per pulsanti a segmenti, chip e barra in basso. Disposizione a mattonelle (bento): schede di misure diverse sulla stessa griglia, 12px di spazio tra l'una e l'altra.
 - Bordi 1px `riga`; niente bordo colorato spesso a sinistra delle card.
 - Profondità con superfici più chiare (sfondo → card → card-2); ombra solo su ciò che galleggia.
 - Telefono prima di tutto: margini laterali 16px, aree toccabili ≥ 44px, zone sicure rispettate.
 
 ## Componenti
-- **Pulsante principale:** fondo verde, testo `#05070a` 600, raggio 8px, altezza 40–44px; pressione `scale(.97)`.
+- **Pulsante principale:** fondo del colore principale dell'app, testo `#05070a` 600, raggio 8px, altezza 40–44px; pressione `scale(.97)`.
 - **Pulsante secondario:** fondo `card-2`, bordo `riga-forte`. **Tenue:** solo testo, hover `rgba(255,255,255,.04)`.
-- **Interruttori a segmenti:** voce attiva con fondo verde tinta e testo verde.
+- **Pulsanti a segmenti** (es. 1M · 3M · 1A · Tutto, Lista / Mappa): pillole con bordo `rgba(255,255,255,.08)`, testo `inchiostro-2`; quella attiva è **bianca piena** (`inchiostro`) con testo nero `#05070a`.
+- **Barra in basso sul telefono:** pillola che galleggia a 16px dal fondo (vetro scuro `rgba(20,22,28,.75)` + `backdrop-filter: blur(18px)`, bordo `rgba(255,255,255,.09)`), icone in cerchi da 42px con bordo sottile; la voce principale o attiva è un cerchio pieno del colore principale con bagliore `0 0 18px` dello stesso colore.
 - **Card numero:** etichetta in alto, numero grande, variazione con segno colorata, mini grafico sotto.
 - **Campi:** fondo `card`, bordo `riga-forte`, focus bordo verde + anello `0 0 0 3px rgba(78,219,156,.18)`.
 - **Stati vuoti, caricamento, errore:** sempre disegnati (frase utile + azione).
@@ -88,3 +100,9 @@ Il vetro ha sempre un bordo di 1px e una luce sul lato in alto, mai un alone col
 
 ## Prima di consegnare
 Foto a 390px e 1440px, contrasto, stati vuoto/errore/caricamento, marchio Ellecci presente, niente testi in inglese, nessun colore fuori dal suo ruolo.
+
+## Riferimenti scelti da Luigi
+- 15/11/2026, 12 esempi da Pinterest (copie e analisi nel secondo cervello, `riferimenti-design/2026-11-15-pinterest.md`). Confronto A/B/C su VaultWatch: Luigi ha scelto
+  un colore principale per app (tabella sopra), **numeri grandi spessi come prima** (Unbounded, niente numeri sottili né a puntini) e tutto il resto dello stile B:
+  angoli più tondi, alone di luce dietro la scheda principale, pulsante attivo bianco, barra in basso che galleggia, punto del grafico con fumetto, barre a stanghette.
+  Il più vicino allo stile voluto: "Cash Management" (verde menta su nero, area sfumata, fumetto pieno).
