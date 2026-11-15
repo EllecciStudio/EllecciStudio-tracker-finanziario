@@ -1,11 +1,11 @@
 # Ellecci Studio · sistema di design (DESIGN.md)
 
-Identità comune di tutte le app di Luigi (Ellecci Studio): **VaultWatch** (tracker finanziario), **Ellecci Trading Studio**, **app della palestra** (nome da decidere: non più PlateLog), **BandPilot** (bot BTC Con banda), **AltSonar** (radar altcoin). Futuristico ma minimale: nero profondo, pochi pannelli in vetro scuro, un accento per volta, numeri in monospazio, grafici luminosi. Se un progetto ha già un CLAUDE.md con valori diversi, vincono quelli del progetto; le parole di Luigi vincono su tutto.
+Identità comune di tutte le app di Luigi (Ellecci Studio): **VaultWatch** (tracker finanziario), **Ellecci Trading Studio**, **Embrix** (palestra, ex IronLog), **BandPilot** (bot BTC Con banda), **AltSonar** (radar altcoin). Futuristico ma minimale: nero profondo, pochi pannelli in vetro scuro, un accento per volta, numeri in monospazio, grafici luminosi. Se un progetto ha già un CLAUDE.md con valori diversi, vincono quelli del progetto; le parole di Luigi vincono su tutto.
 (Stesso testo della skill `ellecci-design-system`; copia in ogni repository con interfaccia.)
 
 ## Principi
 - **Il nero è la scena, il colore è l'informazione.** Lo sfondo resta nero; il colore compare solo dove dice qualcosa (su/giù, azione, stato, scelta).
-- **Un colore principale per app, uno solo per schermata** (scelta di Luigi del 15/11/2026): verde acqua per VaultWatch e Ellecci Trading Studio, arancio per l'app della palestra e BandPilot, viola per AltSonar. Gli altri colori hanno un ruolo fisso e non si usano per decorare.
+- **Un colore principale per app, uno solo per schermata** (scelta di Luigi del 15/11/2026): verde acqua per VaultWatch e Ellecci Trading Studio, arancio per Embrix e BandPilot, viola per AltSonar. Gli altri colori hanno un ruolo fisso e non si usano per decorare.
 - **Grafici prima delle tabelle.** Luigi preferisce vedere l'andamento nel tempo: dove c'è una serie di numeri, prima il grafico, poi il dettaglio.
 - **Marchio sempre presente.** Ogni app, pagina o file porta nome e logo "Ellecci Studio"; ogni prodotto ha il suo nome e logo, simili a quello di Ellecci.
 - **Tutto in italiano**, testi brevi e concreti; i pulsanti dicono l'azione ("Salva il trade", non "OK").
@@ -25,7 +25,7 @@ rosso:   "#FF6A5C"  # negativo, errore, giù, stop             · fondo tinta "#
 oro:     "#E8B04B"  # attenzione, in evidenza, scelte di Luigi · fondo tinta "#2B2210"
 blu:     "#8FD3FF"  # informazione, link, dati neutri          · fondo tinta "#0F2230"
 viola:   "#B79BEB"  # speciale (GEX, premium, IA)              · fondo tinta "#1F1A33"
-arancio: "#FF7A3D"  # colore principale dell'app della palestra e di BandPilot · fondo tinta "#2E1A10"
+arancio: "#FF7A3D"  # colore principale di Embrix e BandPilot · fondo tinta "#2E1A10"
 neutro:  "#9AA1AC"                                           · fondo tinta "#15181F"
 ```
 - Verde/rosso **solo** per su/giù, guadagno/perdita, successo/errore: mai come decorazione (anche nelle app dove il verde è il colore principale: lì il verde dei pulsanti e il verde di "su" sono lo stesso colore, quindi il segno + / − o la freccia ci sono sempre).
@@ -35,8 +35,8 @@ neutro:  "#9AA1AC"                                           · fondo tinta "#15
 |---|---|---|
 | VaultWatch (tracker) | verde `#4EDB9C` | |
 | Ellecci Trading Studio | verde `#4EDB9C` | |
-| App della palestra (nome da decidere) | arancio `#FF7A3D` | rosso di errore/calo → `#FF4D6D`, per non confonderlo con l'arancio |
-| BandPilot (bot BTC) | arancio `#FF7A3D` | come la palestra; perdite in `#FF4D6D` |
+| Embrix (palestra) | arancio `#FF7A3D` | rosso di errore/calo → `#FF4D6D`, per non confonderlo con l'arancio |
+| BandPilot (bot BTC) | arancio `#FF7A3D` | come Embrix; perdite in `#FF4D6D` |
 | AltSonar (radar altcoin) | viola `#B79BEB` | il ruolo "speciale" passa al blu |
 - Etichette di stato = testo colorato su "fondo tinta" dello stesso colore.
 - Contrasto: testo normale ≥ 4,5:1, testo grande e icone ≥ 3:1. Il colore non è mai l'unico segnale (icona, segno + / −, parola).

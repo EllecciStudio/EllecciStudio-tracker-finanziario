@@ -53,7 +53,7 @@ con lo script del kit: stesse funzioni e stessi dati (stesso login), cambiano so
 patrimonio nella Dashboard e grafici con linee luminose. L'anteprima non registra il service worker e il service worker non la mette in cache.
 Quando Luigi conferma: rigenerarla da `index.html` aggiornato (le modifiche fatte nel frattempo all'app non devono perdersi), metterla al posto
 di `index.html` con i percorsi della radice, togliere `anteprima/`, aumentare `VERSIONE`. Poi lo stesso kit va adattato alle altre app
-(Trading Studio, app della palestra, BandPilot, AltSonar).
+(Trading Studio, Embrix, BandPilot, AltSonar).
 
 ## Sistema di design
 Prima di toccare l'interfaccia leggi `DESIGN.md` (sistema di design comune di Ellecci Studio, 15/11/2026; stesso testo della skill personale
