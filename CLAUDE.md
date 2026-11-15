@@ -15,7 +15,7 @@ da **venderla**. Luigi non è uno sviluppatore: spiega le modifiche in italiano 
 - Nessun passaggio di build: tutto è in `index.html` (HTML, CSS e JS insieme). Librerie incluse in `lib/`
   (Supabase JS 2.117.2, Chart.js 4.4.1), per non dipendere da CDN.
 - Quando cambi i file del "guscio" (index.html, icone, lib), **aumenta `VERSIONE` in `sw.js`**
-  (oggi `tracker-v3`), altrimenti il telefono può continuare a mostrare la versione vecchia.
+  (oggi `tracker-v4`), altrimenti il telefono può continuare a mostrare la versione vecchia.
 - Prima di un push controlla l'app a larghezza telefono (circa 390 px) e il funzionamento offline.
 
 ## Dati e sincronizzazione
@@ -46,17 +46,16 @@ Servirà ripensare: account multipli e onboarding, pagamenti (su iPhone di norma
 privacy/GDPR per dati finanziari di altre persone, backup e supporto. Per la pubblicazione sugli store
 Luigi ha salvato come riferimento un corso su React Native + Expo + Supabase.
 
-## Nuovo stile "kit Ellecci" (anteprima dal 13/11/2026, rifatta il 15/11/2026)
-Luigi ha rinominato l'app **VaultWatch**. Il nuovo stile segue `DESIGN.md` (scelte del 15/11: solo vetro scuro, il vetro chiaro è scartato;
-colore principale verde, angoli 16/24 px, alone verde dietro il patrimonio, pulsanti attivi bianchi, pulsante principale verde,
-sul telefono barra in basso a pillola con Dashboard / Transazioni / + (apre Transazioni sul campo Importo) / Conti / Altro (pannello con tutte
-le sezioni), sul computer barra laterale; nei grafici a linea punto evidenziato sull'ultimo valore con fumetto chiaro).
-È in `anteprima/index.html`, **generata** da `index.html` con `python3 strumenti/kit-ellecci/genera.py index.html anteprima/index.html ../`
-(lo stile sta in `strumenti/kit-ellecci/kit.css`): stesse funzioni e stessi dati (stesso login), cambia solo l'aspetto. Non modificare
-l'anteprima a mano: si cambiano `genera.py`/`kit.css` e si rigenera. L'anteprima non registra il service worker e il service worker non la mette in cache.
-Quando Luigi conferma: `python3 strumenti/kit-ellecci/genera.py index.html index.html ''` (dall'`index.html` aggiornato, così le modifiche fatte
-nel frattempo all'app non si perdono), togliere `anteprima/`, aumentare `VERSIONE`. Poi lo stesso kit va adattato alle altre app
-(Trading Studio, Embrix, BandPilot, AltSonar).
+## Stile "kit Ellecci" (nell'app dal 15/11/2026)
+Luigi ha rinominato l'app **VaultWatch** e il 15/11/2026 ha messo il nuovo stile al posto di quello vecchio ("anche se ci sono modifiche da fare,
+le vediamo nei prossimi giorni"). Segue `DESIGN.md`: solo vetro scuro, colore principale verde, angoli 16/24 px, alone verde dietro il patrimonio,
+pulsanti attivi bianchi, pulsante principale verde; sul telefono barra in basso a pillola con Dashboard / Transazioni / + (apre Transazioni sul
+campo Importo) / Conti / Altro (pannello con tutte le sezioni), sul computer barra laterale; nei grafici a linea punto evidenziato sull'ultimo
+valore con fumetto chiaro.
+- Il kit è già dentro `index.html` (blocco `<style id="vw-kit">` e script della barra): **i ritocchi si fanno direttamente in `index.html`**.
+  Non rilanciare `strumenti/kit-ellecci/genera.py` su `index.html` (applicherebbe il kit due volte): quello script e `kit.css` restano come
+  riferimento per portare lo stesso stile nelle altre app (Trading Studio, Embrix, BandPilot, AltSonar).
+- La versione prima del kit è nel commit precedente a quello del 15/11/2026 ("VaultWatch: nuovo stile…"), se servisse tornare indietro.
 
 ## Sistema di design
 Prima di toccare l'interfaccia leggi `DESIGN.md` (sistema di design comune di Ellecci Studio, 15/11/2026; stesso testo della skill personale
