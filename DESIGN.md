@@ -116,6 +116,15 @@ la scelta si salva sul dispositivo (`localStorage`) e uno script in `<head>` met
 - Il logo Ellecci (bianco) si inverte con `filter:invert(1)`.
 - Ogni colore scritto a mano (CSS, grafici, canvas) va previsto in entrambi i temi; foto di controllo in tutti e due prima di consegnare.
 
+## Regole fisse dopo la revisione del 17/11/2026
+- **Computer**: l'app riempie la finestra (niente colonna stretta al centro con i lati vuoti); sugli schermi larghi i blocchi si affiancano.
+- **iPhone**: ogni campo dove si scrive ha testo da **16 px** in su, altrimenti Safari ingrandisce la pagina e non torna indietro.
+- **Tendine**: elenco nello stile dell'app (vetro, voce scelta nel colore principale con la spunta), mai il menu grigio del sistema. Modello: VaultWatch (`vw-menu`).
+- **Moduli**: campi tutti alti uguali (44 px), `min-width:0` nelle griglie perché nessun campo esca dalla sua casella (la data di iOS lo faceva).
+- **Ritmo**: stessa distanza (12–14 px) tra tutti i blocchi, note comprese. Etichette dei grafici dritte, mai inclinate.
+- **Elenchi**: nome corto + al massimo una riga di descrizione; i dettagli stanno nelle impostazioni.
+- Numeri grandi sempre in Unbounded, in tutte le app.
+
 ## Prima di consegnare
 Foto a 390px e 1440px, contrasto, stati vuoto/errore/caricamento, marchio Ellecci presente, niente testi in inglese, nessun colore fuori dal suo ruolo.
 
