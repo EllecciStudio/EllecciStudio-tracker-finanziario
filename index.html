@@ -7,6 +7,7 @@
 <meta name="googlebot" content="noindex, nofollow">
 <meta name="author" content="Ellecci Studio">
 <meta name="theme-color" content="#000000">
+<script>/* tema scelto (predefinito scuro): Altro > Tema o il pulsante in alto */try{if(localStorage.getItem("vw_tema")==="chiaro"){document.documentElement.dataset.tema="chiaro";document.querySelector('meta[name="theme-color"]').content="#F3F4F6";}}catch(e){}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -356,6 +357,72 @@ html.vw-altro #ft-root .tabs{ opacity:1; transform:none; pointer-events:auto; vi
   ::view-transition-new(root){ animation:none; }
 }
 </style>
+<style id="vw-chiaro">
+/* ============================================================
+   Tema chiaro (16/11/2026) — per chi non usa il tema scuro. Predefinito: scuro.
+   Stessa struttura del kit: cambiano solo i colori (DESIGN.md > Tema chiaro).
+   ============================================================ */
+#ft-root .vw-azioni{ display:flex; gap:6px; align-items:center; }
+#ft-root .vw-tema{ display:inline-flex; align-items:center; gap:6px; }
+#ft-root .vw-tema svg{ width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+#ft-root .vw-tema .luna{ display:none; }
+html[data-tema="chiaro"] #ft-root .vw-tema .luna{ display:inline; }
+html[data-tema="chiaro"] #ft-root .vw-tema .sole{ display:none; }
+@media (max-width:420px){ #ft-root .vw-tema span{ display:none; } }
+
+html[data-tema="chiaro"]{ color-scheme:light; background:#F3F4F6; }
+html[data-tema="chiaro"] body, html[data-tema="chiaro"]:root{ background:#F3F4F6; }
+html[data-tema="chiaro"] body::after{ background:#F3F4F6; }
+html[data-tema="chiaro"] #ft-root{
+  --bg:#F3F4F6; --card:#FFFFFF; --ink:#0E1116; --ink-soft:#5B6472; --ink-faint:#8A93A1;
+  --line:#E2E5EA; --teal:#0E9F63; --teal-bg:#E2F5EC; --gold:#A8700F; --gold-bg:#FBF1DE;
+  --red:#D93A2B; --red-bg:#FDE8E5; --blue:#1F78B4; --blue-bg:#E3F0FA; --purple:#6E4FC0; --purple-bg:#EEE8FA;
+  --neutral:#6B7280; --neutral-bg:#EEF0F3;
+}
+html[data-tema="chiaro"]{
+  --vw-principale:#0E9F63; --vw-principale-alone:rgba(14,159,99,.20);
+  --vw-pannello:#FFFFFF; --vw-risalto:linear-gradient(170deg, #FFFFFF, #FAFBFC);
+  --vw-solido:#FFFFFF; --vw-bordo:rgba(15,23,42,.08); --vw-bordo-risalto:rgba(15,23,42,.08);
+  --vw-luce:rgba(255,255,255,.9); --vw-ombra:0 10px 30px rgba(15,23,42,.08); --vw-righe:rgba(15,23,42,.06);
+}
+/* accesso */
+html[data-tema="chiaro"] #accesso{ color:#0E1116; }
+html[data-tema="chiaro"] #accesso .firma, html[data-tema="chiaro"] #accesso p, html[data-tema="chiaro"] #accesso label{ color:#5B6472; }
+html[data-tema="chiaro"] #accesso input{ background:#FFFFFF; border-color:rgba(15,23,42,.12); color:#0E1116; }
+html[data-tema="chiaro"] #accesso input:focus{ border-color:#0E9F63; }
+html[data-tema="chiaro"] #accesso button{ color:#FFFFFF; box-shadow:0 8px 20px rgba(14,159,99,.25); }
+html[data-tema="chiaro"] #accesso-errore{ color:#D93A2B; }
+/* pulsanti, schede, barre */
+html[data-tema="chiaro"] #ft-root .btn-esci{ background:#FFFFFF; }
+html[data-tema="chiaro"] #ft-root .btn-esci:hover{ background:#F0F2F5; }
+html[data-tema="chiaro"] #ft-root .lato{ background:rgba(255,255,255,.88) !important; }
+html[data-tema="chiaro"] #ft-root .tab-btn{ border-color:rgba(15,23,42,.08); }
+html[data-tema="chiaro"] #ft-root .tab-btn.active{ color:#FFFFFF; }
+html[data-tema="chiaro"] #ft-root .tab-btn.active::before{ color:rgba(255,255,255,.7); }
+html[data-tema="chiaro"] #ft-root .tab-btn:not(.active):hover{ background:rgba(15,23,42,.05); }
+html[data-tema="chiaro"] #ft-root .barra-basso{ background:rgba(255,255,255,.82) !important; border-color:rgba(15,23,42,.08); }
+html[data-tema="chiaro"] #ft-root .barra-basso button{ border-color:rgba(15,23,42,.06); }
+html[data-tema="chiaro"] #ft-root .barra-basso button.on{ color:#FFFFFF; }
+html[data-tema="chiaro"] #ft-root .barra-basso button.principale{ color:#FFFFFF; }
+html[data-tema="chiaro"] #ft-root input, html[data-tema="chiaro"] #ft-root select, html[data-tema="chiaro"] #ft-root textarea{ background:#FFFFFF; border-color:rgba(15,23,42,.12); }
+html[data-tema="chiaro"] #ft-root select option{ background:#FFFFFF; color:#0E1116; }
+html[data-tema="chiaro"] #ft-root input:focus, html[data-tema="chiaro"] #ft-root select:focus, html[data-tema="chiaro"] #ft-root textarea:focus{ border-color:#0E9F63; box-shadow:0 0 0 3px rgba(14,159,99,.15); }
+html[data-tema="chiaro"] #ft-root button.btn:not(.primary){ background:#FFFFFF; border-color:rgba(15,23,42,.12); color:#0E1116; }
+html[data-tema="chiaro"] #ft-root button.btn:not(.primary):hover{ background:#F0F2F5; }
+html[data-tema="chiaro"] #ft-root button.btn.primary{ color:#FFFFFF; box-shadow:0 8px 18px rgba(14,159,99,.22); }
+html[data-tema="chiaro"] #ft-root button.btn.primary:hover{ background:#0B8A55; }
+html[data-tema="chiaro"] #ft-root .rail{ background:rgba(15,23,42,.07); }
+html[data-tema="chiaro"] #ft-root .note{ background:#FBF1DE; border-color:rgba(168,112,15,.3); color:#7A5208; }
+html[data-tema="chiaro"] #ft-root .hero.neg::after{ background:radial-gradient(closest-side, rgba(217,58,43,.18), transparent); }
+html[data-tema="chiaro"] #ft-root .card, html[data-tema="chiaro"] #ft-root .kpi, html[data-tema="chiaro"] #ft-root .hero{ box-shadow:0 1px 2px rgba(15,23,42,.04), 0 8px 24px rgba(15,23,42,.05); }
+html[data-tema="chiaro"] #vw-nuova{ background:rgba(255,255,255,.92); color:#0E1116; border-color:rgba(15,23,42,.1); box-shadow:0 12px 40px rgba(15,23,42,.15); }
+html[data-tema="chiaro"] #vw-nuova button{ background:#0E9F63; color:#FFFFFF; }
+/* il logo Ellecci è bianco: sul chiaro diventa nero */
+html[data-tema="chiaro"] #accesso .logo, html[data-tema="chiaro"] #ft-root .marchio img, html[data-tema="chiaro"] #ft-root .firma-piede img{ filter:invert(1); }
+@media (max-width:959px){ html[data-tema="chiaro"] #ft-root .tabs{ background:rgba(255,255,255,.94); } }
+@media (prefers-reduced-transparency:reduce){ html[data-tema="chiaro"] #ft-root .barra-basso, html[data-tema="chiaro"] #ft-root .lato{ background:#FFFFFF !important; } }
+</style>
+
 
 <div id="ft-root" class="hidden">
   <h2 class="sr-only">Tracker finanziario personale con log transazioni, debiti, investimenti, fondo emergenza, obiettivi e patrimonio netto</h2>
@@ -392,7 +459,7 @@ html.vw-altro #ft-root .tabs{ opacity:1; transform:none; pointer-events:auto; vi
     <div class="lato-piede">
       <span class="save-flag" id="ft-saveflag" role="status" aria-live="polite">Salvato</span>
       <div class="bottoni">
-        <button class="btn-esci" id="ft-esci" type="button">Esci</button>
+        <span class="vw-azioni"><button class="btn-esci vw-tema" id="vw-tema" type="button" aria-label="Cambia tema: chiaro o scuro" title="Tema chiaro o scuro"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="luna" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><g class="sole"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></svg><span>Chiaro</span></button><button class="btn-esci" id="ft-esci" type="button">Esci</button></span>
       </div>
     </div>
   </aside>
@@ -443,7 +510,7 @@ var chartConti = null;
 var chartPrevisione = null;
 var chartEtf = null;
 
-var COLORS = {
+var COLORS_SCURO = {
   teal:'#4EDB9C', tealBg:'rgba(78,219,156,0.14)',
   red:'#FF6A5C', redBg:'rgba(255,106,92,0.14)',
   gold:'#E8B04B', goldBg:'rgba(232,176,75,0.14)',
@@ -451,6 +518,34 @@ var COLORS = {
   purple:'#B79BEB', purpleBg:'rgba(183,155,235,0.15)',
   neutral:'#9AA1AC', neutralBg:'rgba(154,161,172,0.15)'
 };
+var COLORS_CHIARO = {
+  teal:'#0E9F63', tealBg:'rgba(14,159,99,0.12)',
+  red:'#D93A2B', redBg:'rgba(217,58,43,0.12)',
+  gold:'#B7811C', goldBg:'rgba(183,129,28,0.12)',
+  blue:'#1F78B4', blueBg:'rgba(31,120,180,0.12)',
+  purple:'#6E4FC0', purpleBg:'rgba(110,79,192,0.12)',
+  neutral:'#6B7280', neutralBg:'rgba(107,114,128,0.12)'
+};
+var COLORS = {};
+/* colori dei grafici secondo il tema (scuro predefinito, chiaro a scelta) */
+var VW_TEMA = {};
+function vwTemaChiaro(){ return document.documentElement.dataset.tema === 'chiaro'; }
+function vwApplicaTemaGrafici(){
+  var chiaro = vwTemaChiaro(), src = chiaro ? COLORS_CHIARO : COLORS_SCURO;
+  Object.keys(src).forEach(function(k){ COLORS[k] = src[k]; });
+  VW_TEMA = chiaro
+    ? { testo:'#5B6472', griglia:'rgba(15,23,42,0.07)', fumetto:'#0E1116', fumettoTesto:'#FFFFFF', centro:'#FFFFFF' }
+    : { testo:'#8A93A1', griglia:'rgba(255,255,255,0.045)', fumetto:'#E9ECF1', fumettoTesto:'#05070a', centro:'#000' };
+  if(typeof Chart === 'undefined') return;
+  try{
+    Chart.defaults.color = VW_TEMA.testo;
+    Chart.defaults.borderColor = chiaro ? 'rgba(15,23,42,0.08)' : 'rgba(255,255,255,0.05)';
+    Chart.defaults.set('scale', { grid:{ color:VW_TEMA.griglia } });
+    var t = Chart.defaults.plugins.tooltip;
+    t.backgroundColor = VW_TEMA.fumetto; t.titleColor = VW_TEMA.fumettoTesto; t.bodyColor = VW_TEMA.fumettoTesto;
+  }catch(e){ console.error('tema grafici', e); }
+}
+vwApplicaTemaGrafici();
 
 if(typeof Chart !== 'undefined'){
   Chart.defaults.color = '#8A93A1';
@@ -475,6 +570,7 @@ if(typeof Chart !== 'undefined'){
     var lg = Chart.defaults.plugins.legend.labels;
     lg.usePointStyle = true; lg.pointStyle = 'circle'; lg.boxHeight = 6; lg.boxWidth = 6;
   }catch(e){ console.error('stile grafici', e); }
+  vwApplicaTemaGrafici();
   function vwRgba(hex, a){
     if(typeof hex !== 'string' || hex.charAt(0) !== '#' || hex.length !== 7) return hex;
     return 'rgba(' + parseInt(hex.slice(1,3),16) + ',' + parseInt(hex.slice(3,5),16) + ',' + parseInt(hex.slice(5,7),16) + ',' + a + ')';
@@ -534,7 +630,7 @@ if(typeof Chart !== 'undefined'){
       ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, a.bottom); ctx.stroke();
       ctx.setLineDash([]); ctx.globalAlpha = .25; ctx.fillStyle = col;
       ctx.beginPath(); ctx.arc(p.x, p.y, 8, 0, Math.PI * 2); ctx.fill();
-      ctx.globalAlpha = 1; ctx.fillStyle = '#000'; ctx.lineWidth = 2; ctx.strokeStyle = col;
+      ctx.globalAlpha = 1; ctx.fillStyle = VW_TEMA.centro; ctx.lineWidth = 2; ctx.strokeStyle = col;
       ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
       if(!attivi.length){
         var v = typeof ds.data[i] === 'object' && ds.data[i] !== null ? ds.data[i].y : ds.data[i];
@@ -543,9 +639,9 @@ if(typeof Chart !== 'undefined'){
         var w = ctx.measureText(testo).width + 20, hh = 22;
         var x = Math.min(Math.max(p.x - w / 2, a.left), a.right - w), y = p.y - hh - 12;
         if(y < a.top - 6) y = p.y + 12;
-        ctx.fillStyle = '#E9ECF1';
+        ctx.fillStyle = VW_TEMA.fumetto;
         ctx.beginPath(); if(ctx.roundRect) ctx.roundRect(x, y, w, hh, hh / 2); else ctx.rect(x, y, w, hh); ctx.fill();
-        ctx.fillStyle = '#05070a'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillStyle = VW_TEMA.fumettoTesto; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.fillText(testo, x + w / 2, y + hh / 2 + .5);
       }
       ctx.restore();
@@ -1286,6 +1382,21 @@ async function avvia(){
     loadData();
   });
 
+  /* tema chiaro / scuro (16/11/2026): scelta salvata su questo dispositivo, predefinito scuro */
+  (function(){
+    var b = document.getElementById('vw-tema'); if(!b) return;
+    function etichetta(){ var c = vwTemaChiaro(); b.querySelector('span').textContent = c ? 'Scuro' : 'Chiaro'; b.setAttribute('aria-label', c ? 'Passa al tema scuro' : 'Passa al tema chiaro'); }
+    etichetta();
+    b.addEventListener('click', function(){
+      vwCambioPagina(function(){
+        var chiaro = !vwTemaChiaro();
+        if(chiaro) document.documentElement.dataset.tema = 'chiaro'; else delete document.documentElement.dataset.tema;
+        try{ localStorage.setItem('vw_tema', chiaro ? 'chiaro' : 'scuro'); }catch(e){}
+        var m = document.querySelector('meta[name="theme-color"]'); if(m) m.content = chiaro ? '#F3F4F6' : '#000000';
+        vwApplicaTemaGrafici(); etichetta(); renderAll();
+      }, false);
+    });
+  })();
   document.getElementById('ft-esci').addEventListener('click', async function(){
     if(salvataggioInAttesa && !confirm('Ci sono modifiche non ancora salvate. Uscire comunque?')) return;
     await sb.auth.signOut();

@@ -15,7 +15,7 @@ da **venderla**. Luigi non è uno sviluppatore: spiega le modifiche in italiano 
 - Nessun passaggio di build: tutto è in `index.html` (HTML, CSS e JS insieme). Librerie incluse in `lib/`
   (Supabase JS 2.117.2, Chart.js 4.4.1), per non dipendere da CDN.
 - Quando cambi i file del "guscio" (index.html, icone, lib), **aumenta `VERSIONE` in `sw.js`**
-  (oggi `tracker-v7`), altrimenti il telefono può continuare a mostrare la versione vecchia.
+  (oggi `tracker-v8`), altrimenti il telefono può continuare a mostrare la versione vecchia.
 - Prima di un push controlla l'app a larghezza telefono (circa 390 px) e il funzionamento offline.
 - Aggiornamenti (16/11/2026): il service worker chiede sempre la pagina alla rete con `cache: 'no-cache'` (GitHub Pages la terrebbe in cache 10 minuti)
   e controlla nuove versioni all'apertura, al ritorno sulla scheda e ogni 30 minuti; quando una nuova versione prende il controllo compare l'avviso
@@ -62,6 +62,9 @@ valore con fumetto chiaro.
   Ogni volta che si apre una sezione (scelta di Luigi, 16/11/2026; non quando i dati si aggiornano nella sezione aperta): schede a cascata, numeri `.hero-val`/`.kpi-val`/`.disp` che contano da 0, grafici a linea che si disegnano quando
   arrivano sullo schermo; cambio pagina a cerchio (View Transitions) dal punto toccato; schede che si sollevano col mouse. `renderAll` è avvolta per far
   continuare l'animazione se i dati arrivano a metà. Con "riduci movimento" del sistema non parte nulla.
+- **Tema chiaro** (16/11/2026, richiesta di Luigi per quando le app saranno in vendita): predefinito **scuro**; pulsante luna/sole accanto a "Esci"
+  (`#vw-tema`), scelta salvata in `localStorage` `vw_tema` e applicata da uno script in `<head>` prima del disegno. Colori in `<style id="vw-chiaro">`
+  (`html[data-tema="chiaro"]`), grafici con `COLORS_SCURO`/`COLORS_CHIARO` + `vwApplicaTemaGrafici()`. Ogni nuovo colore scritto a mano va previsto anche lì.
 - La versione prima del kit è nel commit precedente a quello del 15/11/2026 ("VaultWatch: nuovo stile…"), se servisse tornare indietro.
 
 ## Sistema di design
