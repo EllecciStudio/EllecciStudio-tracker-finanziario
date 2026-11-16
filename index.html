@@ -337,6 +337,24 @@ html.vw-altro #ft-root .tabs{ opacity:1; transform:none; pointer-events:auto; vi
 @media (prefers-reduced-motion:reduce){
   #ft-root .tab-btn, #ft-root .tabs, #ft-root .barra-basso button{ transition:none; }
 }
+/* ---------- movimento "da dashboard" (16/11/2026, DESIGN.md > Movimento) ----------
+   schede a cascata la prima volta che si apre una sezione, numeri che contano, grafici che si costruiscono,
+   cambio pagina a cerchio (View Transitions), schede che si sollevano col mouse */
+@keyframes vw-entra{ from{ opacity:0; transform:translateY(8px); filter:blur(4px); } to{ opacity:1; transform:none; filter:none; } }
+#ft-root .vw-in{ animation:vw-entra .46s cubic-bezier(0.23, 1, 0.32, 1) backwards; animation-delay:var(--vw-ritardo, 0ms); }
+#ft-root .hero-val, #ft-root .kpi-val{ font-variant-numeric:tabular-nums; }
+@media (hover:hover) and (pointer:fine){
+  #ft-root .kpi, #ft-root .hero, #ft-root .card:has(canvas){ transition:transform .22s cubic-bezier(0.23, 1, 0.32, 1), border-color .22s; }
+  #ft-root .kpi:hover, #ft-root .hero:hover, #ft-root .card:has(canvas):hover{ transform:translateY(-4px); }
+}
+::view-transition-old(root){ animation:none; mix-blend-mode:normal; }
+::view-transition-new(root){ animation:vw-cerchio .38s cubic-bezier(0.23, 1, 0.32, 1) both; mix-blend-mode:normal; }
+@keyframes vw-cerchio{ from{ clip-path:circle(0 at var(--vw-cx, 50%) var(--vw-cy, 100%)); } to{ clip-path:circle(150vmax at var(--vw-cx, 50%) var(--vw-cy, 100%)); } }
+@media (prefers-reduced-motion:reduce){
+  #ft-root .vw-in{ animation:none; }
+  #ft-root .kpi, #ft-root .hero, #ft-root .card{ transition:none !important; transform:none !important; }
+  ::view-transition-new(root){ animation:none; }
+}
 </style>
 
 <div id="ft-root" class="hidden">
@@ -497,6 +515,7 @@ if(typeof Chart !== 'undefined'){
     id:'vwPunto',
     afterDatasetsDraw:function(chart){
       if(chart.config.type !== 'line' || !chart.chartArea) return;
+      if(chart.$vwRivela !== undefined && chart.$vwRivela < 1) return;
       var attivi = chart.getActiveElements ? chart.getActiveElements() : [];
       var di = 0, i;
       if(attivi.length){ di = attivi[0].datasetIndex; i = attivi[0].index; }
@@ -1312,13 +1331,17 @@ function safeRender(panelId, fn){
 document.getElementById('ft-tabs').addEventListener('click', function(e){
   var btn = e.target.closest('.tab-btn');
   if(!btn) return;
-  document.querySelectorAll('#ft-root .tab-btn').forEach(function(b){ b.classList.remove('active'); });
-  document.querySelectorAll('#ft-root .tab-panel').forEach(function(p){ p.classList.remove('active'); });
-  btn.classList.add('active');
-  document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
-  var t = document.getElementById('vw-titolo'); if(t) t.textContent = btn.textContent;
-  if(window.vwBarra) window.vwBarra(btn.dataset.tab);
-  if(window.scrollY > 0) window.scrollTo(0, 0);
+  function cambia(){
+    document.querySelectorAll('#ft-root .tab-btn').forEach(function(b){ b.classList.remove('active'); });
+    document.querySelectorAll('#ft-root .tab-panel').forEach(function(p){ p.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    var t = document.getElementById('vw-titolo'); if(t) t.textContent = btn.textContent;
+    if(window.vwBarra) window.vwBarra(btn.dataset.tab);
+    if(window.scrollY > 0) window.scrollTo(0, 0);
+  }
+  var giaAperta = btn.classList.contains('active');
+  vwCambioPagina(function(){ cambia(); vwEntra(btn.dataset.tab); }, giaAperta);
 });
 
 /* barra in basso sul telefono: 3 sezioni principali, "+" per aggiungere, "Altro" per le altre */
@@ -2779,6 +2802,158 @@ function updatePatrimonio(year, field, value){
   saveCfg(); renderAll();
 }
 window.updatePatrimonio = updatePatrimonio;
+
+/* ============================================================
+   MOVIMENTO "da dashboard" (16/11/2026, DESIGN.md > Movimento)
+   La prima volta che si apre una sezione: schede a cascata, numeri che contano da 0, grafici che si costruiscono.
+   Ai ritorni nella stessa sessione i numeri sono gia al loro posto. Con "riduci movimento" niente di tutto questo.
+   ============================================================ */
+var VW_FERMO = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+var VW_PASSO = 50, VW_MAX = 12, VW_CONTA = 1150, VW_DISEGNA = 900, VW_FINESTRA = 1600;
+var vwViste = {}, vwInCorso = null, vwPuntatore = null;
+function vwEase(t){ return 1 - Math.pow(1 - t, 3); }
+document.addEventListener('pointerdown', function(e){ vwPuntatore = { x:e.clientX, y:e.clientY, t:Date.now() }; }, true);
+
+function vwCambioPagina(cambia, giaAperta){
+  if(VW_FERMO || giaAperta || !document.startViewTransition){ cambia(); return; }
+  var r = document.documentElement, p = vwPuntatore;
+  var x = (p && Date.now() - p.t < 1500) ? p.x : window.innerWidth / 2;
+  var y = (p && Date.now() - p.t < 1500) ? p.y : window.innerHeight;
+  r.style.setProperty('--vw-cx', x + 'px'); r.style.setProperty('--vw-cy', y + 'px');
+  try{ document.startViewTransition(cambia); }catch(e){ cambia(); }
+}
+
+/* numero dentro il testo: "1.234,56 €" -> prefisso, valore, decimali, suffisso */
+function vwLeggiNumero(testo){
+  var m = /-?\d+(?:\.\d{3})*(?:,\d+)?/.exec(testo);
+  if(!m) return null;
+  var dec = m[0].indexOf(',') >= 0 ? m[0].split(',')[1].length : 0;
+  var v = parseFloat(m[0].replace(/\./g, '').replace(',', '.'));
+  if(!isFinite(v)) return null;
+  return { pre:testo.slice(0, m.index), suf:testo.slice(m.index + m[0].length), v:v, dec:dec };
+}
+function vwScriviNumero(el, n, x){
+  var s = n.pre + new Intl.NumberFormat('it-IT', { minimumFractionDigits:n.dec, maximumFractionDigits:n.dec }).format(x) + n.suf;
+  if(el.dataset.vwDec === '1'){
+    var i = s.lastIndexOf(',');
+    el.innerHTML = i > 0 ? escapeHtml(s.slice(0, i)) + '<span class="dec">' + escapeHtml(s.slice(i)) + '</span>' : escapeHtml(s);
+  } else el.textContent = s;
+}
+
+/* applica cascata e conteggio agli elementi del pannello; "trascorso" fa ripartire da dove era arrivata
+   l'animazione quando i dati si aggiornano a meta (es. la copia locale e poi quella del server) */
+function vwPrepara(pannello, trascorso){
+  var blocchi = pannello.querySelectorAll('.hero, .kpi, .card, .note');
+  for(var i = 0; i < blocchi.length; i++){
+    var b = blocchi[i];
+    b.style.setProperty('--vw-ritardo', (Math.min(i, VW_MAX) * VW_PASSO - trascorso) + 'ms');
+    b.classList.remove('vw-in'); void b.offsetWidth; b.classList.add('vw-in');
+  }
+  var numeri = [];
+  pannello.querySelectorAll('.hero-val, .kpi-val, .disp').forEach(function(el){
+    var testo = el.textContent, n = vwLeggiNumero(testo);
+    if(!n || n.v === 0) return;
+    if(el.querySelector('.dec')) el.dataset.vwDec = '1';
+    var blocco = el.closest('.hero, .kpi, .card');
+    var pos = Array.prototype.indexOf.call(blocchi, blocco);
+    var inizio = Math.max(0, Math.min(pos, VW_MAX)) * VW_PASSO + 80;
+    numeri.push({ el:el, n:n, inizio:inizio });
+    vwScriviNumero(el, n, n.v * vwEase(Math.min(1, Math.max(0, (trascorso - inizio) / VW_CONTA))));
+  });
+  return numeri;
+}
+
+function vwGrafici(pannello){
+  if(typeof Chart === 'undefined') return;
+  pannello.querySelectorAll('canvas').forEach(function(cv){
+    var ch = Chart.getChart(cv); if(!ch) return;
+    var linea = ch.config.type === 'line';
+    function parti(){
+      if(linea){
+        var t0 = performance.now() + 120;
+        (function passo(){
+          if(!ch.canvas) return;
+          var t = Math.min(1, Math.max(0, (performance.now() - t0) / VW_DISEGNA));
+          ch.$vwRivela = vwEase(t); ch.draw();
+          if(t < 1) requestAnimationFrame(passo); else { ch.$vwRivela = 1; ch.draw(); }
+        })();
+      } else {
+        try{ ch.update(); }catch(e){}
+      }
+    }
+    /* il grafico si costruisce quando arriva sullo schermo (sul telefono spesso e piu in basso) */
+    if(linea){ ch.$vwRivela = 0; ch.draw(); } else { try{ ch.reset(); ch.draw(); }catch(e){} }
+    var r = cv.getBoundingClientRect();
+    if(!window.IntersectionObserver || (r.top < window.innerHeight * 0.85 && r.bottom > 0)){ parti(); return; }
+    var oss = new IntersectionObserver(function(voci){
+      if(voci.some(function(v){ return v.isIntersecting; })){ oss.disconnect(); parti(); }
+    }, { threshold:0.35 });
+    oss.observe(cv);
+  });
+}
+
+function vwAvviaConteggio(stato){
+  (function passo(){
+    if(vwInCorso !== stato) return;
+    var ora = performance.now() - stato.t0, finito = true;
+    stato.numeri.forEach(function(q){
+      if(!q.el.isConnected) return;
+      var t = Math.min(1, Math.max(0, (ora - q.inizio) / VW_CONTA));
+      if(t < 1){ finito = false; vwScriviNumero(q.el, q.n, q.n.v * vwEase(t)); }
+      else if(!q.fatto){ q.fatto = true; vwScriviNumero(q.el, q.n, q.n.v); }
+    });
+    if(!finito) requestAnimationFrame(passo);
+  })();
+}
+
+/* entrata in una sezione: solo la prima volta nella sessione */
+function vwEntra(sez){
+  if(VW_FERMO || vwViste[sez]) return;
+  var pannello = document.getElementById('panel-' + sez);
+  var root = document.getElementById('ft-root');
+  if(!pannello || !root || root.classList.contains('hidden')) return;
+  vwViste[sez] = true;
+  var stato = { sez:sez, t0:performance.now(), numeri:[] };
+  vwInCorso = stato;
+  stato.numeri = vwPrepara(pannello, 0);
+  requestAnimationFrame(function(){ vwGrafici(pannello); });
+  vwAvviaConteggio(stato);
+}
+
+/* dopo ogni ridisegno: se una sezione sta entrando, l'animazione continua sugli elementi nuovi;
+   all'avvio la prima sezione visibile fa la sua entrata */
+var vwRenderOriginale = renderAll;
+renderAll = function(){
+  vwRenderOriginale.apply(this, arguments);
+  if(VW_FERMO) return;
+  var s = vwInCorso;
+  if(s && performance.now() - s.t0 < VW_FINESTRA){
+    var pannello = document.getElementById('panel-' + s.sez);
+    var trascorso = performance.now() - s.t0;
+    s.numeri = vwPrepara(pannello, trascorso);
+    requestAnimationFrame(function(){ vwGrafici(pannello); });
+    vwAvviaConteggio(s);
+    return;
+  }
+  var attiva = document.querySelector('#ft-tabs .tab-btn.active');
+  if(attiva) vwEntra(attiva.dataset.tab);
+};
+
+if(typeof Chart !== 'undefined' && Chart.register){
+  Chart.register({
+    id:'vwRivela',
+    beforeDatasetsDraw:function(chart){
+      if(chart.$vwRivela === undefined || chart.$vwRivela >= 1 || !chart.chartArea) return;
+      var a = chart.chartArea, ctx = chart.ctx;
+      ctx.save(); ctx.beginPath();
+      ctx.rect(a.left - 4, 0, (a.right - a.left + 8) * chart.$vwRivela, chart.height); ctx.clip();
+      chart.$vwClip = true;
+    },
+    afterDatasetsDraw:function(chart){
+      if(chart.$vwClip){ chart.ctx.restore(); chart.$vwClip = false; }
+    }
+  });
+}
 
 window.ftApp = {};
 avvia();

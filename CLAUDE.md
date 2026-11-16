@@ -15,7 +15,7 @@ da **venderla**. Luigi non è uno sviluppatore: spiega le modifiche in italiano 
 - Nessun passaggio di build: tutto è in `index.html` (HTML, CSS e JS insieme). Librerie incluse in `lib/`
   (Supabase JS 2.117.2, Chart.js 4.4.1), per non dipendere da CDN.
 - Quando cambi i file del "guscio" (index.html, icone, lib), **aumenta `VERSIONE` in `sw.js`**
-  (oggi `tracker-v4`), altrimenti il telefono può continuare a mostrare la versione vecchia.
+  (oggi `tracker-v5`), altrimenti il telefono può continuare a mostrare la versione vecchia.
 - Prima di un push controlla l'app a larghezza telefono (circa 390 px) e il funzionamento offline.
 
 ## Dati e sincronizzazione
@@ -55,6 +55,10 @@ valore con fumetto chiaro.
 - Il kit è già dentro `index.html` (blocco `<style id="vw-kit">` e script della barra): **i ritocchi si fanno direttamente in `index.html`**.
   Non rilanciare `strumenti/kit-ellecci/genera.py` su `index.html` (applicherebbe il kit due volte): quello script e `kit.css` restano come
   riferimento per portare lo stesso stile nelle altre app (Trading Studio, Embrix, BandPilot, AltSonar).
+- **Movimento** (16/11/2026, regole in `DESIGN.md` > Movimento): blocco "MOVIMENTO" in fondo allo script principale di `index.html` + CSS `vw-entra`/`vw-cerchio`.
+  La prima volta che si apre una sezione: schede a cascata, numeri `.hero-val`/`.kpi-val`/`.disp` che contano da 0, grafici a linea che si disegnano quando
+  arrivano sullo schermo; cambio pagina a cerchio (View Transitions) dal punto toccato; schede che si sollevano col mouse. `renderAll` è avvolta per far
+  continuare l'animazione se i dati arrivano a metà. Con "riduci movimento" del sistema non parte nulla.
 - La versione prima del kit è nel commit precedente a quello del 15/11/2026 ("VaultWatch: nuovo stile…"), se servisse tornare indietro.
 
 ## Sistema di design
