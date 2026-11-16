@@ -97,6 +97,14 @@ Il vetro ha sempre un bordo di 1px e una luce sul lato in alto (bordo più chiar
 ## Movimento
 - `--ease-out: cubic-bezier(0.23, 1, 0.32, 1)`; 120–160ms pressioni, 150–250ms menu, fino a 400ms finestre.
 - Solo `transform` e `opacity`; ingresso da `scale(.96)` + `opacity:0`; niente animazioni su ciò che si usa di continuo; `prefers-reduced-motion` rispettato.
+- **Movimento "da dashboard" scelto da Luigi** (16/11/2026, riferimento "Dashboard V15" nel secondo cervello, `riferimenti-design/2026-11-16-movimento-dashboard.md`):
+  - **numeri che contano** da 0 al valore in ~0,8–1 s con la curva ease-out (veloci all'inizio, lenti alla fine), cifre in Plex Mono/Unbounded a larghezza fissa;
+  - **grafici che si costruiscono**: linea che si disegna da sinistra (`stroke-dashoffset` o animazione di Chart.js), barre che crescono dal basso, archi che si riempiono;
+  - **schede a cascata**: `opacity 0 → 1`, `translateY(8px) → 0`, sfocatura `4px → 0`, 40–60 ms tra una scheda e l'altra, poi le righe delle liste;
+  - **cambio pagina a cerchio** (`clip-path: circle()` che si allarga dal pulsante toccato), al massimo 350–400 ms;
+  - **schede che si sollevano** di 3–5 px al passaggio del mouse (solo con puntatore, non sul telefono).
+  Tutto questo solo **la prima volta che si apre una sezione** in una sessione: ai ritorni successivi i numeri sono già al loro posto (la regola sopra resta).
+  Con "riduci movimento" del sistema: niente conteggi, niente cerchio, solo dissolvenze brevi.
 
 ## Prima di consegnare
 Foto a 390px e 1440px, contrasto, stati vuoto/errore/caricamento, marchio Ellecci presente, niente testi in inglese, nessun colore fuori dal suo ruolo.
