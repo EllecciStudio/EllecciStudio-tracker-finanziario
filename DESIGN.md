@@ -103,7 +103,8 @@ Il vetro ha sempre un bordo di 1px e una luce sul lato in alto (bordo più chiar
   - **schede a cascata**: `opacity 0 → 1`, `translateY(8px) → 0`, sfocatura `4px → 0`, 40–60 ms tra una scheda e l'altra, poi le righe delle liste;
   - **cambio pagina a cerchio** (`clip-path: circle()` che si allarga dal pulsante toccato), al massimo 350–400 ms;
   - **schede che si sollevano** di 3–5 px al passaggio del mouse (solo con puntatore, non sul telefono).
-  Tutto questo solo **la prima volta che si apre una sezione** in una sessione: ai ritorni successivi i numeri sono già al loro posto (la regola sopra resta).
+  Tutto questo **ogni volta che si apre una sezione** (decisione di Luigi del 16/11/2026, vale più della regola sopra sul cambio scheda); non quando i dati
+  si aggiornano dentro la sezione già aperta.
   Con "riduci movimento" del sistema: niente conteggi, niente cerchio, solo dissolvenze brevi.
 
 ## Prima di consegnare

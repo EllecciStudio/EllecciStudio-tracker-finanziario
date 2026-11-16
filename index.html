@@ -2805,12 +2805,12 @@ window.updatePatrimonio = updatePatrimonio;
 
 /* ============================================================
    MOVIMENTO "da dashboard" (16/11/2026, DESIGN.md > Movimento)
-   La prima volta che si apre una sezione: schede a cascata, numeri che contano da 0, grafici che si costruiscono.
-   Ai ritorni nella stessa sessione i numeri sono gia al loro posto. Con "riduci movimento" niente di tutto questo.
+   Ogni volta che si apre una sezione (scelta di Luigi, 16/11/2026): schede a cascata, numeri che contano da 0, grafici che si costruiscono.
+   Non quando i dati si aggiornano dentro la sezione gia aperta. Con "riduci movimento" niente di tutto questo.
    ============================================================ */
 var VW_FERMO = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 var VW_PASSO = 50, VW_MAX = 12, VW_CONTA = 1150, VW_DISEGNA = 900, VW_FINESTRA = 1600;
-var vwViste = {}, vwInCorso = null, vwPuntatore = null;
+var vwAvviata = false, vwInCorso = null, vwPuntatore = null;
 function vwEase(t){ return 1 - Math.pow(1 - t, 3); }
 document.addEventListener('pointerdown', function(e){ vwPuntatore = { x:e.clientX, y:e.clientY, t:Date.now() }; }, true);
 
@@ -2851,7 +2851,8 @@ function vwPrepara(pannello, trascorso){
   }
   var numeri = [];
   pannello.querySelectorAll('.hero-val, .kpi-val, .disp').forEach(function(el){
-    var testo = el.textContent, n = vwLeggiNumero(testo);
+    var testo = el.dataset.vwFinale || el.textContent, n = vwLeggiNumero(testo);
+    el.dataset.vwFinale = testo;
     if(!n || n.v === 0) return;
     if(el.querySelector('.dec')) el.dataset.vwDec = '1';
     var blocco = el.closest('.hero, .kpi, .card');
@@ -2867,6 +2868,7 @@ function vwGrafici(pannello){
   if(typeof Chart === 'undefined') return;
   pannello.querySelectorAll('canvas').forEach(function(cv){
     var ch = Chart.getChart(cv); if(!ch) return;
+    if(ch.$vwOss){ ch.$vwOss.disconnect(); ch.$vwOss = null; }
     var linea = ch.config.type === 'line';
     function parti(){
       if(linea){
@@ -2886,8 +2888,9 @@ function vwGrafici(pannello){
     var r = cv.getBoundingClientRect();
     if(!window.IntersectionObserver || (r.top < window.innerHeight * 0.85 && r.bottom > 0)){ parti(); return; }
     var oss = new IntersectionObserver(function(voci){
-      if(voci.some(function(v){ return v.isIntersecting; })){ oss.disconnect(); parti(); }
+      if(voci.some(function(v){ return v.isIntersecting; })){ oss.disconnect(); ch.$vwOss = null; parti(); }
     }, { threshold:0.35 });
+    ch.$vwOss = oss;
     oss.observe(cv);
   });
 }
@@ -2906,13 +2909,18 @@ function vwAvviaConteggio(stato){
   })();
 }
 
-/* entrata in una sezione: solo la prima volta nella sessione */
+/* entrata in una sezione: ogni volta che la si apre */
+function vwChiudiConteggio(){
+  var s = vwInCorso; vwInCorso = null;
+  if(s) s.numeri.forEach(function(q){ if(q.el.isConnected) vwScriviNumero(q.el, q.n, q.n.v); });
+}
 function vwEntra(sez){
-  if(VW_FERMO || vwViste[sez]) return;
+  if(VW_FERMO) return;
   var pannello = document.getElementById('panel-' + sez);
   var root = document.getElementById('ft-root');
   if(!pannello || !root || root.classList.contains('hidden')) return;
-  vwViste[sez] = true;
+  vwAvviata = true;
+  vwChiudiConteggio();
   var stato = { sez:sez, t0:performance.now(), numeri:[] };
   vwInCorso = stato;
   stato.numeri = vwPrepara(pannello, 0);
@@ -2935,6 +2943,7 @@ renderAll = function(){
     vwAvviaConteggio(s);
     return;
   }
+  if(vwAvviata) return;
   var attiva = document.querySelector('#ft-tabs .tab-btn.active');
   if(attiva) vwEntra(attiva.dataset.tab);
 };
