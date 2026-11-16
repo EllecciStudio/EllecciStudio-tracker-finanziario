@@ -1,6 +1,6 @@
 {
-  "name": "Tracker finanziario · Ellecci Studio",
-  "short_name": "Finanze",
+  "name": "VaultWatch · Ellecci Studio",
+  "short_name": "VaultWatch",
   "description": "Tracker delle finanze personali di Ellecci Studio",
   "lang": "it",
   "start_url": "./",

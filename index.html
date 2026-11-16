@@ -422,6 +422,65 @@ html[data-tema="chiaro"] #accesso .logo, html[data-tema="chiaro"] #ft-root .marc
 @media (max-width:959px){ html[data-tema="chiaro"] #ft-root .tabs{ background:rgba(255,255,255,.94); } }
 @media (prefers-reduced-transparency:reduce){ html[data-tema="chiaro"] #ft-root .barra-basso, html[data-tema="chiaro"] #ft-root .lato{ background:#FFFFFF !important; } }
 </style>
+<style id="vw-rifiniture">
+/* ============================================================
+   Rifiniture (17/11/2026, revisione da designer chiesta da Luigi)
+   ============================================================ */
+/* 1) iPhone: Safari ingrandisce la pagina quando tocchi un campo con testo sotto i 16 px, e poi non torna indietro.
+      Con 16 px non ingrandisce mai. */
+@media (hover:none) and (pointer:coarse){
+  #ft-root input, #ft-root select, #ft-root textarea, #accesso input{ font-size:16px !important; }
+}
+/* 2) campi dei moduli: tutti alti uguali, nessuno esce dalla sua casella (la data di iOS era più larga e copriva "Tipo") */
+#ft-root .form-grid{ grid-template-columns:repeat(auto-fit, minmax(min(140px, 100%), 1fr)); align-items:end; gap:12px; }
+#ft-root .form-grid > *{ min-width:0; }
+#ft-root input, #ft-root select{ height:44px; min-width:0; max-width:100%; padding:0 14px; -webkit-appearance:none; appearance:none; }
+#ft-root input[type="date"]{ display:block; text-align:left; }
+#ft-root input[type="date"]::-webkit-date-and-time-value{ text-align:left; margin:0; }
+#ft-root input[type="checkbox"], #ft-root input[type="radio"]{ height:auto; width:auto; padding:0; -webkit-appearance:auto; appearance:auto; accent-color:var(--vw-principale); }
+#ft-root td input, #ft-root td select{ height:36px; padding:0 10px; }
+#ft-root button.btn{ min-height:44px; }
+#ft-root td button.btn{ min-height:36px; }
+@media (max-width:480px){ #ft-root .form-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); } }
+/* 3) tendine nello stile dell'app (al posto di quella grigia del telefono) */
+#ft-root select{ pointer-events:none; padding-right:38px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238A93A1' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 12px center; background-size:16px; }
+#ft-root select.vw-aperta{ border-color:var(--vw-principale); }
+.vw-menu-velo{ position:fixed; inset:0; z-index:70; }
+.vw-menu{ position:fixed; z-index:71; min-width:200px; max-width:calc(100vw - 24px); max-height:min(60vh, 420px); overflow-y:auto; overscroll-behavior:contain; padding:6px;
+  border-radius:20px; background:rgba(16,18,24,.92); border:1px solid rgba(255,255,255,.09); box-shadow:inset 0 1px 0 rgba(255,255,255,.075), 0 18px 50px rgba(0,0,0,.6);
+  -webkit-backdrop-filter:blur(18px) saturate(140%); backdrop-filter:blur(18px) saturate(140%);
+  font-family:'IBM Plex Sans',system-ui,sans-serif; transform-origin:top center; animation:vw-menu .16s cubic-bezier(0.23,1,0.32,1); }
+.vw-menu.su{ transform-origin:bottom center; }
+@keyframes vw-menu{ from{ opacity:0; transform:scale(.96); } }
+.vw-menu button{ display:flex; align-items:center; justify-content:space-between; gap:14px; width:100%; min-height:42px; padding:8px 14px; border:0; border-radius:14px;
+  background:transparent; color:#E9ECF1; font:500 14.5px 'IBM Plex Sans',system-ui,sans-serif; text-align:left; cursor:pointer; }
+.vw-menu button:hover, .vw-menu button:focus-visible{ background:rgba(255,255,255,.06); outline:none; }
+.vw-menu button[aria-selected="true"]{ background:rgba(78,219,156,.12); color:#4EDB9C; font-weight:600; }
+.vw-menu button[aria-selected="true"]::after{ content:""; width:14px; height:8px; border-left:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(-45deg) translateY(-2px); flex:none; }
+html[data-tema="chiaro"] .vw-menu{ background:rgba(255,255,255,.96); border-color:rgba(15,23,42,.1); box-shadow:0 18px 50px rgba(15,23,42,.18); }
+html[data-tema="chiaro"] .vw-menu button{ color:#0E1116; }
+html[data-tema="chiaro"] .vw-menu button:hover{ background:rgba(15,23,42,.05); }
+html[data-tema="chiaro"] .vw-menu button[aria-selected="true"]{ background:rgba(14,159,99,.1); color:#0E9F63; }
+@media (prefers-reduced-motion:reduce){ .vw-menu{ animation:none; } }
+/* 4) computer: l'app riempie la finestra (prima restava una colonna stretta al centro) */
+@media (min-width:960px){
+  #ft-root{ max-width:none; }
+  body{ padding:16px 24px 28px; }
+  #ft-root .kpi-grid{ grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); }
+}
+@media (min-width:1500px){
+  #ft-root{ grid-template-columns:264px minmax(0,1fr); column-gap:32px; }
+  #ft-root .hero-val{ font-size:56px; }
+  #ft-root .kpi-val{ font-size:22px; }
+  #ft-root .card canvas{ max-height:none; }
+  #ft-root .card > div[style*="height:220px"], #ft-root .card > div[style*="height:240px"]{ height:320px !important; }
+}
+/* 5) telefono: l'ultima riga non resta sotto la barra che galleggia; la tabella scorre dentro la sua scheda senza allargare la pagina */
+@media (max-width:959px){ html, body{ overflow-x:hidden; } #ft-root .contenuto{ padding-bottom:12px; } }
+</style>
+
 
 
 <div id="ft-root" class="hidden">
@@ -3074,6 +3133,72 @@ if(typeof Chart !== 'undefined' && Chart.register){
     }
   });
 }
+
+/* ============================================================
+   TENDINE nello stile dell'app (17/11/2026): al posto del menu grigio del telefono.
+   I <select> restano quelli di prima (stessi valori, stessi eventi): cambia solo l'elenco che si apre.
+   ============================================================ */
+(function(){
+  var aperto = null;
+  function chiudi(){ if(!aperto) return; aperto.menu.remove(); aperto.velo.remove(); aperto.sel.classList.remove('vw-aperta'); aperto = null; }
+  function apri(sel){
+    chiudi();
+    if(sel.disabled) return;
+    var velo = document.createElement('div'); velo.className = 'vw-menu-velo';
+    var menu = document.createElement('div'); menu.className = 'vw-menu'; menu.setAttribute('role', 'listbox');
+    Array.prototype.forEach.call(sel.options, function(o, i){
+      if(o.hidden) return;
+      var b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'option'); b.textContent = o.textContent; b.disabled = o.disabled;
+      b.setAttribute('aria-selected', i === sel.selectedIndex ? 'true' : 'false');
+      b.addEventListener('click', function(){
+        var cambia = sel.selectedIndex !== i; sel.selectedIndex = i; chiudi();
+        if(cambia){ sel.dispatchEvent(new Event('input', { bubbles:true })); sel.dispatchEvent(new Event('change', { bubbles:true })); }
+        try{ sel.focus({ preventScroll:true }); }catch(e){}
+      });
+      menu.appendChild(b);
+    });
+    document.body.appendChild(velo); document.body.appendChild(menu);
+    var r = sel.getBoundingClientRect(), vh = window.innerHeight, vw = window.innerWidth;
+    menu.style.minWidth = Math.max(200, r.width) + 'px';
+    var h = menu.offsetHeight, w = menu.offsetWidth, sotto = vh - r.bottom - 12, sopra = r.top - 12;
+    var su = h > sotto && sopra > sotto;
+    if(su){ menu.classList.add('su'); menu.style.maxHeight = Math.min(h, sopra) + 'px'; menu.style.top = Math.max(12, r.top - 6 - Math.min(h, sopra)) + 'px'; }
+    else { menu.style.maxHeight = Math.min(h, Math.max(160, sotto)) + 'px'; menu.style.top = (r.bottom + 6) + 'px'; }
+    menu.style.left = Math.min(Math.max(12, r.left), vw - w - 12) + 'px';
+    var scelta = menu.querySelector('[aria-selected="true"]'); if(scelta) scelta.scrollIntoView({ block:'nearest' });
+    sel.classList.add('vw-aperta');
+    velo.addEventListener('pointerdown', function(e){ e.preventDefault(); chiudi(); });
+    aperto = { sel:sel, menu:menu, velo:velo };
+  }
+  /* i select non ricevono il tocco (pointer-events:none): lo riceve la casella intorno e qui si capisce quale select era sotto il dito */
+  document.addEventListener('click', function(e){
+    var root = document.getElementById('ft-root'); if(!root || !root.contains(e.target) || e.target.closest('.vw-menu')) return;
+    if(e.target.closest('button, a, input, textarea, .barra-basso, .tabs, .lato')) return;
+    var scope = e.target.closest('td, .form-grid > *, .card-title, .card, label'), trovato = null;
+    if(!scope) return;
+    Array.prototype.some.call(scope.querySelectorAll('select'), function(sel){
+      var r = sel.getBoundingClientRect();
+      if(e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom){ trovato = sel; return true; }
+      return false;
+    });
+    if(trovato){ e.preventDefault(); apri(trovato); }
+  });
+  document.addEventListener('keydown', function(e){
+    if(aperto){
+      if(e.key === 'Escape'){ var s0 = aperto.sel; chiudi(); try{ s0.focus(); }catch(err){} e.preventDefault(); return; }
+      if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+        var bs = Array.prototype.slice.call(aperto.menu.querySelectorAll('button:not(:disabled)')), k = bs.indexOf(document.activeElement);
+        if(k < 0) k = bs.indexOf(aperto.menu.querySelector('[aria-selected="true"]'));
+        var n = bs[Math.max(0, Math.min(bs.length - 1, k + (e.key === 'ArrowDown' ? 1 : -1)))]; if(n) n.focus(); e.preventDefault();
+      }
+      return;
+    }
+    var t = e.target;
+    if(t && t.tagName === 'SELECT' && t.closest('#ft-root') && (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown')){ e.preventDefault(); apri(t); var p = document.querySelector('.vw-menu [aria-selected="true"]'); if(p) p.focus(); }
+  });
+  window.addEventListener('resize', chiudi);
+  window.addEventListener('scroll', function(e){ if(aperto && !(e.target && e.target.closest && e.target.closest('.vw-menu'))) chiudi(); }, true);
+})();
 
 window.ftApp = {};
 avvia();
