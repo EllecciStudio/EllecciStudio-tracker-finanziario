@@ -404,7 +404,7 @@ html[data-tema="chiaro"] #ft-root .barra-basso{ background:rgba(255,255,255,.82)
 html[data-tema="chiaro"] #ft-root .barra-basso button{ border-color:rgba(15,23,42,.06); }
 html[data-tema="chiaro"] #ft-root .barra-basso button.on{ color:#FFFFFF; }
 html[data-tema="chiaro"] #ft-root .barra-basso button.principale{ color:#FFFFFF; }
-html[data-tema="chiaro"] #ft-root input, html[data-tema="chiaro"] #ft-root select, html[data-tema="chiaro"] #ft-root textarea{ background:#FFFFFF; border-color:rgba(15,23,42,.12); }
+html[data-tema="chiaro"] #ft-root input, html[data-tema="chiaro"] #ft-root select, html[data-tema="chiaro"] #ft-root textarea{ background-color:#FFFFFF; border-color:rgba(15,23,42,.12); }
 html[data-tema="chiaro"] #ft-root select option{ background:#FFFFFF; color:#0E1116; }
 html[data-tema="chiaro"] #ft-root input:focus, html[data-tema="chiaro"] #ft-root select:focus, html[data-tema="chiaro"] #ft-root textarea:focus{ border-color:#0E9F63; box-shadow:0 0 0 3px rgba(14,159,99,.15); }
 html[data-tema="chiaro"] #ft-root button.btn:not(.primary){ background:#FFFFFF; border-color:rgba(15,23,42,.12); color:#0E1116; }
@@ -446,6 +446,7 @@ html[data-tema="chiaro"] #accesso .logo, html[data-tema="chiaro"] #ft-root .marc
 #ft-root select{ pointer-events:none; padding-right:38px;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238A93A1' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat:no-repeat; background-position:right 12px center; background-size:16px; }
+#ft-root .card-title select{ width:auto; height:38px; padding:0 36px 0 14px; font-size:13px !important; text-transform:none; letter-spacing:0; }
 #ft-root select.vw-aperta{ border-color:var(--vw-principale); }
 .vw-menu-velo{ position:fixed; inset:0; z-index:70; }
 .vw-menu{ position:fixed; z-index:71; min-width:200px; max-width:calc(100vw - 24px); max-height:min(60vh, 420px); overflow-y:auto; overscroll-behavior:contain; padding:6px;
@@ -477,6 +478,9 @@ html[data-tema="chiaro"] .vw-menu button[aria-selected="true"]{ background:rgba(
   #ft-root .card canvas{ max-height:none; }
   #ft-root .card > div[style*="height:220px"], #ft-root .card > div[style*="height:240px"]{ height:320px !important; }
 }
+/* 6) ritmo uguale tra i blocchi: le note non toccano più la scheda sotto */
+#ft-root .note{ margin-bottom:14px; }
+#ft-root .tab-panel > :last-child{ margin-bottom:0; }
 /* 5) telefono: l'ultima riga non resta sotto la barra che galleggia; la tabella scorre dentro la sua scheda senza allargare la pagina */
 @media (max-width:959px){ html, body{ overflow-x:hidden; } #ft-root .contenuto{ padding-bottom:12px; } }
 </style>
@@ -613,7 +617,7 @@ if(typeof Chart !== 'undefined'){
   Chart.defaults.font.size = 10.5;
   try{
     Chart.defaults.set('scale', { grid:{ color:'rgba(255,255,255,0.045)' }, border:{ display:false } });
-    Chart.defaults.set('scales.category', { grid:{ display:false } });
+    Chart.defaults.set('scales.category', { grid:{ display:false }, ticks:{ maxRotation:0, autoSkip:true, autoSkipPadding:14 } }); /* etichette dei mesi dritte: se non ci stanno se ne salta qualcuna, non si inclinano */
     Chart.defaults.elements.line.borderWidth = 2;
     Chart.defaults.elements.point.hoverRadius = 5;
     Chart.defaults.elements.point.borderWidth = 0;
