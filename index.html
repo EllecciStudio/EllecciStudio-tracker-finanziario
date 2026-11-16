@@ -478,6 +478,19 @@ html[data-tema="chiaro"] .vw-menu button[aria-selected="true"]{ background:rgba(
   #ft-root .card canvas{ max-height:none; }
   #ft-root .card > div[style*="height:220px"], #ft-root .card > div[style*="height:240px"]{ height:320px !important; }
 }
+/* 7) movimento "dal vivo": lampo sul riquadro che cambia, riga nuova che si illumina, puntini verso la Dashboard */
+@keyframes vw-lampo-su{ 0%{ box-shadow:0 0 0 1px rgba(78,219,156,.75), 0 0 34px rgba(78,219,156,.35); } 100%{ box-shadow:0 0 0 1px rgba(78,219,156,0), 0 0 0 rgba(78,219,156,0); } }
+@keyframes vw-lampo-giu{ 0%{ box-shadow:0 0 0 1px rgba(255,106,92,.75), 0 0 34px rgba(255,106,92,.3); } 100%{ box-shadow:0 0 0 1px rgba(255,106,92,0), 0 0 0 rgba(255,106,92,0); } }
+#ft-root .vw-lampo-su{ animation:vw-lampo-su 1.1s cubic-bezier(0.23,1,0.32,1); }
+#ft-root .vw-lampo-giu{ animation:vw-lampo-giu 1.1s cubic-bezier(0.23,1,0.32,1); }
+@keyframes vw-riga-nuova{ 0%{ background:rgba(78,219,156,.22); transform:translateX(-10px); opacity:0; } 30%{ transform:none; opacity:1; } 100%{ background:transparent; } }
+#ft-root tr.vw-riga-nuova td{ animation:vw-riga-nuova 1.6s cubic-bezier(0.23,1,0.32,1); }
+.vw-puntino{ position:fixed; z-index:80; width:8px; height:8px; border-radius:50%; pointer-events:none; }
+@keyframes vw-arrivo{ 0%{ transform:scale(1); } 40%{ transform:scale(1.18); } 100%{ transform:scale(1); } }
+#ft-root .vw-arrivo{ animation:vw-arrivo .45s cubic-bezier(0.23,1,0.32,1); }
+@media (prefers-reduced-motion:reduce){ #ft-root .vw-lampo-su, #ft-root .vw-lampo-giu, #ft-root tr.vw-riga-nuova td, #ft-root .vw-arrivo{ animation:none; } .vw-puntino{ display:none; } }
+/* 8) testata: se il messaggio di stato è lungo (es. errore di salvataggio) va a capo intero, non stringe il marchio */
+#ft-root .app-header{ flex-wrap:wrap; } #ft-root .marchio{ min-width:min(100%, 230px); }
 /* 6) ritmo uguale tra i blocchi: le note non toccano più la scheda sotto */
 #ft-root .note{ margin-bottom:14px; }
 #ft-root .tab-panel > :last-child{ margin-bottom:0; }
@@ -1934,7 +1947,7 @@ function renderTxList(filterMonth){
   var html = '<table><thead><tr><th>Data</th><th>Tipo</th><th>Categoria</th><th>Importo</th><th>Conto</th><th>Note</th><th></th></tr></thead><tbody>';
   list.forEach(function(t){
     var meta = TYPE_META[t.type] || {};
-    html += '<tr>';
+    html += '<tr data-tx="' + escapeHtml(String(t.id)) + '" data-tipo="' + escapeHtml(t.type) + '">';
     html += '<td class="num">' + fmtDate(t.date) + '</td>';
     html += '<td><span class="badge-type" style="background:' + meta.bg + '; color:' + meta.fg + ';">' + t.type + '</span></td>';
     html += '<td>' + escapeHtml(t.category) + '</td>';
@@ -3105,9 +3118,76 @@ function vwEntra(sez){
 /* dopo ogni ridisegno: se una sezione sta entrando, l'animazione continua sugli elementi nuovi;
    all'avvio la prima sezione visibile fa la sua entrata */
 var vwRenderOriginale = renderAll;
+/* ---- movimento "dal vivo" (17/11/2026, riferimento "Revlark" scelto da Luigi): quando un dato cambia mentre guardi,
+   il numero scorre dal valore di prima a quello nuovo con un lampo verde o rosso, la riga nuova si illumina
+   e dei puntini volano dal punto toccato verso la Dashboard ---- */
+function vwChiave(el){
+  var pan = el.closest('.tab-panel'), k = el.closest('.kpi'), c;
+  if(el.classList.contains('hero-val')) return (pan ? pan.id : '') + '|hero';
+  if(k){ var l = k.querySelector('.kpi-label'); return (pan ? pan.id : '') + '|' + (l ? l.textContent : ''); }
+  c = el.closest('.card'); var t = c && c.querySelector('.card-title');
+  return (pan ? pan.id : '') + '|' + (t ? t.textContent : '') + '|' + Array.prototype.indexOf.call(c ? c.querySelectorAll('.disp') : [], el);
+}
+function vwFoto(){
+  var f = { num:{}, tx:null };
+  document.querySelectorAll('#ft-root .hero-val, #ft-root .kpi-val, #ft-root .disp').forEach(function(el){
+    var n = vwLeggiNumero(el.dataset.vwFinale || el.textContent); if(n) f.num[vwChiave(el)] = n.v;
+  });
+  var righe = document.querySelectorAll('#panel-log tr[data-tx]');
+  if(righe.length){ f.tx = {}; righe.forEach(function(r){ f.tx[r.dataset.tx] = 1; }); }
+  return f;
+}
+function vwPuntini(colore){
+  var p = vwPuntatore; if(!p || Date.now() - p.t > 4000) return;
+  var meta = document.querySelector('#vw-barra [data-vai="dashboard"]');
+  if(!meta || !meta.offsetParent) meta = document.querySelector('#ft-tabs .tab-btn[data-tab="dashboard"]');
+  if(!meta || !meta.offsetParent) return;
+  var r = meta.getBoundingClientRect(), ax = r.left + r.width / 2, ay = r.top + r.height / 2;
+  for(var i = 0; i < 9; i++){
+    (function(i){
+      var d = document.createElement('i'); d.className = 'vw-puntino'; d.style.background = colore; d.style.boxShadow = '0 0 10px ' + colore;
+      d.style.left = p.x + 'px'; d.style.top = p.y + 'px'; document.body.appendChild(d);
+      var sx = (Math.random() - .5) * 90, sy = -30 - Math.random() * 70;
+      var an = d.animate([
+        { transform:'translate(-50%,-50%) scale(.4)', opacity:0 },
+        { transform:'translate(calc(-50% + ' + sx + 'px), calc(-50% + ' + sy + 'px)) scale(1)', opacity:1, offset:.3 },
+        { transform:'translate(calc(-50% + ' + (ax - p.x) + 'px), calc(-50% + ' + (ay - p.y) + 'px)) scale(.5)', opacity:.9 }
+      ], { duration:700 + i * 45, easing:'cubic-bezier(0.5, 0, 0.2, 1)', delay:i * 28, fill:'both' });
+      an.onfinish = function(){ d.remove(); if(i === 8){ meta.classList.remove('vw-arrivo'); void meta.offsetWidth; meta.classList.add('vw-arrivo'); } };
+    })(i);
+  }
+}
+function vwDalVivo(prima){
+  var attivo = document.querySelector('#ft-root .tab-panel.active'); if(!attivo) return;
+  attivo.querySelectorAll('.hero-val, .kpi-val, .disp').forEach(function(el){
+    var testo = el.textContent, n = vwLeggiNumero(testo), da = prima.num[vwChiave(el)];
+    if(!n || da === undefined || Math.abs(da - n.v) < 0.005) return;
+    if(el.querySelector('.dec')) el.dataset.vwDec = '1';
+    el.dataset.vwFinale = testo;
+    var su = n.v > da, t0 = performance.now(), blocco = el.closest('.hero, .kpi, .card');
+    if(blocco){ blocco.classList.remove('vw-lampo-su', 'vw-lampo-giu'); void blocco.offsetWidth; blocco.classList.add(su ? 'vw-lampo-su' : 'vw-lampo-giu'); }
+    (function passo(){
+      if(!el.isConnected) return;
+      var t = Math.min(1, (performance.now() - t0) / 800);
+      vwScriviNumero(el, n, t < 1 ? da + (n.v - da) * vwEase(t) : n.v);
+      if(t < 1) requestAnimationFrame(passo);
+    })();
+  });
+  if(prima.tx){
+    var nuove = [];
+    document.querySelectorAll('#panel-log tr[data-tx]').forEach(function(r){ if(!prima.tx[r.dataset.tx]) nuove.push(r); });
+    if(nuove.length && nuove.length <= 3){
+      nuove.forEach(function(r){ r.classList.add('vw-riga-nuova'); });
+      var tipo = nuove[0].dataset.tipo || '', entra = /Entrata|Rimborso Credito/.test(tipo);
+      vwPuntini(entra ? COLORS.teal : /Uscita|Rimborso Debito|Prestito/.test(tipo) ? COLORS.red : COLORS.blue);
+    }
+  }
+}
 renderAll = function(){
+  var vwPrima = (!VW_FERMO && vwAvviata && !(vwInCorso && performance.now() - vwInCorso.t0 < VW_FINESTRA)) ? vwFoto() : null;
   vwRenderOriginale.apply(this, arguments);
   if(VW_FERMO) return;
+  if(vwPrima){ vwDalVivo(vwPrima); return; }
   var s = vwInCorso;
   if(s && performance.now() - s.t0 < VW_FINESTRA){
     var pannello = document.getElementById('panel-' + s.sez);
