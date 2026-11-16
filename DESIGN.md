@@ -107,6 +107,15 @@ Il vetro ha sempre un bordo di 1px e una luce sul lato in alto (bordo più chiar
   si aggiornano dentro la sezione già aperta.
   Con "riduci movimento" del sistema: niente conteggi, niente cerchio, solo dissolvenze brevi.
 
+## Tema chiaro (a scelta, dal 16/11/2026)
+Luigi usa solo il tema scuro, che resta il **predefinito**; il chiaro serve a chi comprerà le app. Ogni app ha un pulsante luna/sole (o "◐ Tema") in testata;
+la scelta si salva sul dispositivo (`localStorage`) e uno script in `<head>` mette `data-tema="chiaro"` su `<html>` prima del disegno.
+- Fondo `#F3F4F6`, schede bianche con bordo `rgba(15,23,42,.08)` e ombra morbida al posto del vetro; testo `#0E1116`, secondario `#5B6472`.
+- Colori più scuri per reggere sul bianco: verde `#0E9F63`, rosso `#D93A2B`, oro `#A8700F`, blu `#1F78B4`, viola `#6E4FC0`, arancio `#E2621F`.
+- Pulsante attivo: scuro con testo bianco (il contrario dello scuro). Fumetti dei grafici scuri con testo bianco. Alone dietro la scheda principale più tenue.
+- Il logo Ellecci (bianco) si inverte con `filter:invert(1)`.
+- Ogni colore scritto a mano (CSS, grafici, canvas) va previsto in entrambi i temi; foto di controllo in tutti e due prima di consegnare.
+
 ## Prima di consegnare
 Foto a 390px e 1440px, contrasto, stati vuoto/errore/caricamento, marchio Ellecci presente, niente testi in inglese, nessun colore fuori dal suo ruolo.
 
