@@ -106,6 +106,9 @@ Il vetro ha sempre un bordo di 1px e una luce sul lato in alto (bordo più chiar
   Tutto questo **ogni volta che si apre una sezione** (decisione di Luigi del 16/11/2026, vale più della regola sopra sul cambio scheda); non quando i dati
   si aggiornano dentro la sezione già aperta.
   Con "riduci movimento" del sistema: niente conteggi, niente cerchio, solo dissolvenze brevi.
+- **Movimento "da trading"** (17/11/2026, riferimento "Orderlume", `riferimenti-design/2026-11-17-movimento-studio-e-trading.md` nel secondo cervello; nel Trading Studio):
+  prezzo vivo (scorrono solo le cifre cambiate, lampo verde se sale e rosso se scende), la posizione appena disegnata si costruisce (entrata, poi target e stop, poi le scritte),
+  i risultati scorrono dal valore di prima a quello nuovo. Candele e indicatori non si animano. Per le app di studio vale il riferimento "Campus" (stessa nota): anelli, serie di giorni, punti.
 
 ## Tema chiaro (a scelta, dal 16/11/2026)
 Luigi usa solo il tema scuro, che resta il **predefinito**; il chiaro serve a chi comprerà le app. Ogni app ha un pulsante luna/sole (o "◐ Tema") in testata;
