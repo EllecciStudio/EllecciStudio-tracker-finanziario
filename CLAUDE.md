@@ -15,7 +15,7 @@ da **venderla**. Luigi non è uno sviluppatore: spiega le modifiche in italiano 
 - Nessun passaggio di build: tutto è in `index.html` (HTML, CSS e JS insieme). Librerie incluse in `lib/`
   (Supabase JS 2.117.2, Chart.js 4.4.1), per non dipendere da CDN.
 - Quando cambi i file del "guscio" (index.html, icone, lib), **aumenta `VERSIONE` in `sw.js`**
-  (oggi `tracker-v11`), altrimenti il telefono può continuare a mostrare la versione vecchia.
+  (oggi `tracker-v12`), altrimenti il telefono può continuare a mostrare la versione vecchia.
 - Prima di un push controlla l'app a larghezza telefono (circa 390 px) e il funzionamento offline.
 - Aggiornamenti (16/11/2026): il service worker chiede sempre la pagina alla rete con `cache: 'no-cache'` (GitHub Pages la terrebbe in cache 10 minuti)
   e controlla nuove versioni all'apertura, al ritorno sulla scheda e ogni 30 minuti; quando una nuova versione prende il controllo compare l'avviso
@@ -69,6 +69,9 @@ valore con fumetto chiaro.
   (`#vw-tema`), scelta salvata in `localStorage` `vw_tema` e applicata da uno script in `<head>` prima del disegno. Colori in `<style id="vw-chiaro">`
   (`html[data-tema="chiaro"]`), grafici con `COLORS_SCURO`/`COLORS_CHIARO` + `vwApplicaTemaGrafici()`. Ogni nuovo colore scritto a mano va previsto anche lì.
 - La versione prima del kit è nel commit precedente a quello del 15/11/2026 ("VaultWatch: nuovo stile…"), se servisse tornare indietro.
+
+- **Revisione del 17/11/2026**: tutti gli importi passano da `numIt()`/`fmt()` (punto delle migliaia anche a 4 cifre: 4.380,00 €; prima Intl it-IT scriveva 4380,00),
+  assi dei grafici con `fmtAsse()` (3.600 €); sul telefono (≤700 px) transazioni (`#tx-list-wrap`, celle `c-*`) e patrimonio (`.tab-patr`, `data-l`) diventano schede.
 
 ## Sistema di design
 Prima di toccare l'interfaccia leggi `DESIGN.md` (sistema di design comune di Ellecci Studio, 15/11/2026; stesso testo della skill personale
