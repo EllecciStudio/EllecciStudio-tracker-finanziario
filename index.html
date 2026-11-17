@@ -496,6 +496,35 @@ html[data-tema="chiaro"] .vw-menu button[aria-selected="true"]{ background:rgba(
 #ft-root .tab-panel > :last-child{ margin-bottom:0; }
 /* 5) telefono: l'ultima riga non resta sotto la barra che galleggia; la tabella scorre dentro la sua scheda senza allargare la pagina */
 @media (max-width:959px){ html, body{ overflow-x:hidden; } #ft-root .contenuto{ padding-bottom:12px; } }
+
+/* ---------- revisione del 17/11/2026 (telefono e computer) ---------- */
+#ft-root .form-grid > .riga-intera{ grid-column:1 / -1; }
+#ft-root input[style*="width:95px"], #ft-root input[style*="width:105px"]{ width:100% !important; min-width:80px; }
+@media (min-width:1200px){ #ft-root .kpi-grid{ grid-template-columns:repeat(4, minmax(0,1fr)); } }
+@media (max-width:700px){
+  /* transazioni come schede: tipo e categoria a sinistra, importo a destra, sotto data, conto, nota e azioni (prima l'importo era tagliato) */
+  #tx-list-wrap table, #tx-list-wrap tbody{ display:block; width:100%; }
+  #tx-list-wrap thead{ display:none; }
+  #tx-list-wrap tr{ display:grid; grid-template-columns:auto minmax(0,1fr) auto; grid-template-areas:"tipo cat imp" "meta meta az"; align-items:center; gap:4px 10px; padding:12px 4px; border-bottom:1px solid var(--line); }
+  #tx-list-wrap td{ display:block; padding:0 !important; border:0 !important; min-width:0; }
+  #tx-list-wrap .c-tipo{ grid-area:tipo; } #tx-list-wrap .c-cat{ grid-area:cat; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #tx-list-wrap .c-imp{ grid-area:imp; font-weight:600; white-space:nowrap; }
+  #tx-list-wrap .c-data, #tx-list-wrap .c-conto, #tx-list-wrap .c-note{ grid-row:2; font-size:12px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #tx-list-wrap .c-data{ grid-column:1; } #tx-list-wrap .c-conto{ grid-column:2; } #tx-list-wrap .c-note{ display:none; }
+  #tx-list-wrap .c-az{ grid-area:az; white-space:nowrap; }
+  #tx-list-wrap .c-note:not(:empty){ display:block; grid-column:1 / -1; grid-row:3; font-style:italic; }
+  /* patrimonio: un anno = una scheda con le voci in due colonne */
+  #ft-root .tab-patr, #ft-root .tab-patr tbody{ display:block; width:100%; }
+  #ft-root .tab-patr thead{ display:none; }
+  #ft-root .tab-patr tr{ display:grid; grid-template-columns:1fr 1fr; gap:8px 12px; padding:12px 0; border-bottom:1px solid var(--line); }
+  #ft-root .tab-patr td{ display:flex; flex-direction:column; gap:4px; padding:0 !important; border:0 !important; min-width:0; }
+  #ft-root .tab-patr td[data-l]::before{ content:attr(data-l); font-family:'IBM Plex Sans', system-ui, sans-serif; font-size:11px; font-weight:500; letter-spacing:0; color:var(--ink-soft); }
+  #ft-root .tab-patr .p-anno{ font-family:'Unbounded', system-ui, sans-serif; font-weight:600; font-size:18px; }
+  #ft-root .tab-patr .p-eta{ align-self:center; text-align:right; color:var(--ink-soft); }
+  #ft-root .tab-patr .p-netto{ grid-column:1 / -1; font-size:18px; }
+  #ft-root .tab-patr .p-az{ grid-column:1 / -1; align-items:flex-end; }
+  #ft-root .tab-patr input{ height:40px !important; width:100% !important; }
+}
 </style>
 
 
@@ -829,16 +858,23 @@ function defaultCfg(){
   };
 }
 
-function fmt(n, dec){
-  dec = (dec === undefined) ? 2 : dec;
-  n = Number(n) || 0;
-  return new Intl.NumberFormat('it-IT', {style:'currency', currency:'EUR', minimumFractionDigits:dec, maximumFractionDigits:dec}).format(n);
+/* numeri all'italiana sempre con il punto delle migliaia (17/11/2026: Intl it-IT non raggruppa le 4 cifre, quindi 4380,00 € accanto a 45.000,00 €) */
+function numIt(n, dec){
+  n = Number(n) || 0; dec = (dec === undefined) ? 2 : dec;
+  var s = Math.abs(n).toFixed(dec).split('.'), i = s[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  var neg = n < 0 && /[1-9]/.test(s[0] + (s[1] || ''));
+  return (neg ? '-' : '') + i + (dec ? ',' + s[1] : '');
 }
+function fmt(n, dec){
+  return numIt(n, (dec === undefined) ? 2 : dec) + '\u00a0\u20ac';
+}
+/* etichette degli assi dei grafici: 3.600 € invece di €3600 */
+function fmtAsse(v){ return numIt(v, Math.abs(v) < 10 && v % 1 ? 1 : 0) + '\u00a0\u20ac'; }
 function cent(n){ return Math.round((Number(n)||0)*100)/100; }
 function fmtUsdt(n, dec){
   dec = (dec === undefined) ? 2 : dec;
   n = Number(n) || 0;
-  return new Intl.NumberFormat('it-IT', {minimumFractionDigits:dec, maximumFractionDigits:dec}).format(n) + ' USDT';
+  return numIt(n, dec) + ' USDT';
 }
 function fmtPct(n){
   return new Intl.NumberFormat('it-IT', {style:'percent', minimumFractionDigits:0, maximumFractionDigits:1}).format(n || 0);
@@ -1678,7 +1714,7 @@ function renderDashboard(){
     options: {
       responsive:true, maintainAspectRatio:false,
       plugins:{ legend:{display:true, labels:{boxWidth:10, font:{size:11}}} },
-      scales:{ y:{ ticks:{ callback:function(v){ return '\u20ac' + v; } } } }
+      scales:{ y:{ ticks:{ callback:function(v){ return fmtAsse(v); } } } }
     }
   });
 
@@ -1688,7 +1724,7 @@ function renderDashboard(){
   chartSaldo = safeChart(ctx2, {
     type: 'line',
     data: { labels: months.map(monthLabel), datasets:[{label:'Saldo conto', data:dataSaldo, borderColor:COLORS.teal, backgroundColor:COLORS.tealBg, fill:true, tension:0.3, pointRadius:3, pointBackgroundColor:COLORS.teal}] },
-    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:function(v){ return '\u20ac' + v; } } } } }
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:function(v){ return fmtAsse(v); } } } } }
   });
 }
 
@@ -1948,13 +1984,13 @@ function renderTxList(filterMonth){
   list.forEach(function(t){
     var meta = TYPE_META[t.type] || {};
     html += '<tr data-tx="' + escapeHtml(String(t.id)) + '" data-tipo="' + escapeHtml(t.type) + '">';
-    html += '<td class="num">' + fmtDate(t.date) + '</td>';
-    html += '<td><span class="badge-type" style="background:' + meta.bg + '; color:' + meta.fg + ';">' + t.type + '</span></td>';
-    html += '<td>' + escapeHtml(t.category) + '</td>';
-    html += '<td class="num">' + fmt(t.amount) + '</td>';
-    html += '<td>' + escapeHtml(t.account||'') + '</td>';
-    html += '<td style="color:var(--ink-soft); font-size:12px;">' + escapeHtml(t.note||'') + '</td>';
-    html += '<td><span class="del-row" style="margin-right:8px;" onclick="editTx(\'' + t.id + '\')">Modifica</span><span class="del-row" onclick="deleteTx(\'' + t.id + '\')">Elimina</span></td>';
+    html += '<td class="num c-data">' + fmtDate(t.date) + '</td>';
+    html += '<td class="c-tipo"><span class="badge-type" style="background:' + meta.bg + '; color:' + meta.fg + ';">' + t.type + '</span></td>';
+    html += '<td class="c-cat">' + escapeHtml(t.category) + '</td>';
+    html += '<td class="num c-imp">' + fmt(t.amount) + '</td>';
+    html += '<td class="c-conto">' + escapeHtml(t.account||'') + '</td>';
+    html += '<td class="c-note" style="color:var(--ink-soft); font-size:12px;">' + escapeHtml(t.note||'') + '</td>';
+    html += '<td class="c-az"><span class="del-row" style="margin-right:8px;" onclick="editTx(\'' + t.id + '\')">Modifica</span><span class="del-row" onclick="deleteTx(\'' + t.id + '\')">Elimina</span></td>';
     html += '</tr>';
   });
   html += '</tbody></table>';
@@ -2021,7 +2057,7 @@ function renderDebiti(){
   chartDebiti = safeChart(ctx, {
     type: 'line',
     data: { labels: months.map(monthLabel), datasets:[{label:'Debito residuo', data:data, borderColor:COLORS.red, backgroundColor:COLORS.redBg, fill:true, tension:0.3, pointRadius:3, pointBackgroundColor:COLORS.red}] },
-    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:function(v){ return '\u20ac' + v; } } } } }
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:function(v){ return fmtAsse(v); } } } } }
   });
 }
 
@@ -2122,7 +2158,7 @@ function renderCrediti(){
   chartCrediti = safeChart(ctx, {
     type: 'line',
     data: { labels: months.map(monthLabel), datasets:[{label:'Crediti residui', data:data, borderColor:COLORS.purple, backgroundColor:COLORS.purpleBg, fill:true, tension:0.3, pointRadius:3, pointBackgroundColor:COLORS.purple}] },
-    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:function(v){ return '\u20ac' + v; } } } } }
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:function(v){ return fmtAsse(v); } } } } }
   });
 }
 
@@ -2382,11 +2418,11 @@ function renderFondo(){
       if(!g.autoLink){
         html += '<div><label>Attuale (\u20ac)</label><input type="number" step="any" class="num-in" value="' + g.current + '" onchange="updateGoal(\'' + g.id + '\',\'current\',this.value)"></div>';
       }
-      html += '<div><label>Note</label><input type="text" value="' + escapeHtml(g.note||'') + '" onchange="updateGoal(\'' + g.id + '\',\'note\',this.value)"></div>';
+      html += '<div class="riga-intera"><label>Note</label><input type="text" value="' + escapeHtml(g.note||'') + '" onchange="updateGoal(\'' + g.id + '\',\'note\',this.value)"></div>';
       html += '</div>';
     } else {
       html += '<div class="form-grid" style="margin-top:4px;">';
-      html += '<div><label>Note</label><input type="text" value="' + escapeHtml(g.note||'') + '" onchange="updateGoal(\'' + g.id + '\',\'note\',this.value)"></div>';
+      html += '<div class="riga-intera"><label>Note</label><input type="text" value="' + escapeHtml(g.note||'') + '" onchange="updateGoal(\'' + g.id + '\',\'note\',this.value)"></div>';
       html += '</div>';
     }
     html += '</div>';
@@ -2405,7 +2441,7 @@ function renderFondo(){
   chartFondo = safeChart(ctx, {
     type: 'bar',
     data: { labels: months.map(monthLabel), datasets:[{label:'Fondo accumulato', data:data, backgroundColor:COLORS.blue, borderRadius:4, maxBarThickness:28}] },
-    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:function(v){ return '\u20ac' + v; } } } } }
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:function(v){ return fmtAsse(v); } } } } }
   });
 }
 
@@ -2473,21 +2509,21 @@ function renderPatrimonio(){
 
   html += '<div class="card">';
   html += '<div class="card-title">Snapshot annuale<span><button class="btn primary" onclick="updatePatrimonioWithCurrent()">Aggiorna anno corrente con dati di oggi</button> <button class="btn" onclick="addPatrimonioYear()">+ Aggiungi anno</button></span></div>';
-  html += '<table><thead><tr><th>Anno</th><th>Eta</th><th>Saldo</th><th>Investimenti</th><th>Fondo</th><th>Crediti</th><th>Debiti</th><th>Patrimonio netto</th><th></th></tr></thead><tbody>';
+  html += '<table class="tab-patr"><thead><tr><th>Anno</th><th>Eta</th><th>Saldo</th><th>Investimenti</th><th>Fondo</th><th>Crediti</th><th>Debiti</th><th>Patrimonio netto</th><th></th></tr></thead><tbody>';
   var sorted = CFG.patrimonio.slice().sort(function(a,b){ return a.year - b.year; });
   sorted.forEach(function(p){
     var netto = (Number(p.saldo)||0) + (Number(p.investimenti)||0) + (Number(p.fondo)||0) + (Number(p.crediti)||0) - (Number(p.debiti)||0);
     var age = p.year - CFG.birthYear;
     html += '<tr>';
-    html += '<td class="num">' + p.year + '</td>';
-    html += '<td class="num">' + age + '</td>';
-    html += '<td><input type="number" step="any" class="num-in" value="' + p.saldo + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'saldo\',this.value)"></td>';
-    html += '<td><input type="number" step="any" class="num-in" value="' + p.investimenti + '" style="height:30px; width:105px;" onchange="updatePatrimonio(' + p.year + ',\'investimenti\',this.value)"></td>';
-    html += '<td><input type="number" step="any" class="num-in" value="' + p.fondo + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'fondo\',this.value)"></td>';
-    html += '<td><input type="number" step="any" class="num-in" value="' + (p.crediti||0) + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'crediti\',this.value)"></td>';
-    html += '<td><input type="number" step="any" class="num-in" value="' + p.debiti + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'debiti\',this.value)"></td>';
-    html += '<td class="num" style="font-weight:600;">' + fmt(netto) + '</td>';
-    html += '<td><span class="del-row" onclick="deletePatrimonioYear(' + p.year + ')">Elimina</span></td>';
+    html += '<td class="num p-anno">' + p.year + '</td>';
+    html += '<td class="num p-eta">' + age + ' anni</td>';
+    html += '<td data-l="Saldo"><input type="number" step="any" class="num-in" value="' + p.saldo + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'saldo\',this.value)"></td>';
+    html += '<td data-l="Investimenti"><input type="number" step="any" class="num-in" value="' + p.investimenti + '" style="height:30px; width:105px;" onchange="updatePatrimonio(' + p.year + ',\'investimenti\',this.value)"></td>';
+    html += '<td data-l="Fondo"><input type="number" step="any" class="num-in" value="' + p.fondo + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'fondo\',this.value)"></td>';
+    html += '<td data-l="Crediti"><input type="number" step="any" class="num-in" value="' + (p.crediti||0) + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'crediti\',this.value)"></td>';
+    html += '<td data-l="Debiti"><input type="number" step="any" class="num-in" value="' + p.debiti + '" style="height:30px; width:95px;" onchange="updatePatrimonio(' + p.year + ',\'debiti\',this.value)"></td>';
+    html += '<td class="num p-netto" data-l="Patrimonio netto" style="font-weight:600;">' + fmt(netto) + '</td>';
+    html += '<td class="p-az"><span class="del-row" onclick="deletePatrimonioYear(' + p.year + ')">Elimina</span></td>';
     html += '</tr>';
   });
   html += '</tbody></table></div>';
@@ -2505,7 +2541,7 @@ function renderPatrimonio(){
   chartPatrimonio = safeChart(ctx, {
     type: 'line',
     data: { labels: labels, datasets: [{ label:'Patrimonio netto', data:data, borderColor:COLORS.teal, backgroundColor:COLORS.tealBg, fill:true, tension:0.25, pointRadius:4, pointBackgroundColor:COLORS.teal }] },
-    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:function(v){ return '\u20ac' + v; } } } } }
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:function(v){ return fmtAsse(v); } } } } }
   });
 }
 
@@ -2593,7 +2629,7 @@ function renderPrevisione(){
     options: {
       responsive:true, maintainAspectRatio:false,
       plugins:{ legend:{display:true, labels:{boxWidth:10, font:{size:10}}} },
-      scales:{ y:{ ticks:{ callback:function(v){ return '\u20ac' + v; } } } }
+      scales:{ y:{ ticks:{ callback:function(v){ return fmtAsse(v); } } } }
     }
   });
 }
@@ -2634,7 +2670,7 @@ function renderEtf(){
   html += '</div>';
 
   html += '<div class="kpi-grid">';
-  html += kpiCard('Anni proiettati', etf.anniProiettati.toFixed(1), '');
+  html += kpiCard('Anni proiettati', numIt(etf.anniProiettati, 1), '');
   html += kpiCard('Totale versato', fmt(etf.totaleVersato,0), '');
   html += kpiCard('Guadagno stimato', fmt(etf.guadagnoStimato,0), 'pos');
   html += kpiCard('Valore finale stimato', fmt(etf.valoreFinale,0), 'pos');
@@ -2660,7 +2696,7 @@ function renderEtf(){
     options: {
       responsive:true, maintainAspectRatio:false,
       plugins:{ legend:{display:true, labels:{boxWidth:10, font:{size:10}}} },
-      scales:{ y:{ ticks:{ callback:function(v){ return '\u20ac' + v; } } }, x:{ ticks:{ maxTicksLimit:12 } } }
+      scales:{ y:{ ticks:{ callback:function(v){ return fmtAsse(v); } } }, x:{ ticks:{ maxTicksLimit:12 } } }
     }
   });
 }
@@ -3020,7 +3056,7 @@ function vwLeggiNumero(testo){
   return { pre:testo.slice(0, m.index), suf:testo.slice(m.index + m[0].length), v:v, dec:dec };
 }
 function vwScriviNumero(el, n, x){
-  var s = n.pre + new Intl.NumberFormat('it-IT', { minimumFractionDigits:n.dec, maximumFractionDigits:n.dec }).format(x) + n.suf;
+  var s = n.pre + numIt(x, n.dec) + n.suf;
   if(el.dataset.vwDec === '1'){
     var i = s.lastIndexOf(',');
     el.innerHTML = i > 0 ? escapeHtml(s.slice(0, i)) + '<span class="dec">' + escapeHtml(s.slice(i)) + '</span>' : escapeHtml(s);
