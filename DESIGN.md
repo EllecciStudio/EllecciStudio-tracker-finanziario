@@ -127,6 +127,12 @@ la scelta si salva sul dispositivo (`localStorage`) e uno script in `<head>` met
 - **Ritmo**: stessa distanza (12–14 px) tra tutti i blocchi, note comprese. Etichette dei grafici dritte, mai inclinate.
 - **Elenchi**: nome corto + al massimo una riga di descrizione; i dettagli stanno nelle impostazioni.
 - Numeri grandi sempre in Unbounded, in tutte le app.
+- **Numeri all'italiana ovunque** (aggiunta del pomeriggio del 17/11/2026): punto delle migliaia anche a 4 cifre (4.380,00 €) e virgola dei decimali,
+  anche nelle percentuali (+1,20%), negli assi e nei fumetti dei grafici e nelle date (04/11, non 11-04). Mai fidarsi di `Intl` it-IT da solo: non raggruppa le 4 cifre.
+- **Niente emoji come icone** (sull'iPhone diventano grosse e colorate): icone disegnate a tratto sottile, stesso colore del testo.
+- **La barra in alto del computer deve stare tutta nello schermo già a 1280 px**: ciò che serve di rado va in un menu o diventa un'icona.
+- **Tabelle sul telefono**: se le colonne non ci stanno, ogni riga diventa una scheda (niente importi tagliati a destra).
+- **Caratteri dei grafici sempre con riserva** (`'IBM Plex Sans', system-ui, sans-serif`): senza, il canvas usa un carattere con le grazie finché il font non arriva.
 
 ## Prima di consegnare
 Foto a 390px e 1440px, contrasto, stati vuoto/errore/caricamento, marchio Ellecci presente, niente testi in inglese, nessun colore fuori dal suo ruolo.
