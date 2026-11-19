@@ -7,7 +7,7 @@
 <meta name="googlebot" content="noindex, nofollow">
 <meta name="author" content="Ellecci Studio">
 <meta name="theme-color" content="#000000">
-<script>/* tema scelto (predefinito scuro): Altro > Tema o il pulsante in alto */try{if(localStorage.getItem("vw_tema")==="chiaro"){document.documentElement.dataset.tema="chiaro";document.querySelector('meta[name="theme-color"]').content="#F3F4F6";}}catch(e){}</script>
+<script>/* tema scelto (predefinito scuro; anche "vetro" dal 19/11/2026): pulsante in alto */try{var vwT=localStorage.getItem("vw_tema");if(vwT==="chiaro"||vwT==="vetro"){document.documentElement.dataset.tema=vwT;document.querySelector('meta[name="theme-color"]').content=vwT==="chiaro"?"#F3F4F6":"#06140F";}}catch(e){}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -422,6 +422,51 @@ html[data-tema="chiaro"] #accesso .logo, html[data-tema="chiaro"] #ft-root .marc
 @media (max-width:959px){ html[data-tema="chiaro"] #ft-root .tabs{ background:rgba(255,255,255,.94); } }
 @media (prefers-reduced-transparency:reduce){ html[data-tema="chiaro"] #ft-root .barra-basso, html[data-tema="chiaro"] #ft-root .lato{ background:#FFFFFF !important; } }
 </style>
+<style id="vw-vetro">
+/* ============================================================
+   Tema "vetro colorato" (19/11/2026, riferimento rondesignlabs, secondo-cervello riferimenti-design/2026-11-19):
+   sfondo = luce colorata sfocata che si muove piano (come una foto in controluce), schede in vetro tinto
+   che sfocano quello che hanno dietro, numeri grandi più sottili. Scelta dal pulsante del tema (scuro → vetro → chiaro).
+   ============================================================ */
+html[data-tema="vetro"]{ color-scheme:dark; background:#030806;
+  --vw-pannello:linear-gradient(160deg, rgba(120,255,200,.10), rgba(255,255,255,.035) 55%, rgba(232,176,75,.06));
+  --vw-risalto:linear-gradient(160deg, rgba(150,255,210,.16), rgba(255,255,255,.05) 50%, rgba(232,176,75,.10));
+  --vw-bordo:rgba(255,255,255,.13); --vw-bordo-risalto:rgba(255,255,255,.18); --vw-luce:rgba(255,255,255,.22);
+  --vw-righe:rgba(255,255,255,.08); --vw-sfoca:26px; --vw-ombra:0 20px 50px rgba(0,0,0,.45);
+}
+html[data-tema="vetro"] body{ background:transparent; }
+html[data-tema="vetro"] #ft-root{ --ink-faint:rgba(233,236,241,.56); --ink-soft:rgba(233,236,241,.74); }
+html[data-tema="vetro"] body::before{ content:""; position:fixed; inset:-20%; z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(38% 30% at 30% 28%, rgba(78,219,156,.55), transparent 70%),
+    radial-gradient(34% 28% at 78% 18%, rgba(232,176,75,.45), transparent 70%),
+    radial-gradient(42% 34% at 62% 78%, rgba(43,179,163,.42), transparent 70%),
+    radial-gradient(30% 40% at 18% 86%, rgba(232,176,75,.25), transparent 70%),
+    radial-gradient(26% 32% at 50% 48%, rgba(0,0,0,.85), transparent 75%);
+  filter:blur(40px) saturate(130%); animation:vwScena 38s ease-in-out infinite alternate; }
+@keyframes vwScena{ 0%{ transform:translate3d(0,0,0) rotate(0deg) scale(1); } 50%{ transform:translate3d(4%,-3%,0) rotate(8deg) scale(1.06); } 100%{ transform:translate3d(-3%,4%,0) rotate(-6deg) scale(1.02); } }
+html[data-tema="vetro"] body::after{ background:rgba(3,8,6,.55); }
+html[data-tema="vetro"] #ft-root .card, html[data-tema="vetro"] #ft-root .kpi, html[data-tema="vetro"] #ft-root .hero, html[data-tema="vetro"] #accesso .acc-vetro{
+  -webkit-backdrop-filter:blur(var(--vw-sfoca)) saturate(160%); backdrop-filter:blur(var(--vw-sfoca)) saturate(160%); }
+html[data-tema="vetro"] #ft-root .card{ border-radius:28px; }
+html[data-tema="vetro"] #ft-root .kpi{ border-radius:22px; }
+html[data-tema="vetro"] #ft-root .hero{ border-radius:30px; }
+html[data-tema="vetro"] #ft-root .hero-val{ font-weight:400; letter-spacing:-.045em; }
+html[data-tema="vetro"] #ft-root .kpi-val{ font-weight:400; }
+html[data-tema="vetro"] #ft-root .hero::after{ opacity:.85; }
+html[data-tema="vetro"] #ft-root .barra-basso{ background:rgba(10,24,19,.45) !important; border-color:rgba(255,255,255,.14); }
+html[data-tema="vetro"] #ft-root .lato{ background:rgba(8,20,16,.42) !important; }
+html[data-tema="vetro"] #ft-root input, html[data-tema="vetro"] #ft-root select, html[data-tema="vetro"] #ft-root textarea{ background-color:rgba(255,255,255,.06); border-color:rgba(255,255,255,.14); }
+html[data-tema="vetro"] #ft-root select option{ background:#0B1612; }
+html[data-tema="vetro"] #ft-root .btn-esci, html[data-tema="vetro"] #ft-root button.btn:not(.primary){ background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.14); }
+/* l'icona mostra il tema che si sceglie col prossimo tocco: scuro -> goccia (vetro), vetro -> sole (chiaro), chiaro -> luna (scuro) */
+html:not([data-tema]) #ft-root .vw-tema .sole{ display:none; }
+html[data-tema] #ft-root .vw-tema .goccia{ display:none; }
+@media (prefers-reduced-motion:reduce){ html[data-tema="vetro"] body::before{ animation:none; } }
+@media (prefers-reduced-transparency:reduce){
+  html[data-tema="vetro"] #ft-root .card, html[data-tema="vetro"] #ft-root .kpi, html[data-tema="vetro"] #ft-root .hero{ -webkit-backdrop-filter:none; backdrop-filter:none; background:#0D1814; }
+}
+</style>
 <style id="vw-rifiniture">
 /* ============================================================
    Rifiniture (17/11/2026, revisione da designer chiesta da Luigi)
@@ -564,7 +609,7 @@ html[data-tema="chiaro"] .vw-menu button[aria-selected="true"]{ background:rgba(
     <div class="lato-piede">
       <span class="save-flag" id="ft-saveflag" role="status" aria-live="polite">Salvato</span>
       <div class="bottoni">
-        <span class="vw-azioni"><button class="btn-esci vw-tema" id="vw-tema" type="button" aria-label="Cambia tema: chiaro o scuro" title="Tema chiaro o scuro"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="luna" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><g class="sole"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></svg><span>Chiaro</span></button><button class="btn-esci" id="ft-esci" type="button">Esci</button></span>
+        <span class="vw-azioni"><button class="btn-esci vw-tema" id="vw-tema" type="button" aria-label="Cambia tema" title="Tema: scuro, vetro o chiaro"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="luna" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><path class="goccia" d="M12 3c3.5 4.3 6 7.6 6 10.6A6 6 0 0 1 6 13.6C6 10.6 8.5 7.3 12 3z"/><g class="sole"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></svg><span>Chiaro</span></button><button class="btn-esci" id="ft-esci" type="button">Esci</button></span>
       </div>
     </div>
   </aside>
@@ -1497,14 +1542,17 @@ async function avvia(){
   /* tema chiaro / scuro (16/11/2026): scelta salvata su questo dispositivo, predefinito scuro */
   (function(){
     var b = document.getElementById('vw-tema'); if(!b) return;
-    function etichetta(){ var c = vwTemaChiaro(); b.querySelector('span').textContent = c ? 'Scuro' : 'Chiaro'; b.setAttribute('aria-label', c ? 'Passa al tema scuro' : 'Passa al tema chiaro'); }
+    var ORDINE = ['scuro','vetro','chiaro'], NOMI = { scuro:'Scuro', vetro:'Vetro', chiaro:'Chiaro' };
+    function attuale(){ return document.documentElement.dataset.tema || 'scuro'; }
+    function prossimo(){ return ORDINE[(ORDINE.indexOf(attuale()) + 1) % ORDINE.length]; }
+    function etichetta(){ var p = prossimo(); b.querySelector('span').textContent = NOMI[p]; b.setAttribute('aria-label', 'Passa al tema ' + NOMI[p].toLowerCase()); }
     etichetta();
     b.addEventListener('click', function(){
       vwCambioPagina(function(){
-        var chiaro = !vwTemaChiaro();
-        if(chiaro) document.documentElement.dataset.tema = 'chiaro'; else delete document.documentElement.dataset.tema;
-        try{ localStorage.setItem('vw_tema', chiaro ? 'chiaro' : 'scuro'); }catch(e){}
-        var m = document.querySelector('meta[name="theme-color"]'); if(m) m.content = chiaro ? '#F3F4F6' : '#000000';
+        var t = prossimo();
+        if(t === 'scuro') delete document.documentElement.dataset.tema; else document.documentElement.dataset.tema = t;
+        try{ localStorage.setItem('vw_tema', t); }catch(e){}
+        var m = document.querySelector('meta[name="theme-color"]'); if(m) m.content = t === 'chiaro' ? '#F3F4F6' : (t === 'vetro' ? '#06140F' : '#000000');
         vwApplicaTemaGrafici(); etichetta(); renderAll();
       }, false);
     });
