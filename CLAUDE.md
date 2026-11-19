@@ -15,7 +15,7 @@ da **venderla**. Luigi non è uno sviluppatore: spiega le modifiche in italiano 
 - Nessun passaggio di build: tutto è in `index.html` (HTML, CSS e JS insieme). Librerie incluse in `lib/`
   (Supabase JS 2.117.2, Chart.js 4.4.1), per non dipendere da CDN.
 - Quando cambi i file del "guscio" (index.html, icone, lib), **aumenta `VERSIONE` in `sw.js`**
-  (oggi `tracker-v13`), altrimenti il telefono può continuare a mostrare la versione vecchia.
+  (oggi `tracker-v14`), altrimenti il telefono può continuare a mostrare la versione vecchia.
 - Prima di un push controlla l'app a larghezza telefono (circa 390 px) e il funzionamento offline.
 - Aggiornamenti (16/11/2026): il service worker chiede sempre la pagina alla rete con `cache: 'no-cache'` (GitHub Pages la terrebbe in cache 10 minuti)
   e controlla nuove versioni all'apertura, al ritorno sulla scheda e ogni 30 minuti; quando una nuova versione prende il controllo compare l'avviso
@@ -68,10 +68,11 @@ valore con fumetto chiaro.
 - **Tema chiaro** (16/11/2026, richiesta di Luigi per quando le app saranno in vendita): predefinito **scuro**; pulsante luna/sole accanto a "Esci"
   (`#vw-tema`), scelta salvata in `localStorage` `vw_tema` e applicata da uno script in `<head>` prima del disegno. Colori in `<style id="vw-chiaro">`
   (`html[data-tema="chiaro"]`), grafici con `COLORS_SCURO`/`COLORS_CHIARO` + `vwApplicaTemaGrafici()`. Ogni nuovo colore scritto a mano va previsto anche lì.
-- **Tema "vetro colorato"** (19/11/2026, dai reel di rondesignlabs salvati nel secondo cervello, `riferimenti-design/2026-11-19-rondesignlabs-vetro-colorato.md`):
-  terzo tema a scelta, il pulsante gira scuro → vetro → chiaro (icona goccia). `html[data-tema="vetro"]` in `<style id="vw-vetro">`: sfondo fisso di macchie
-  verdi/oro sfocate che si muovono piano (`vwScena`), schede in vetro smerigliato più trasparenti, numeri grandi più sottili. I grafici usano i colori del tema scuro.
-  Con "riduci trasparenza" o "riduci movimento" del sistema le schede tornano piene e lo sfondo sta fermo.
+- **Tema "vetro"** (19/11/2026, dai reel di rondesignlabs salvati nel secondo cervello, `riferimenti-design/2026-11-19-rondesignlabs-vetro-colorato.md`):
+  terzo tema a scelta, il pulsante gira scuro → vetro → chiaro (icona goccia). Seconda versione dello stesso giorno, chiesta da Luigi ("un misto tra il design
+  di ora e quello di prima", diverso in ogni app): in VaultWatch è l'"aurora": fondo nero, luce verde/oro sfocata che scende dall'alto (`vwAurora`), solo la scheda
+  del patrimonio in vetro colorato, le altre schede scure come nel tema scuro (smerigliate dove passa la luce, filo verde sul bordo alto). Blocco `<style id="vw-vetro">`.
+  I grafici usano i colori del tema scuro. Con "riduci trasparenza" o "riduci movimento" del sistema le schede tornano piene e la luce sta ferma.
 - La versione prima del kit è nel commit precedente a quello del 15/11/2026 ("VaultWatch: nuovo stile…"), se servisse tornare indietro.
 
 - **Revisione del 17/11/2026**: tutti gli importi passano da `numIt()`/`fmt()` (punto delle migliaia anche a 4 cifre: 4.380,00 €; prima Intl it-IT scriveva 4380,00),
