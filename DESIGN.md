@@ -110,7 +110,15 @@ Il vetro ha sempre un bordo di 1px e una luce sul lato in alto (bordo più chiar
   prezzo vivo (scorrono solo le cifre cambiate, lampo verde se sale e rosso se scende), la posizione appena disegnata si costruisce (entrata, poi target e stop, poi le scritte),
   i risultati scorrono dal valore di prima a quello nuovo. Candele e indicatori non si animano. Per le app di studio vale il riferimento "Campus" (stessa nota): anelli, serie di giorni, punti.
 
-## Tema chiaro (a scelta, dal 16/11/2026)
+## Due temi: vetro scuro e vetro chiaro (dal 20/11/2026, scelta di Luigi)
+Il tema "vetro" (19/11/2026, diverso in ogni app: aurora in VaultWatch, terminale nel Trading Studio, quadrante acceso in BandPilot, sonar in AltSonar)
+è diventato il **tema scuro predefinito**; il vecchio scuro senza luce non c'è più. Il chiaro è la **versione chiara dello stesso vetro**: stessa luce dell'app
+più tenue su fondo `#F3F4F6`, la scheda principale in vetro colorato chiaro (sfumatura del colore principale al ~13%, bordo del colore al ~22%), le altre schede
+bianche smerigliate (`rgba(255,255,255,.72)` + `backdrop-filter: blur(22px)`). Il pulsante del tema passa solo tra i due (sole = vai al chiaro, luna = torna allo scuro);
+lo script in `<head>` mette sempre `data-tema="vetro"` oppure `data-tema="chiaro"` (una vecchia scelta "scuro" salvata diventa vetro).
+Con "riduci trasparenza" o "riduci movimento" le schede tornano piene e la luce sta ferma, in tutti e due i temi.
+
+## Tema chiaro (a scelta, dal 16/11/2026; dal 20/11/2026 è il "vetro chiaro" qui sopra)
 Luigi usa solo il tema scuro, che resta il **predefinito**; il chiaro serve a chi comprerà le app. Ogni app ha un pulsante luna/sole (o "◐ Tema") in testata;
 la scelta si salva sul dispositivo (`localStorage`) e uno script in `<head>` mette `data-tema="chiaro"` su `<html>` prima del disegno.
 - Fondo `#F3F4F6`, schede bianche con bordo `rgba(15,23,42,.08)` e ombra morbida al posto del vetro; testo `#0E1116`, secondario `#5B6472`.
