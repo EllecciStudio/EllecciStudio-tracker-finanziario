@@ -277,6 +277,11 @@ html.vw-altro #ft-root .tabs{ opacity:1; transform:none; pointer-events:auto; vi
 #ft-root .delta{ display:flex; flex-direction:column; gap:3px; }
 #ft-root .delta b{ font-weight:500; }
 #ft-root .delta.pos b{ color:var(--teal); } #ft-root .delta.neg b{ color:var(--red); }
+#ft-root .traguardo .rail{ margin:6px 0 4px; }
+#ft-root .traguardo .rail-row{ gap:10px; }
+#ft-root .traguardo .rail-row span:first-child{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+#ft-root .traguardo-dett{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink-soft); }
+#ft-root .traguardo.compatto{ margin-top:16px; padding-top:14px; border-top:1px solid var(--line); }
 #ft-root .delta small{ font-size:9.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-faint); }
 #ft-root .vivo{ display:inline-flex; align-items:center; gap:7px; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft); }
 #ft-root .vivo i{ width:6px; height:6px; border-radius:50%; background:var(--teal); box-shadow:0 0 8px var(--teal); }
@@ -891,7 +896,8 @@ function defaultCfg(){
       {id:uid(), name:'Comprare casa', target:250000, current:0, note:'Con mutuo bancario', autoLink:null},
       {id:uid(), name:'Liberta finanziaria', target:500000, current:0, note:'Conto + investimenti complessivi', autoLink:'patrimonio'}
     ],
-    patrimonio: [ {year:2026, saldo:100, investimenti:2500, fondo:0, crediti:0, debiti:3576} ]
+    patrimonio: [ {year:2026, saldo:100, investimenti:2500, fondo:0, crediti:0, debiti:3576} ],
+    traguardi: []   /* traguardi del patrimonio con una data: {id, nome, data:'AAAA-MM-GG', importo} (dal 20/11/2026) */
   };
 }
 
@@ -1284,6 +1290,7 @@ function normalizzaCfg(loaded){
     CFGo.etfPrevisione = Object.assign({}, def.etfPrevisione, loaded.etfPrevisione);
     CFGo.goals = Array.isArray(loaded.goals) ? loaded.goals : def.goals;
     CFGo.patrimonio = Array.isArray(loaded.patrimonio) ? loaded.patrimonio : def.patrimonio;
+    CFGo.traguardi = Array.isArray(loaded.traguardi) ? loaded.traguardi : def.traguardi;
   } else {
     CFGo = def;
   }
@@ -1703,6 +1710,7 @@ function renderDashboard(){
     + '<div class="hero-testa"><div class="kpi-label" style="margin:0">Patrimonio netto</div>' + vivo + '</div>'
     + '<div class="hero-val">' + pnHtml + '</div>'
     + '<div class="hero-righe">' + vwDelta(varSaldo, 'Conto vs mese scorso') + vwDelta(nettoMese, 'Entrate \u2212 uscite del mese') + '</div>'
+    + (prossimoTraguardo() ? bloccoTraguardo(prossimoTraguardo(), c.patrimonioNetto, true) : '')
     + '</div>';
   html += '<div class="kpi-grid">';
   html += kpiCard('Contanti', fmt(c.saldoContanti), '');
@@ -2539,6 +2547,55 @@ function updateGoal(id, field, value){
 window.updateGoal = updateGoal;
 
 /* ============================================================
+   TRAGUARDI DEL PATRIMONIO (20/11/2026): importo da raggiungere entro una data
+   ============================================================ */
+function traguardiOrdinati(){
+  return (CFG.traguardi || []).filter(function(t){ return t && t.data; }).slice().sort(function(a,b){ return a.data < b.data ? -1 : 1; });
+}
+function prossimoTraguardo(){
+  var oggi = todayStr();
+  return traguardiOrdinati().filter(function(t){ return t.data >= oggi; })[0] || null;
+}
+function mesiFino(dataIso){
+  var a = new Date(todayStr() + 'T00:00:00'), b = new Date(dataIso + 'T00:00:00');
+  return Math.max(0, (b - a) / (1000*60*60*24*30.4375));
+}
+function dataIt(d){ var p = String(d||'').split('-'); return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : d; }
+/* riga di avanzamento verso un traguardo: percentuale, quanto manca, mesi e quanto servirebbe al mese senza rendimenti */
+function statoTraguardo(t, pn){
+  var imp = Number(t.importo) || 0, mesi = mesiFino(t.data), manca = Math.max(0, imp - pn);
+  return { importo:imp, pct: imp > 0 ? Math.max(0, Math.min(100, pn / imp * 100)) : 0, manca:manca, mesi:mesi,
+           alMese: mesi >= 1 ? manca / mesi : manca, raggiunto: pn >= imp && imp > 0 };
+}
+function bloccoTraguardo(t, pn, compatto){
+  var st = statoTraguardo(t, pn);
+  var titolo = escapeHtml(t.nome || 'Traguardo') + ' \u00b7 ' + dataIt(t.data);
+  var dett = st.raggiunto ? 'Raggiunto!' : 'Mancano ' + fmt(st.manca) + ' \u00b7 ' + Math.round(st.mesi) + ' mesi \u00b7 circa ' + fmt(st.alMese) + ' al mese';
+  return '<div class="traguardo' + (compatto ? ' compatto' : '') + '">'
+    + '<div class="rail-row"><span>' + titolo + '</span><span>' + numIt(st.pct, st.pct < 10 ? 1 : 0) + '% di ' + fmt(st.importo) + '</span></div>'
+    + railBlock(Math.max(0, pn), st.importo, 'gold')
+    + '<div class="traguardo-dett">' + dett + '</div></div>';
+}
+function addTraguardo(){
+  CFG.traguardi = CFG.traguardi || [];
+  CFG.traguardi.push({ id:uid(), nome:'Nuovo traguardo', data:(new Date().getFullYear() + 3) + '-01-01', importo:100000 });
+  saveCfg(); renderAll();
+}
+window.addTraguardo = addTraguardo;
+function updateTraguardo(id, campo, valore){
+  var t = (CFG.traguardi || []).find(function(x){ return x.id === id; });
+  if(!t) return;
+  if(campo === 'importo') t.importo = parseFloat(valore) || 0; else t[campo] = valore;
+  saveCfg(); renderAll();
+}
+window.updateTraguardo = updateTraguardo;
+function deleteTraguardo(id){
+  CFG.traguardi = (CFG.traguardi || []).filter(function(x){ return x.id !== id; });
+  saveCfg(); renderAll();
+}
+window.deleteTraguardo = deleteTraguardo;
+
+/* ============================================================
    PATRIMONIO NETTO
    ============================================================ */
 function renderPatrimonio(){
@@ -2546,6 +2603,21 @@ function renderPatrimonio(){
   var html = '';
 
   html += '<div class="note">Qui tieni traccia del tuo patrimonio netto una volta all\'anno (o quando vuoi tu), per vedere la crescita nel corso di anni e decenni. Patrimonio netto = Saldo conto + Investimenti + Fondo emergenza + Crediti (soldi che ti devono) - Debiti. Premi il pulsante qui sotto e l\'anno corrente si compila da solo con i valori gia calcolati nelle altre schede: non serve ricopiare nulla a mano.</div>';
+
+  var trg = traguardiOrdinati();
+  html += '<div class="card"><div class="card-title">Traguardi<button class="btn" onclick="addTraguardo()">+ Aggiungi traguardo</button></div>';
+  if(!trg.length) html += '<div style="font-size:12.5px; color:var(--ink-soft);">Un traguardo \u00e8 un patrimonio da raggiungere entro una data (per esempio un compleanno). Compare qui, sul grafico qui sotto e in Dashboard.</div>';
+  trg.forEach(function(t){
+    html += '<div style="padding:12px 0; border-bottom:1px solid var(--line);">' + bloccoTraguardo(t, c.patrimonioNetto, false);
+    html += '<div class="form-grid" style="margin-top:8px;">';
+    html += '<div><label>Nome</label><input type="text" value="' + escapeHtml(t.nome || '') + '" onchange="updateTraguardo(\'' + t.id + '\',\'nome\',this.value)"></div>';
+    html += '<div><label>Entro il</label><input type="date" value="' + escapeHtml(t.data) + '" onchange="updateTraguardo(\'' + t.id + '\',\'data\',this.value)"></div>';
+    html += '<div><label>Patrimonio (\u20ac)</label><input type="number" step="any" class="num-in" value="' + (Number(t.importo)||0) + '" onchange="updateTraguardo(\'' + t.id + '\',\'importo\',this.value)"></div>';
+    html += '<div style="display:flex; align-items:flex-end;"><span class="del-row" onclick="deleteTraguardo(\'' + t.id + '\')">Elimina</span></div>';
+    html += '</div></div>';
+  });
+  if(trg.length) html += '<div style="font-size:11px; color:var(--ink-soft); margin-top:10px;">\u00abAl mese\u00bb \u00e8 una divisione semplice (quanto manca \u00f7 mesi rimasti), senza rendimenti: serve a dare la misura dello sforzo, non \u00e8 una previsione.</div>';
+  html += '</div>';
 
   html += '<div class="card">';
   html += '<div class="card-title">Snapshot annuale<span><button class="btn primary" onclick="updatePatrimonioWithCurrent()">Aggiorna anno corrente con dati di oggi</button> <button class="btn" onclick="addPatrimonioYear()">+ Aggiungi anno</button></span></div>';
@@ -2578,10 +2650,29 @@ function renderPatrimonio(){
   if(chartPatrimonio){ chartPatrimonio.destroy(); }
   var labels = sorted.map(function(p){ return p.year; });
   var data = sorted.map(function(p){ return cent((Number(p.saldo)||0)+(Number(p.investimenti)||0)+(Number(p.fondo)||0)+(Number(p.crediti)||0)-(Number(p.debiti)||0)); });
+  /* traguardi: gli anni arrivano fino all'ultimo traguardo; linea tratteggiata oro dall'ultimo anno salvato ai traguardi */
+  var obiettivo = null;
+  if(trg.length){
+    var annoMax = Math.max.apply(null, trg.map(function(t){ return +t.data.slice(0,4); }));
+    var annoMin = labels.length ? labels[0] : new Date().getFullYear();
+    var tutti = [];
+    for(var a = annoMin; a <= Math.max(annoMax, labels.length ? labels[labels.length-1] : annoMin); a++) tutti.push(a);
+    data = tutti.map(function(a){ var i = labels.indexOf(a); return i >= 0 ? data[i] : null; });
+    obiettivo = tutti.map(function(){ return null; });
+    var ultimo = null;
+    data.forEach(function(v, i){ if(v != null) ultimo = i; });
+    if(ultimo != null) obiettivo[ultimo] = data[ultimo];
+    trg.forEach(function(t){ var i = tutti.indexOf(+t.data.slice(0,4)); if(i >= 0) obiettivo[i] = Number(t.importo) || 0; });
+    labels = tutti;
+  }
+  var dsP = [{ label:'Patrimonio netto', data:data, borderColor:COLORS.teal, backgroundColor:COLORS.tealBg, fill:true, tension:0.25, pointRadius:4, pointBackgroundColor:COLORS.teal, spanGaps:false }];
+  if(obiettivo) dsP.push({ label:'Traguardi', data:obiettivo, borderColor:COLORS.gold, backgroundColor:COLORS.gold, borderDash:[6,5], borderWidth:2, fill:false, tension:0, spanGaps:true, pointRadius:obiettivo.map(function(v, i){ return v == null ? 0 : (data[i] != null ? 0 : 6); }), pointStyle:'rectRot' });
   chartPatrimonio = safeChart(ctx, {
     type: 'line',
-    data: { labels: labels, datasets: [{ label:'Patrimonio netto', data:data, borderColor:COLORS.teal, backgroundColor:COLORS.tealBg, fill:true, tension:0.25, pointRadius:4, pointBackgroundColor:COLORS.teal }] },
-    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:function(v){ return fmtAsse(v); } } } } }
+    data: { labels: labels, datasets: dsP },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display: !!obiettivo, labels:{ boxWidth:12 }},
+      tooltip:{ callbacks:{ label:function(it){ return ' ' + it.dataset.label + ': ' + fmt(it.raw); }, title:function(it){ var a = +it[0].label; var t = trg.filter(function(x){ return +x.data.slice(0,4) === a; })[0]; return a + (t ? ' \u00b7 ' + (t.nome || 'traguardo') + ' (' + dataIt(t.data) + ')' : ''); } } } },
+      scales:{ y:{ ticks:{ callback:function(v){ return fmtAsse(v); } } } } }
   });
 }
 
