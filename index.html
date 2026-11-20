@@ -7,7 +7,7 @@
 <meta name="googlebot" content="noindex, nofollow">
 <meta name="author" content="Ellecci Studio">
 <meta name="theme-color" content="#000000">
-<script>/* tema scelto (predefinito scuro; anche "vetro" dal 19/11/2026): pulsante in alto */try{var vwT=localStorage.getItem("vw_tema");if(vwT==="chiaro"||vwT==="vetro"){document.documentElement.dataset.tema=vwT;document.querySelector('meta[name="theme-color"]').content=vwT==="chiaro"?"#F3F4F6":"#000000";}}catch(e){}</script>
+<script>/* tema (20/11/2026, scelta di Luigi): due soli temi, "vetro" scuro (predefinito) e "chiaro" = vetro chiaro; il vecchio scuro non c'è più */try{var vwT=localStorage.getItem("vw_tema")==="chiaro"?"chiaro":"vetro";document.documentElement.dataset.tema=vwT;document.querySelector('meta[name="theme-color"]').content=vwT==="chiaro"?"#F3F4F6":"#000000";}catch(e){document.documentElement.dataset.tema="vetro";}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -463,6 +463,34 @@ html[data-tema] #ft-root .vw-tema .goccia{ display:none; }
   html[data-tema="vetro"] #ft-root .card, html[data-tema="vetro"] #ft-root .kpi, html[data-tema="vetro"] #ft-root .hero{ -webkit-backdrop-filter:none; backdrop-filter:none; }
   html[data-tema="vetro"] #ft-root .card, html[data-tema="vetro"] #ft-root .kpi{ background:#0B0D12; }
 }
+/* ============================================================
+   Vetro chiaro (20/11/2026, scelta di Luigi: il vetro diventa il tema scuro e il chiaro è la sua versione chiara).
+   Stessa "aurora" verde e oro che scende dall'alto, più tenue, su fondo chiaro; la scheda del patrimonio è vetro colorato chiaro,
+   le altre schede bianche smerigliate con un filo di luce sul bordo alto.
+   ============================================================ */
+html[data-tema="chiaro"]{
+  --vw-pannello:rgba(255,255,255,.72);
+  --vw-risalto:linear-gradient(165deg, rgba(14,159,99,.13), rgba(255,255,255,.72) 48%, rgba(168,112,15,.07));
+  --vw-bordo:rgba(15,23,42,.07); --vw-bordo-risalto:rgba(14,159,99,.22); --vw-luce:rgba(255,255,255,.95);
+  --vw-sfoca:22px; --vw-ombra:0 14px 40px rgba(15,23,42,.10);
+}
+html[data-tema="chiaro"] body{ background:transparent; }
+html[data-tema="chiaro"] body::before{ content:""; position:fixed; left:-25%; right:-25%; top:-12vh; height:72vh; z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(42% 60% at 30% 22%, rgba(14,159,99,.22), transparent 70%),
+    radial-gradient(34% 50% at 72% 12%, rgba(232,176,75,.22), transparent 70%),
+    radial-gradient(30% 45% at 52% 40%, rgba(43,179,163,.14), transparent 70%);
+  filter:blur(46px) saturate(125%); animation:vwAurora 30s ease-in-out infinite alternate; }
+html[data-tema="chiaro"] #ft-root .card, html[data-tema="chiaro"] #ft-root .kpi, html[data-tema="chiaro"] #ft-root .hero, html[data-tema="chiaro"] #accesso .acc-vetro{
+  -webkit-backdrop-filter:blur(var(--vw-sfoca)) saturate(160%); backdrop-filter:blur(var(--vw-sfoca)) saturate(160%); }
+html[data-tema="chiaro"] #ft-root .hero{ border-radius:28px; box-shadow:inset 0 1px 0 rgba(255,255,255,.95), 0 18px 44px rgba(14,90,60,.12); }
+html[data-tema="chiaro"] #ft-root .hero-val{ font-weight:400; letter-spacing:-.045em; }
+html[data-tema="chiaro"] #ft-root .hero::after{ opacity:.55; }
+@media (prefers-reduced-motion:reduce){ html[data-tema="chiaro"] body::before{ animation:none; } }
+@media (prefers-reduced-transparency:reduce){
+  html[data-tema="chiaro"] #ft-root .card, html[data-tema="chiaro"] #ft-root .kpi, html[data-tema="chiaro"] #ft-root .hero{ -webkit-backdrop-filter:none; backdrop-filter:none; }
+  html[data-tema="chiaro"] #ft-root .card, html[data-tema="chiaro"] #ft-root .kpi{ background:#FFFFFF; }
+}
 </style>
 <style id="vw-rifiniture">
 /* ============================================================
@@ -606,7 +634,7 @@ html[data-tema="chiaro"] .vw-menu button[aria-selected="true"]{ background:rgba(
     <div class="lato-piede">
       <span class="save-flag" id="ft-saveflag" role="status" aria-live="polite">Salvato</span>
       <div class="bottoni">
-        <span class="vw-azioni"><button class="btn-esci vw-tema" id="vw-tema" type="button" aria-label="Cambia tema" title="Tema: scuro, vetro o chiaro"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="luna" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><path class="goccia" d="M12 3c3.5 4.3 6 7.6 6 10.6A6 6 0 0 1 6 13.6C6 10.6 8.5 7.3 12 3z"/><g class="sole"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></svg><span>Chiaro</span></button><button class="btn-esci" id="ft-esci" type="button">Esci</button></span>
+        <span class="vw-azioni"><button class="btn-esci vw-tema" id="vw-tema" type="button" aria-label="Cambia tema" title="Tema: scuro o chiaro"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="luna" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><path class="goccia" d="M12 3c3.5 4.3 6 7.6 6 10.6A6 6 0 0 1 6 13.6C6 10.6 8.5 7.3 12 3z"/><g class="sole"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></svg><span>Chiaro</span></button><button class="btn-esci" id="ft-esci" type="button">Esci</button></span>
       </div>
     </div>
   </aside>
@@ -1541,15 +1569,15 @@ async function avvia(){
   /* tema chiaro / scuro (16/11/2026): scelta salvata su questo dispositivo, predefinito scuro */
   (function(){
     var b = document.getElementById('vw-tema'); if(!b) return;
-    var ORDINE = ['scuro','vetro','chiaro'], NOMI = { scuro:'Scuro', vetro:'Vetro', chiaro:'Chiaro' };
-    function attuale(){ return document.documentElement.dataset.tema || 'scuro'; }
+    var ORDINE = ['vetro','chiaro'], NOMI = { vetro:'Scuro', chiaro:'Chiaro' }; // due temi (20/11/2026): vetro scuro e vetro chiaro
+    function attuale(){ return document.documentElement.dataset.tema === 'chiaro' ? 'chiaro' : 'vetro'; }
     function prossimo(){ return ORDINE[(ORDINE.indexOf(attuale()) + 1) % ORDINE.length]; }
     function etichetta(){ var p = prossimo(); b.querySelector('span').textContent = NOMI[p]; b.setAttribute('aria-label', 'Passa al tema ' + NOMI[p].toLowerCase()); }
     etichetta();
     b.addEventListener('click', function(){
       vwCambioPagina(function(){
         var t = prossimo();
-        if(t === 'scuro') delete document.documentElement.dataset.tema; else document.documentElement.dataset.tema = t;
+        document.documentElement.dataset.tema = t;
         try{ localStorage.setItem('vw_tema', t); }catch(e){}
         var m = document.querySelector('meta[name="theme-color"]'); if(m) m.content = t === 'chiaro' ? '#F3F4F6' : '#000000';
         vwApplicaTemaGrafici(); etichetta(); renderAll();
