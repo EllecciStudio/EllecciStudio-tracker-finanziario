@@ -15,7 +15,7 @@ da **venderla**. Luigi non è uno sviluppatore: spiega le modifiche in italiano 
 - Nessun passaggio di build: tutto è in `index.html` (HTML, CSS e JS insieme). Librerie incluse in `lib/`
   (Supabase JS 2.117.2, Chart.js 4.4.1), per non dipendere da CDN.
 - Quando cambi i file del "guscio" (index.html, icone, lib), **aumenta `VERSIONE` in `sw.js`**
-  (oggi `tracker-v19`), altrimenti il telefono può continuare a mostrare la versione vecchia.
+  (oggi `tracker-v20`), altrimenti il telefono può continuare a mostrare la versione vecchia.
 - Prima di un push controlla l'app a larghezza telefono (circa 390 px) e il funzionamento offline.
 - Aggiornamenti (16/11/2026): il service worker chiede sempre la pagina alla rete con `cache: 'no-cache'` (GitHub Pages la terrebbe in cache 10 minuti)
   e controlla nuove versioni all'apertura, al ritorno sulla scheda e ogni 30 minuti; quando una nuova versione prende il controllo compare l'avviso

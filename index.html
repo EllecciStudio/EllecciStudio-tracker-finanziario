@@ -621,8 +621,8 @@ html[data-tema] body::before, body::before{ content:""; position:fixed; inset:0;
 html[data-tema="chiaro"] body::before{ opacity:.06; filter:invert(1); }
 /* fascia in cima con la C */
 .vw-banda{ position:absolute; z-index:-2; left:0; right:0; top:0; height:560px; overflow:hidden; pointer-events:none;
-  background:linear-gradient(162deg, #12855C 0%, #0B5139 42%, #080C0A 100%); }
-html[data-tema="chiaro"] .vw-banda{ background:linear-gradient(162deg, #8FDDBA 0%, #CBEEDD 42%, #F1F5F3 100%); }
+  background:linear-gradient(180deg, transparent 62%, #080C0A 100%), linear-gradient(162deg, #12855C 0%, #0B5139 42%, #080C0A 100%); }
+html[data-tema="chiaro"] .vw-banda{ background:linear-gradient(180deg, transparent 62%, #F1F5F3 100%), linear-gradient(162deg, #8FDDBA 0%, #CBEEDD 42%, #F1F5F3 100%); }
 .vw-banda svg{ position:absolute; right:-120px; top:-110px; width:820px; height:820px; fill:none; stroke:#A9F0CF; stroke-linecap:butt;
   -webkit-mask-image:linear-gradient(180deg, #000 75%, transparent 82%); mask-image:linear-gradient(180deg, #000 75%, transparent 82%); }
 html[data-tema="chiaro"] .vw-banda svg{ stroke:#0E9F63; }
