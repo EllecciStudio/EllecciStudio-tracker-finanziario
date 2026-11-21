@@ -15,7 +15,7 @@ da **venderla**. Luigi non è uno sviluppatore: spiega le modifiche in italiano 
 - Nessun passaggio di build: tutto è in `index.html` (HTML, CSS e JS insieme). Librerie incluse in `lib/`
   (Supabase JS 2.117.2, Chart.js 4.4.1), per non dipendere da CDN.
 - Quando cambi i file del "guscio" (index.html, icone, lib), **aumenta `VERSIONE` in `sw.js`**
-  (oggi `tracker-v17`), altrimenti il telefono può continuare a mostrare la versione vecchia.
+  (oggi `tracker-v18`), altrimenti il telefono può continuare a mostrare la versione vecchia.
 - Prima di un push controlla l'app a larghezza telefono (circa 390 px) e il funzionamento offline.
 - Aggiornamenti (16/11/2026): il service worker chiede sempre la pagina alla rete con `cache: 'no-cache'` (GitHub Pages la terrebbe in cache 10 minuti)
   e controlla nuove versioni all'apertura, al ritorno sulla scheda e ogni 30 minuti; quando una nuova versione prende il controllo compare l'avviso
@@ -89,3 +89,8 @@ Prima di toccare l'interfaccia leggi `DESIGN.md` (sistema di design comune di El
 - **Due temi** (20/11/2026, scelta di Luigi): il vetro ("aurora") è diventato il tema scuro predefinito e il chiaro è la sua versione chiara (stessa aurora più tenue,
   patrimonio in vetro colorato chiaro, schede bianche smerigliate; CSS in fondo a `<style id="vw-vetro">`). Il vecchio scuro non c'è più: lo script in `<head>`
   mette sempre `data-tema` = `vetro` (anche con `vw_tema` = "scuro" salvato) oppure `chiaro`; il pulsante passa solo tra i due.
+
+- **Niente nomi di persone o fonti esterne** (regola di Luigi del 21/11/2026, vale per tutte le app): nel codice e nei testi non si scrivono nomi di persone,
+  né i siti, video o profili da cui sono nate idee di design. Le quote crypto di altre persone hanno chiavi generiche (`CFG.crypto.nomeSocio`/`nomeSocio2`,
+  `quotaSocioEUR`/`quotaSocio2EUR`, `CFG.previsione.rimborsoSocioMensile`): i nomi veri stanno solo nei dati di Luigi su Supabase. `migraSoci()` sposta da sola
+  le chiavi delle versioni vecchie (anche dai backup) senza scrivere nomi nel codice.

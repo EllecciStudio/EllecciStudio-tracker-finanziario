@@ -883,19 +883,23 @@ function defaultTx(){
   ];
 }
 
+function nomeSocio(){ return (CFG.crypto && CFG.crypto.nomeSocio) || 'Socio 1'; }
+function nomeSocio2(){ return (CFG.crypto && CFG.crypto.nomeSocio2) || 'Socio 2'; }
+
 function defaultCfg(){
   return {
     saldoIniziale: 100,
     birthYear: 1999,
     debts: [
-      {id:'carta', name:'Carta di Credito', iniziale:1700},
-      {id:'lucia', name:'Lucia', iniziale:1850}
+      {id:'carta', name:'Carta di Credito', iniziale:0}
     ],
     crypto: {
       coins: [{id:uid(), name:'Altcoin 1', qty:0, buyPrice:0, currentPrice:0}],
       usdtEurRate: 0.92,
-      quotaLuciaEUR: 1300,
-      quotaMadreEUR: 1400,
+      nomeSocio: 'Socio 1',
+      nomeSocio2: 'Socio 2',
+      quotaSocioEUR: 0,
+      quotaSocio2EUR: 0,
       bingxIniziale: 300,
       bingxAttuale: 300
     },
@@ -905,7 +909,7 @@ function defaultCfg(){
       speseFisseMensili: 65,
       speseVariabiliMensili: 60,
       contributoFondoMensile: 0,
-      rimborsoLuciaMensile: 0,
+      rimborsoSocioMensile: 0,
       includiRataCarta: true,
       dataObiettivo: '2027-03-31'
     },
@@ -1086,15 +1090,15 @@ function computeAll(){
   var cryptoRecuperoPct = (cryptoPL < 0 && cryptoValore > 0) ? (cryptoInvestito / cryptoValore) - 1 : null;
   var bingxPL = CFG.crypto.bingxAttuale - CFG.crypto.bingxIniziale;
 
-  var quotaLucia = Number(CFG.crypto.quotaLuciaEUR) || 0;
-  var quotaMadre = Number(CFG.crypto.quotaMadreEUR) || 0;
-  var quotaMiaInvestita = Math.max(0, cryptoInvestito - quotaLucia - quotaMadre);
+  var quotaSocio = Number(CFG.crypto.quotaSocioEUR) || 0;
+  var quotaSocio2 = Number(CFG.crypto.quotaSocio2EUR) || 0;
+  var quotaMiaInvestita = Math.max(0, cryptoInvestito - quotaSocio - quotaSocio2);
   var pctMia = cryptoInvestito > 0 ? quotaMiaInvestita / cryptoInvestito : 0;
-  var pctLucia = cryptoInvestito > 0 ? quotaLucia / cryptoInvestito : 0;
-  var pctMadre = cryptoInvestito > 0 ? quotaMadre / cryptoInvestito : 0;
+  var pctSocio = cryptoInvestito > 0 ? quotaSocio / cryptoInvestito : 0;
+  var pctSocio2 = cryptoInvestito > 0 ? quotaSocio2 / cryptoInvestito : 0;
   var cryptoValoreMia = cryptoValore * pctMia;
-  var cryptoValoreLucia = cryptoValore * pctLucia;
-  var cryptoValoreMadre = cryptoValore * pctMadre;
+  var cryptoValoreSocio = cryptoValore * pctSocio;
+  var cryptoValoreSocio2 = cryptoValore * pctSocio2;
 
   var investimentiTotali = cryptoValoreMia + CFG.crypto.bingxAttuale;
 
@@ -1110,8 +1114,8 @@ function computeAll(){
     fondoAccumulato: fondoAccumulato,
     cryptoInvestito: cryptoInvestito, cryptoValore: cryptoValore, cryptoPL: cryptoPL, cryptoPLPercent: cryptoPLPercent, cryptoRecuperoPct: cryptoRecuperoPct, bingxPL: bingxPL,
     quotaMiaInvestita: quotaMiaInvestita, cryptoValoreMia: cryptoValoreMia,
-    cryptoValoreLucia: cryptoValoreLucia, cryptoValoreMadre: cryptoValoreMadre,
-    pctMia: pctMia, pctLucia: pctLucia, pctMadre: pctMadre,
+    cryptoValoreSocio: cryptoValoreSocio, cryptoValoreSocio2: cryptoValoreSocio2,
+    pctMia: pctMia, pctSocio: pctSocio, pctSocio2: pctSocio2,
     cryptoInvestitoUSDT: cryptoInvestitoUSDT, cryptoValoreUSDT: cryptoValoreUSDT,
     investimentiTotali: investimentiTotali, patrimonioNetto: patrimonioNetto
   };
@@ -1190,7 +1194,7 @@ function computePrevisione(){
         cartaEstintaLabel = monthLabel(cursor.getFullYear() + '-' + String(cursor.getMonth()+1).padStart(2,'0'));
       }
     }
-    var net = p.redditoMensile - p.speseFisseMensili - p.speseVariabiliMensili - rata - p.contributoFondoMensile - p.rimborsoLuciaMensile;
+    var net = p.redditoMensile - p.speseFisseMensili - p.speseVariabiliMensili - rata - p.contributoFondoMensile - p.rimborsoSocioMensile;
     liquido += net;
     fondo += p.contributoFondoMensile;
 
@@ -1296,9 +1300,46 @@ function messaggioErrore(e){
   return String(e.message || e.error_description || e.code || e);
 }
 
+/* Quote crypto di altre persone (21/11/2026): nomi e chiavi generici, i nomi veri stanno solo nei dati dell'utente.
+   Le chiavi delle versioni precedenti (quota<Nome>EUR, rimborso<Nome>Mensile) si spostano qui senza scriverle nel codice. */
+function migraSoci(loaded){
+  if(!loaded || typeof loaded !== 'object') return loaded;
+  loaded = Object.assign({}, loaded);
+  var cr = loaded.crypto && typeof loaded.crypto === 'object' ? Object.assign({}, loaded.crypto) : null;
+  if(cr){
+    var vecchiaSocio = null;
+    Object.keys(cr).forEach(function(k){
+      var m = /^quota(.+)EUR$/.exec(k);
+      if(!m || k === 'quotaSocioEUR' || k === 'quotaSocio2EUR') return;
+      var nuova = (m[1] === 'Madre') ? 'quotaSocio2EUR' : 'quotaSocioEUR';
+      if(nuova === 'quotaSocioEUR') vecchiaSocio = m[1];
+      if(cr[nuova] === undefined) cr[nuova] = cr[k];
+      delete cr[k];
+    });
+    if(vecchiaSocio && !cr.nomeSocio){
+      var d = Array.isArray(loaded.debts) ? loaded.debts.filter(function(x){ return x && x.id !== 'carta' && x.name; })[0] : null;
+      cr.nomeSocio = d ? d.name : vecchiaSocio;
+      if(!cr.nomeSocio2 && cr.quotaSocio2EUR !== undefined) cr.nomeSocio2 = 'Madre di ' + cr.nomeSocio;
+    }
+    loaded.crypto = cr;
+  }
+  if(loaded.previsione && typeof loaded.previsione === 'object'){
+    var pv = Object.assign({}, loaded.previsione);
+    Object.keys(pv).forEach(function(k){
+      if(/^rimborso.+Mensile$/.test(k) && k !== 'rimborsoSocioMensile'){
+        if(pv.rimborsoSocioMensile === undefined) pv.rimborsoSocioMensile = pv[k];
+        delete pv[k];
+      }
+    });
+    loaded.previsione = pv;
+  }
+  return loaded;
+}
+
 function normalizzaCfg(loaded){
   var def = defaultCfg();
   var CFGo;
+  loaded = migraSoci(loaded);
   if(loaded){
     CFGo = Object.assign({}, def, loaded);
     CFGo.debts = loaded.debts || def.debts;
@@ -1306,7 +1347,7 @@ function normalizzaCfg(loaded){
       var oldDebts = CFGo.debts || {};
       var migrated = Object.keys(oldDebts).map(function(k){
         var entry = oldDebts[k] || {};
-        var label = (k === 'carta') ? 'Carta di Credito' : (k === 'giulia' ? 'Lucia' : k);
+        var label = (k === 'carta') ? 'Carta di Credito' : (k.charAt(0).toUpperCase() + k.slice(1));
         return {id:k, name:label, iniziale:Number(entry.iniziale)||0};
       });
       CFGo.debts = migrated.length ? migrated : def.debts;
@@ -2293,21 +2334,23 @@ function renderInvestimenti(){
   }
   html += '</div>';
 
-  html += '<div class="note">Strategia: aspettare la ripresa o l\'altcoin season, poi vendere senza aspettare grandi profitti. Non vendere in perdita. Priorita: rimborsare prima la madre di Lucia e poi Lucia.</div>';
+  html += '<div class="note">Strategia: aspettare la ripresa o l\'altcoin season, poi vendere senza aspettare grandi profitti. Non vendere in perdita. Priorità: rimborsare prima ' + escapeHtml(nomeSocio2()) + ' e poi ' + escapeHtml(nomeSocio()) + '.</div>';
 
   html += '<div class="card">';
   html += '<div class="card-title">Di chi sono questi soldi</div>';
   html += '<div class="form-grid" style="margin-bottom:12px;">';
-  html += '<div><label>Quota di Lucia (\u20ac investiti)</label><input type="number" step="any" class="num-in" id="quota-lucia" value="' + CFG.crypto.quotaLuciaEUR + '"></div>';
-  html += '<div><label>Quota madre di Lucia (\u20ac investiti)</label><input type="number" step="any" class="num-in" id="quota-madre" value="' + CFG.crypto.quotaMadreEUR + '"></div>';
+  html += '<div><label>Nome (prima quota)</label><input type="text" id="nome-socio" value="' + escapeHtml(nomeSocio()) + '"></div>';
+  html += '<div><label>Quota di ' + escapeHtml(nomeSocio()) + ' (\u20ac investiti)</label><input type="number" step="any" class="num-in" id="quota-socio" value="' + CFG.crypto.quotaSocioEUR + '"></div>';
+  html += '<div><label>Nome (seconda quota)</label><input type="text" id="nome-socio2" value="' + escapeHtml(nomeSocio2()) + '"></div>';
+  html += '<div><label>Quota di ' + escapeHtml(nomeSocio2()) + ' (\u20ac investiti)</label><input type="number" step="any" class="num-in" id="quota-socio2" value="' + CFG.crypto.quotaSocio2EUR + '"></div>';
   html += '<div><span class="kpi-label">Quota mia (\u20ac investiti)</span><div class="kpi-val">' + fmt(c.quotaMiaInvestita) + '</div></div>';
   html += '</div>';
   html += '<table><thead><tr><th></th><th>% del totale</th><th>Investito (EUR)</th><th>Valore attuale (EUR)</th></tr></thead><tbody>';
   html += '<tr><td style="font-weight:600;">Mia</td><td class="num">' + fmtPct(c.pctMia) + '</td><td class="num">' + fmt(c.quotaMiaInvestita) + '</td><td class="num" style="font-weight:600; color:var(--teal);">' + fmt(c.cryptoValoreMia) + '</td></tr>';
-  html += '<tr><td style="font-weight:600;">Lucia</td><td class="num">' + fmtPct(c.pctLucia) + '</td><td class="num">' + fmt(CFG.crypto.quotaLuciaEUR) + '</td><td class="num">' + fmt(c.cryptoValoreLucia) + '</td></tr>';
-  html += '<tr><td style="font-weight:600;">Madre di Lucia</td><td class="num">' + fmtPct(c.pctMadre) + '</td><td class="num">' + fmt(CFG.crypto.quotaMadreEUR) + '</td><td class="num">' + fmt(c.cryptoValoreMadre) + '</td></tr>';
+  html += '<tr><td style="font-weight:600;">' + escapeHtml(nomeSocio()) + '</td><td class="num">' + fmtPct(c.pctSocio) + '</td><td class="num">' + fmt(CFG.crypto.quotaSocioEUR) + '</td><td class="num">' + fmt(c.cryptoValoreSocio) + '</td></tr>';
+  html += '<tr><td style="font-weight:600;">' + escapeHtml(nomeSocio2()) + '</td><td class="num">' + fmtPct(c.pctSocio2) + '</td><td class="num">' + fmt(CFG.crypto.quotaSocio2EUR) + '</td><td class="num">' + fmt(c.cryptoValoreSocio2) + '</td></tr>';
   html += '</tbody></table>';
-  html += '<div style="font-size:11px; color:var(--ink-soft); margin-top:10px;">Il valore attuale si ripartisce nelle stesse proporzioni dell\'investito: se il portafoglio sale o scende, ogni quota si aggiorna da sola. Solo la quota mia entra nel calcolo del mio patrimonio netto: quella di Lucia e di sua madre non gravano ne a favore ne contro il mio patrimonio.</div>';
+  html += '<div style="font-size:11px; color:var(--ink-soft); margin-top:10px;">Il valore attuale si ripartisce nelle stesse proporzioni dell\'investito: se il portafoglio sale o scende, ogni quota si aggiorna da sola. Solo la quota mia entra nel calcolo del mio patrimonio netto: le quote delle altre persone non gravano né a favore né contro il mio patrimonio.</div>';
   html += '</div>';
 
   html += '<div class="card">';
@@ -2363,15 +2406,21 @@ function renderInvestimenti(){
   html += '<div><label>Deposito iniziale (\u20ac)</label><input type="number" step="0.01" class="num-in" id="bingx-iniziale" value="' + CFG.crypto.bingxIniziale + '"></div>';
   html += '<div><label>Saldo attuale (\u20ac)</label><input type="number" step="0.01" class="num-in" id="bingx-attuale" value="' + CFG.crypto.bingxAttuale + '"></div>';
   html += '<div><span class="kpi-label">P&amp;L</span><div class="kpi-val ' + (c.bingxPL>=0?'pos':'neg') + '">' + fmt(c.bingxPL) + '</div></div>';
-  html += '</div><div style="font-size:11px; color:var(--ink-soft); margin-top:8px;">Il saldo BingX e interamente tuo, non entra nella ripartizione con Lucia e sua madre.</div></div>';
+  html += '</div><div style="font-size:11px; color:var(--ink-soft); margin-top:8px;">Il saldo BingX e interamente tuo, non entra nella ripartizione delle quote.</div></div>';
 
   document.getElementById('panel-investimenti').innerHTML = html;
 
-  document.getElementById('quota-lucia').addEventListener('change', function(){
-    CFG.crypto.quotaLuciaEUR = parseFloat(this.value) || 0; saveCfg(); renderAll();
+  document.getElementById('quota-socio').addEventListener('change', function(){
+    CFG.crypto.quotaSocioEUR = parseFloat(this.value) || 0; saveCfg(); renderAll();
   });
-  document.getElementById('quota-madre').addEventListener('change', function(){
-    CFG.crypto.quotaMadreEUR = parseFloat(this.value) || 0; saveCfg(); renderAll();
+  document.getElementById('quota-socio2').addEventListener('change', function(){
+    CFG.crypto.quotaSocio2EUR = parseFloat(this.value) || 0; saveCfg(); renderAll();
+  });
+  document.getElementById('nome-socio').addEventListener('change', function(){
+    CFG.crypto.nomeSocio = this.value.trim() || 'Socio 1'; saveCfg(); renderAll();
+  });
+  document.getElementById('nome-socio2').addEventListener('change', function(){
+    CFG.crypto.nomeSocio2 = this.value.trim() || 'Socio 2'; saveCfg(); renderAll();
   });
   document.getElementById('usdt-rate').addEventListener('change', function(){
     CFG.crypto.usdtEurRate = parseFloat(this.value) || 1; saveCfg(); renderAll();
@@ -2405,8 +2454,8 @@ function renderInvestimenti(){
     });
   }
 
-  var ownerLabels = ['Mia', 'Lucia', 'Madre di Lucia'];
-  var ownerData = [cent(c.cryptoValoreMia), cent(c.cryptoValoreLucia), cent(c.cryptoValoreMadre)];
+  var ownerLabels = ['Mia', nomeSocio(), nomeSocio2()];
+  var ownerData = [cent(c.cryptoValoreMia), cent(c.cryptoValoreSocio), cent(c.cryptoValoreSocio2)];
   var ownerColors = [COLORS.teal, COLORS.gold, COLORS.purple];
   var ctxOwner = document.getElementById('ft-chart-owner');
   if(chartOwner){ chartOwner.destroy(); }
@@ -2744,7 +2793,7 @@ function renderPrevisione(){
   html += '<div><label>Spese fisse mensili (\u20ac)</label><input type="number" step="any" class="num-in" id="prev-fisse" value="' + p.speseFisseMensili + '"></div>';
   html += '<div><label>Spese variabili mensili (\u20ac)</label><input type="number" step="any" class="num-in" id="prev-variabili" value="' + p.speseVariabiliMensili + '"></div>';
   html += '<div><label>Versamento fondo mensile (\u20ac)</label><input type="number" step="any" class="num-in" id="prev-fondo" value="' + p.contributoFondoMensile + '"></div>';
-  html += '<div><label>Rimborso Lucia mensile (\u20ac)</label><input type="number" step="any" class="num-in" id="prev-lucia" value="' + p.rimborsoLuciaMensile + '"></div>';
+  html += '<div><label>Rimborso a ' + escapeHtml(nomeSocio()) + ' al mese (\u20ac)</label><input type="number" step="any" class="num-in" id="prev-socio" value="' + p.rimborsoSocioMensile + '"></div>';
   html += '<div><label>Fino a</label><input type="date" id="prev-target" value="' + p.dataObiettivo + '"></div>';
   html += '</div>';
   html += '<div style="margin-top:10px; display:flex; align-items:center; gap:8px;"><input type="checkbox" id="prev-carta" style="width:auto; height:auto;" ' + (p.includiRataCarta ? 'checked' : '') + '><label style="margin:0;" for="prev-carta">Continua a pagare la rata carta di credito (\u20ac75/mese) finche non e estinta</label></div>';
@@ -2799,7 +2848,7 @@ function updatePrevisioneAssumptions(){
   CFG.previsione.speseFisseMensili = parseFloat(document.getElementById('prev-fisse').value) || 0;
   CFG.previsione.speseVariabiliMensili = parseFloat(document.getElementById('prev-variabili').value) || 0;
   CFG.previsione.contributoFondoMensile = parseFloat(document.getElementById('prev-fondo').value) || 0;
-  CFG.previsione.rimborsoLuciaMensile = parseFloat(document.getElementById('prev-lucia').value) || 0;
+  CFG.previsione.rimborsoSocioMensile = parseFloat(document.getElementById('prev-socio').value) || 0;
   CFG.previsione.includiRataCarta = document.getElementById('prev-carta').checked;
   var targetVal = document.getElementById('prev-target').value;
   if(targetVal) CFG.previsione.dataObiettivo = targetVal;
@@ -2980,7 +3029,7 @@ function importaDati(){
   }
   TX = parsed.transazioni;
   var def = defaultCfg();
-  var loaded = parsed.impostazioni;
+  var loaded = migraSoci(parsed.impostazioni);
   CFG = Object.assign({}, def, loaded);
   CFG.debts = Array.isArray(loaded.debts) ? loaded.debts : def.debts;
   CFG.crypto = Object.assign({}, def.crypto, loaded.crypto);
@@ -3048,8 +3097,8 @@ function generaRiepilogo(){
       L.push('Serve per pareggiare: +' + (c.cryptoRecuperoPct*100).toFixed(2) + '%');
     }
     L.push('Quota mia investita: ' + c.quotaMiaInvestita.toFixed(2) + ' EUR -> vale ora ' + c.cryptoValoreMia.toFixed(2) + ' EUR');
-    L.push('Quota Lucia investita: ' + (CFG.crypto.quotaLuciaEUR).toFixed(2) + ' EUR -> vale ora ' + c.cryptoValoreLucia.toFixed(2) + ' EUR');
-    L.push('Quota madre di Lucia investita: ' + (CFG.crypto.quotaMadreEUR).toFixed(2) + ' EUR -> vale ora ' + c.cryptoValoreMadre.toFixed(2) + ' EUR');
+    L.push('Quota ' + nomeSocio() + ' investita: ' + Number(CFG.crypto.quotaSocioEUR || 0).toFixed(2) + ' EUR -> vale ora ' + c.cryptoValoreSocio.toFixed(2) + ' EUR');
+    L.push('Quota ' + nomeSocio2() + ' investita: ' + Number(CFG.crypto.quotaSocio2EUR || 0).toFixed(2) + ' EUR -> vale ora ' + c.cryptoValoreSocio2.toFixed(2) + ' EUR');
     L.push('BingX: depositato ' + CFG.crypto.bingxIniziale.toFixed(2) + ', saldo attuale ' + CFG.crypto.bingxAttuale.toFixed(2) + ' EUR');
     L.push('');
     L.push('Dettaglio coin (prezzi in USDT):');
@@ -3314,7 +3363,7 @@ function vwEntra(sez){
 /* dopo ogni ridisegno: se una sezione sta entrando, l'animazione continua sugli elementi nuovi;
    all'avvio la prima sezione visibile fa la sua entrata */
 var vwRenderOriginale = renderAll;
-/* ---- movimento "dal vivo" (17/11/2026, riferimento "Revlark" scelto da Luigi): quando un dato cambia mentre guardi,
+/* ---- movimento "dal vivo" (17/11/2026, scelto da Luigi): quando un dato cambia mentre guardi,
    il numero scorre dal valore di prima a quello nuovo con un lampo verde o rosso, la riga nuova si illumina
    e dei puntini volano dal punto toccato verso la Dashboard ---- */
 function vwChiave(el){
