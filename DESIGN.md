@@ -23,7 +23,7 @@ ogni design: confronto con le regole di Hallmark (secondo cervello, video 124; p
   (carattere del testo, un gradino più piccolo, colore secondario: «Rischio attuale»). Il maiuscolo resta solo nei loghi.
 - **Niente scritta piccola sopra i titoli** che ripete il titolo. Sopra un numero l'etichetta resta (dice cos'è il numero).
 - **Niente puntino di mezzo come separatore** (`A · B · C`) né freccia attaccata ai link (`Tutto lo storico ›`): a capo, colonne, virgole; il link è un verbo
-  («Apri lo storico»). Ammesso un solo puntino nel nome del prodotto («CycleDial · Ellecci Studio») e nelle legende dei grafici.
+  («Apri lo storico»). Nemmeno nel nome dentro l'app (Luigi, 21/11/2026): nome del prodotto e «Ellecci Studio» su due righe. Il puntino resta solo nel nome della finestra e dell'app installata («CycleDial · Ellecci Studio»), finché Luigi non decide altro.
 - **Niente riquadro dentro un riquadro**: una nota dentro una scheda si separa con una linea sottile sopra, non con un secondo box.
 - **Pillole solo per pulsanti, filtri e la barra**; chip con angoli piccoli (6 px) e nel carattere del testo. Il monospazio solo per i numeri.
 - **Solo ciò che si clicca reagisce al mouse** (una scheda che porta a una sezione si solleva; le altre no). Niente pallini che pulsano all'infinito.
