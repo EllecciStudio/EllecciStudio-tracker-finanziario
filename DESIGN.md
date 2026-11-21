@@ -1,7 +1,38 @@
 # Ellecci Studio · sistema di design (DESIGN.md)
 
-Identità comune di tutte le app di Luigi (Ellecci Studio): **VaultWatch** (tracker finanziario), **Ellecci Trading Studio**, **Embrix** (palestra, ex IronLog), **BandPilot** (bot BTC Con banda), **AltSonar** (radar altcoin). Futuristico ma minimale: nero profondo, pochi pannelli in vetro scuro, un accento per volta, numeri in monospazio, grafici luminosi. Se un progetto ha già un CLAUDE.md con valori diversi, vincono quelli del progetto; le parole di Luigi vincono su tutto.
+Identità comune di tutte le app di Luigi (Ellecci Studio): **VaultWatch** (tracker finanziario), **Ellecci Trading Studio**, **Embrix** (palestra, ex IronLog), **BandPilot** (bot BTC Con banda), **AltSonar** (radar altcoin). Futuristico ma minimale: quasi nero tinto, schede piene e linee sottili, un accento per volta, numeri grandi, grafici chiari (Kit Ellecci 2 dal 21/11/2026). Se un progetto ha già un CLAUDE.md con valori diversi, vincono quelli del progetto; le parole di Luigi vincono su tutto.
 (Stesso testo della skill `ellecci-design-system`; copia in ogni repository con interfaccia.)
+
+## Kit Ellecci 2 (dal 21/11/2026, scelta di Luigi: vince sulle regole più sotto)
+Molti dettagli del primo kit (luci dietro le schede, vetro ovunque, scritte in maiuscolo distanziate…) sono gli stessi che i modelli di IA mettono in quasi
+ogni design: confronto con le regole di Hallmark (secondo cervello, video 124; pagina «Kit Ellecci 2» in `artefatti.md`). Da oggi:
+- **Niente luci, aloni, aurora, bagliori** dietro le schede o sul fondo, né fermi né animati; niente ombra colorata «a bagliore» (nemmeno sulla voce attiva della barra).
+  Niente sfumature viola-blu, viola-rosa o azzurro su scuro; un colore principale per app, sempre pieno.
+- **Vetro smerigliato solo sulla barra in basso del telefono** (che galleggia sopra il contenuto). Le schede sono piene, un gradino più chiare del fondo,
+  bordo 1px; nessuna scheda «in vetro colorato». La profondità si fa con fondi più chiari, non con bagliori.
+- **Fondo quasi nero tinto** verso il colore dell'app (mai `#000` o `#fff` puri come superficie; i numeri sotto sono OKLCH L 15/19/22/27/32%):
+
+| App | sfondo | card | card-2 | riga | riga-forte |
+|---|---|---|---|---|---|
+| VaultWatch, Trading Studio (verde) | `#080C0A` | `#101512` | `#171C19` | `#222824` | `#2E3531` |
+| CycleDial (azzurro) | `#080C0E` | `#101517` | `#161B1F` | `#21272C` | `#2D3438` |
+| BandPilot, Embrix (arancio) | `#0E0A08` | `#171310` | `#1F1916` | `#2B2521` | `#38312D` |
+| AltSonar (viola) | `#0B0B0E` | `#141317` | `#1B1A1F` | `#27252C` | `#333238` |
+  Tema chiaro: fondo `#F1F4F6` tinto, schede bianche piene con bordo 1px (niente bianco smerigliato).
+- **Etichette in testo normale**: niente MAIUSCOLO né spaziatura tra le lettere in etichette, intestazioni di tabella, chip, voci di menu
+  (carattere del testo, un gradino più piccolo, colore secondario: «Rischio attuale»). Il maiuscolo resta solo nei loghi.
+- **Niente scritta piccola sopra i titoli** che ripete il titolo. Sopra un numero l'etichetta resta (dice cos'è il numero).
+- **Niente puntino di mezzo come separatore** (`A · B · C`) né freccia attaccata ai link (`Tutto lo storico ›`): a capo, colonne, virgole; il link è un verbo
+  («Apri lo storico»). Ammesso un solo puntino nel nome del prodotto («CycleDial · Ellecci Studio») e nelle legende dei grafici.
+- **Niente riquadro dentro un riquadro**: una nota dentro una scheda si separa con una linea sottile sopra, non con un secondo box.
+- **Pillole solo per pulsanti, filtri e la barra**; chip con angoli piccoli (6 px) e nel carattere del testo. Il monospazio solo per i numeri.
+- **Solo ciò che si clicca reagisce al mouse** (una scheda che porta a una sezione si solleva; le altre no). Niente pallini che pulsano all'infinito.
+- **Il segno nuovo delle app Ellecci**:
+  - **numeri protagonisti**: il numero eroe più grande (Unbounded 600, fino a 4–4,5rem sul computer), il resto della scheda calmo intorno;
+  - **l'arco della «C» di Ellecci come forma**: quadranti, anelli di avanzamento, bande ad arco dove il dato lo permette (mai come decorazione vuota);
+  - **linee sottili al posto dei riquadri**: meno schede chiuse, più righe e colonne separate da filetti 1px (`riga`);
+  - **grana finissima sul fondo** (rumore SVG in `body`, opacità 3–5%, ferma), al posto della luce.
+- Il movimento «da dashboard» a ogni sezione resta (decisione di Luigi del 16/11/2026), più corto: cascata entro ~0,5 s, numeri che contano ~0,8 s.
 
 ## Principi
 - **Il nero è la scena, il colore è l'informazione.** Lo sfondo resta nero; il colore compare solo dove dice qualcosa (su/giù, azione, stato, scelta).
@@ -42,7 +73,7 @@ neutro:  "#9AA1AC"                                           · fondo tinta "#15
 - Contrasto: testo normale ≥ 4,5:1, testo grande e icone ≥ 3:1. Il colore non è mai l'unico segnale (icona, segno + / −, parola).
 - Le app sono nere per scelta di Luigi: niente tema chiaro se non lo chiede.
 
-## Vetro (kit Ellecci, da VaultWatch)
+## Vetro (kit Ellecci, da VaultWatch) — superato dal Kit Ellecci 2: vetro solo sulla barra in basso del telefono, niente alone
 Pannelli in vetro solo per gli elementi che galleggiano o vanno in risalto (barra laterale, numero grande del patrimonio, finestre), non per ogni scheda.
 ```css
 /* vetro scuro (predefinito) */
@@ -68,7 +99,7 @@ Il vetro ha sempre un bordo di 1px e una luce sul lato in alto (bordo più chiar
 | titolo sezione | 1.125rem | Unbounded 500 | 1.25 | 0 |
 | corpo | 1rem (min 15px sul telefono) | Plex Sans 400 | 1.55 | 0 |
 | piccolo | 0.8125rem | Plex Sans 400 | 1.45 | 0 |
-| etichetta di sezione | 0.6875rem MAIUSCOLO | Plex Sans 600 | 1.2 | +0.08em |
+| etichetta di sezione | 0.8125rem, testo normale (Kit 2) | Plex Sans 500 | 1.3 | 0 |
 | numeri | come il contesto | Plex Mono 500 | — | 0 |
 
 ## Spazi, forme, profondità
@@ -102,7 +133,7 @@ Il vetro ha sempre un bordo di 1px e una luce sul lato in alto (bordo più chiar
   - **grafici che si costruiscono**: linea che si disegna da sinistra (`stroke-dashoffset` o animazione di Chart.js), barre che crescono dal basso, archi che si riempiono;
   - **schede a cascata**: `opacity 0 → 1`, `translateY(8px) → 0`, sfocatura `4px → 0`, 40–60 ms tra una scheda e l'altra, poi le righe delle liste;
   - **cambio pagina a cerchio** (`clip-path: circle()` che si allarga dal pulsante toccato), al massimo 350–400 ms;
-  - **schede che si sollevano** di 3–5 px al passaggio del mouse (solo con puntatore, non sul telefono).
+  - **schede che si sollevano** di 3–5 px al passaggio del mouse (solo con puntatore, non sul telefono; dal Kit 2 solo le schede cliccabili).
   Tutto questo **ogni volta che si apre una sezione** (decisione di Luigi del 16/11/2026, vale più della regola sopra sul cambio scheda); non quando i dati
   si aggiornano dentro la sezione già aperta.
   Con "riduci movimento" del sistema: niente conteggi, niente cerchio, solo dissolvenze brevi.
@@ -110,7 +141,7 @@ Il vetro ha sempre un bordo di 1px e una luce sul lato in alto (bordo più chiar
   prezzo vivo (scorrono solo le cifre cambiate, lampo verde se sale e rosso se scende), la posizione appena disegnata si costruisce (entrata, poi target e stop, poi le scritte),
   i risultati scorrono dal valore di prima a quello nuovo. Candele e indicatori non si animano. Per le app di studio vale il riferimento "Campus" (stessa nota): anelli, serie di giorni, punti.
 
-## Due temi: vetro scuro e vetro chiaro (dal 20/11/2026, scelta di Luigi)
+## Due temi: vetro scuro e vetro chiaro (dal 20/11/2026, scelta di Luigi) — dal 21/11/2026 senza luce e senza vetro sulle schede (Kit Ellecci 2): restano due temi, scuro tinto e chiaro
 Il tema "vetro" (19/11/2026, diverso in ogni app: aurora in VaultWatch, terminale nel Trading Studio, quadrante acceso in BandPilot, sonar in AltSonar)
 è diventato il **tema scuro predefinito**; il vecchio scuro senza luce non c'è più. Il chiaro è la **versione chiara dello stesso vetro**: stessa luce dell'app
 più tenue su fondo `#F3F4F6`, la scheda principale in vetro colorato chiaro (sfumatura del colore principale al ~13%, bordo del colore al ~22%), le altre schede
