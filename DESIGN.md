@@ -8,7 +8,11 @@ Molti dettagli del primo kit (luci dietro le schede, vetro ovunque, scritte in m
 ogni design: confronto con le regole di Hallmark (secondo cervello, video 124; pagina «Kit Ellecci 2» in `artefatti.md`). Da oggi:
 - **Niente luci, aloni, aurora, bagliori** dietro le schede o sul fondo, né fermi né animati; niente ombra colorata «a bagliore» (nemmeno sulla voce attiva della barra).
   Niente sfumature viola-blu, viola-rosa o azzurro su scuro; un colore principale per app, sempre pieno.
-- **Vetro smerigliato solo sulla barra in basso del telefono** (che galleggia sopra il contenuto). Le schede sono piene, un gradino più chiare del fondo,
+- **Fascia in cima con gli archi della C** (scelta di Luigi, 21/11/2026 sera, «vetro sul colore» + «archi della C»): dietro il titolo di ogni pagina una fascia
+  in sfumatura di **un solo colore, quello dell'app** (dalla tinta piena a una più scura fino al fondo; ~540 px sul computer, ~430 sul telefono), con 8 archi sottili e fermi
+  aperti a destra come la C del logo, uno più spesso, sfumati verso il basso e messi a destra per non passare dietro il titolo. La fascia non segue i dati: è sempre del colore dell'app.
+  Esempio funzionante: CycleDial (`.banda` in `index.html`).
+- **Vetro smerigliato solo dove dietro c'è colore**: le schede del primo blocco che stanno sopra la fascia e la barra in basso del telefono (che galleggia sopra il contenuto). Le schede sono piene, un gradino più chiare del fondo,
   bordo 1px; nessuna scheda «in vetro colorato». La profondità si fa con fondi più chiari, non con bagliori.
 - **Fondo quasi nero tinto** verso il colore dell'app (mai `#000` o `#fff` puri come superficie; i numeri sotto sono OKLCH L 15/19/22/27/32%):
 
