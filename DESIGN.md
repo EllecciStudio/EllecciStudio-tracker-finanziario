@@ -11,14 +11,14 @@ ogni design: confronto con le regole di Hallmark (secondo cervello, video 124; p
 - **Fascia in cima con gli archi della C** (scelta di Luigi, 21/11/2026 sera, «vetro sul colore» + «archi della C»): dietro il titolo di ogni pagina una fascia
   in sfumatura di **un solo colore, quello dell'app** (dalla tinta piena a una più scura fino al fondo; ~540 px sul computer, ~430 sul telefono), con **una C grande**
   fatta di 8 archi concentrici fermi aperti a destra: linee sottili, due un po' più spesse, quelle esterne che si assottigliano; sta a destra della fascia, sfumata verso
-  il basso, in parte dietro le schede di vetro (Luigi, 21/11/2026 sera: la C piccola e intera è stata scartata, «bruttissima»). La fascia non segue i dati: è sempre del colore dell'app.
+  il basso, in parte dietro le schede di vetro, che sfocano poco (~8 px) perché la C si veda attenuata (Luigi, 21/11/2026 sera: la C piccola e intera è stata scartata, «bruttissima»). La fascia non segue i dati: è sempre del colore dell'app.
   Esempio funzionante: CycleDial (`.banda` in `index.html`).
 - **Vetro smerigliato solo dove dietro c'è colore**: le schede del primo blocco che stanno sopra la fascia e la barra in basso del telefono (che galleggia sopra il contenuto).
   **Contrasto sul vetro**: sopra il colore i grigi del tema scuro non si leggono; dentro le schede di vetro testo secondario, numeri degli assi e link diventano bianco
   attenuato (~82% e ~62%) o una tinta chiara del colore dell'app. Controllare sempre le scritte nelle schede di vetro.
 - **Barra in alto fissa sul computer**: un rettangolo di vetro trasparente su tutta la larghezza (compare quando la pagina scorre) con il logo a sinistra e il tema a destra,
   e l'«isola» delle sezioni al centro che quando la pagina scorre diventa anche lei un po' trasparente, con un'ombra leggera. Controllare il contrasto delle voci.
-- **Cambio sezione a cerchio dal centro della C** della fascia (non dal punto toccato), lento abbastanza da far vedere da dove nasce (~0,75 s). Le schede sono piene, un gradino più chiare del fondo,
+- **Cambio sezione a cerchio dal centro della C** della fascia (non dal punto toccato), lento abbastanza da far vedere da dove nasce (~1,1 s). Le schede sono piene, un gradino più chiare del fondo,
   bordo 1px; nessuna scheda «in vetro colorato». La profondità si fa con fondi più chiari, non con bagliori.
 - **Fondo quasi nero tinto** verso il colore dell'app (mai `#000` o `#fff` puri come superficie; i numeri sotto sono OKLCH L 15/19/22/27/32%):
 
