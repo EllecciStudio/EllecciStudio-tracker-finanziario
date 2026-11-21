@@ -344,7 +344,7 @@ html.vw-altro #ft-root .tabs{ opacity:1; transform:none; pointer-events:auto; vi
   #ft-root .tab-btn, #ft-root .tabs, #ft-root .barra-basso button{ transition:none; }
 }
 /* ---------- movimento "da dashboard" (16/11/2026, DESIGN.md > Movimento) ----------
-   schede a cascata la prima volta che si apre una sezione, numeri che contano, grafici che si costruiscono,
+   schede a cascata ogni volta che si apre una sezione, numeri che contano, grafici che si costruiscono,
    cambio pagina a cerchio (View Transitions), schede che si sollevano col mouse */
 @keyframes vw-entra{ from{ opacity:0; transform:translateY(8px); filter:blur(4px); } to{ opacity:1; transform:none; filter:none; } }
 #ft-root .vw-in{ animation:vw-entra .46s cubic-bezier(0.23, 1, 0.32, 1) backwards; animation-delay:var(--vw-ritardo, 0ms); }
