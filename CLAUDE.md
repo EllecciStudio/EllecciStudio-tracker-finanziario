@@ -15,7 +15,7 @@ da **venderla**. Luigi non è uno sviluppatore: spiega le modifiche in italiano 
 - Nessun passaggio di build: tutto è in `index.html` (HTML, CSS e JS insieme). Librerie incluse in `lib/`
   (Supabase JS 2.117.2, Chart.js 4.4.1), per non dipendere da CDN.
 - Quando cambi i file del "guscio" (index.html, icone, lib), **aumenta `VERSIONE` in `sw.js`**
-  (oggi `tracker-v18`), altrimenti il telefono può continuare a mostrare la versione vecchia.
+  (oggi `tracker-v19`), altrimenti il telefono può continuare a mostrare la versione vecchia.
 - Prima di un push controlla l'app a larghezza telefono (circa 390 px) e il funzionamento offline.
 - Aggiornamenti (16/11/2026): il service worker chiede sempre la pagina alla rete con `cache: 'no-cache'` (GitHub Pages la terrebbe in cache 10 minuti)
   e controlla nuove versioni all'apertura, al ritorno sulla scheda e ogni 30 minuti; quando una nuova versione prende il controllo compare l'avviso
@@ -94,3 +94,9 @@ Prima di toccare l'interfaccia leggi `DESIGN.md` (sistema di design comune di El
   né i siti, video o profili da cui sono nate idee di design. Le quote crypto di altre persone hanno chiavi generiche (`CFG.crypto.nomeSocio`/`nomeSocio2`,
   `quotaSocioEUR`/`quotaSocio2EUR`, `CFG.previsione.rimborsoSocioMensile`): i nomi veri stanno solo nei dati di Luigi su Supabase. `migraSoci()` sposta da sola
   le chiavi delle versioni vecchie (anche dai backup) senza scrivere nomi nel codice.
+
+- **Kit Ellecci 2** (21/11/2026 sera, confermato da Luigi su CycleDial e portato qui): blocco `<style id="vw-kit2">` subito prima di `#ft-root` (vince su tutto quello sopra).
+  Fondo quasi nero tinto di verde `#080C0A` (chiaro `#F1F5F3`) con grana fine ferma (`body::before`, al posto dell'aurora, che non c'è più); fascia verde in cima
+  `.vw-banda` (primo elemento del `body`, `z-index:-2`; il `body` deve restare trasparente) con la C fatta di archi; vetro solo sulla prima scheda di ogni sezione
+  (`.tab-panel > :first-child`), sulla barra laterale del computer e sulla barra del telefono; schede piene; etichette in testo normale (niente maiuscole spaziate né Plex Mono
+  sulle scritte); niente numeri «01, 02» davanti alle sezioni; niente bagliori; nessuna scheda che si solleva se non si clicca; cambio sezione a cerchio dal centro della C, 1,1 s.
