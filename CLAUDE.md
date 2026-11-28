@@ -29,6 +29,9 @@ da **venderla**. Luigi non è uno sviluppatore: spiega le modifiche in italiano 
   locali vincono, il resto arriva dal server. Ogni transazione ha un `id`: non cambiarne il formato.
 - Copia locale in `localStorage` (`ellecci_tracker_cache_<user_id>`) per aprire l'app senza rete;
   il service worker non mette mai in cache le risposte di Supabase.
+- **Copia settimanale automatica** (dal 28/11/2026): la funzione Edge `backup-settimanale` di Supabase (nessuna chiave condivisa: risponde solo al lavoro
+  `backup.yml` del repository privato EllecciStudio-trading-studio, con il token OIDC di GitHub) legge `tracker_data` (per questo `service_role` ha il permesso SELECT)
+  e la copia va ogni domenica sul ramo privato `backup-dati` di quel repository. Se cambi nome o colonne di `tracker_data`, controlla anche la copia.
 - Backup/esportazione in JSON dalla scheda "Backup" (`versione: 1`): se cambi la struttura dei dati,
   gestisci la migrazione dei backup e delle righe esistenti.
 
